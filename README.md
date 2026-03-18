@@ -12,6 +12,10 @@ Diese Website ermöglicht:
   - `student` (darf nur sehen, wenn freigeschaltet)
 - Tabs pro Fach mit Badge (z. B. `HÜ/Test/SA/MÜ`), wenn Termine eingetragen sind.
 
+## Wichtig zum Fehler `identitytoolkit ... REPLACE_ME`
+
+Wenn du diesen Fehler siehst, sind in `firebase-config.js` noch Platzhalterwerte aktiv oder die Datei wurde nicht korrekt geladen.
+
 ## 1) Firebase-Projekt anlegen
 
 1. Öffne [https://console.firebase.google.com](https://console.firebase.google.com)
@@ -20,15 +24,20 @@ Diese Website ermöglicht:
 4. Erstelle **Cloud Firestore** (Production oder Test, danach Regeln setzen).
 5. Bei **Project settings > Your apps > Web app** die Config kopieren.
 
-## 2) Config in `app.js` eintragen
+## 2) `firebase-config.js` ausfüllen
 
-In `app.js` folgende Werte ersetzen:
+Im Repo gibt es:
+
+- `firebase-config.js` (Projektwerte sind bereits eingetragen; Rollen-E-Mails bitte anpassen)
+- `firebase-config.example.js` (Beispiel)
+
+Trage in `firebase-config.js` ein:
 
 - `firebaseConfig` (`apiKey`, `authDomain`, `projectId`, ...)
-- `ROOT_ADMIN_EMAIL`
-- `CLASS_REP_1_EMAIL`
-- `CLASS_REP_2_EMAIL`
-- `DEPUTY_REP_EMAIL`
+- `rootAdminEmail`
+- `classRep1Email`
+- `classRep2Email`
+- `deputyRepEmail`
 
 ## 3) Firestore-Regeln setzen
 
@@ -70,12 +79,6 @@ service cloud.firestore {
    - Source: `Deploy from a branch`
    - Branch: `main` (oder dein Branch) / `/root`
 4. Nach 1–2 Minuten ist die Seite online.
-
-## 5) Optional: Firebase Hosting statt GitHub Pages
-
-Wenn du Server-seitige Funktionen später willst (z. B. E-Mail-Freigabe-Workflows), ist Firebase Hosting + Cloud Functions besser.
-
----
 
 ## Hinweis
 
