@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Klassen-Terminkalender</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c35;
+      --panel-2: #162447;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --line: rgba(255,255,255,.08);
+      --accent: #7c3aed;
+      --accent-2: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --chip: rgba(255,255,255,.08);
+      --shadow: 0 20px 60px rgba(0,0,0,.30);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(1200px 700px at 15% 10%, rgba(124,58,237,.18), transparent 40%),
+                  radial-gradient(1000px 600px at 85% 0%, rgba(34,197,94,.10), transparent 35%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; }
+
+    .wrap {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .hero-main, .hero-side, .panel {
+      padding: 22px;
+    }
+
+    .title {
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.05;
+      margin: 0 0 10px;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0 0 18px;
+      max-width: 64ch;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      background: var(--chip);
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #f3f4f6;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr .9fr;
+      gap: 16px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .muted { color: var(--muted); }
+
+    label {
+      display: block;
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      color: var(--text);
+      border-radius: 12px;
+      outline: none;
+    }
+
+    textarea { min-height: 110px; resize: vertical; }
+
+    input::placeholder, textarea::placeholder { color: #94a3b8; }
+
+    .row { display: grid; gap: 10px; margin-bottom: 12px; }
+
+    .btnbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+    .btn {
+      border: 0;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      transition: transform .15s ease, opacity .15s ease, background .15s ease;
+      background: var(--accent);
+      font-weight: 700;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn.secondary { background: rgba(255,255,255,.08); border: 1px solid var(--line); }
+    .btn.good { background: var(--accent-2); color: #081018; }
+    .btn.warn { background: var(--warning); color: #111827; }
+    .btn.danger { background: var(--danger); }
+    .btn.small { padding: 8px 11px; border-radius: 10px; font-size: 13px; }
+
+    .hidden { display: none !important; }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .tab {
+      background: rgba(255,255,255,.04);
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      user-select: none;
+    }
+
+    .tab.active { background: rgba(124,58,237,.20); border-color: rgba(124,58,237,.45); }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 32px;
+      height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .badge.hue { background: rgba(59,130,246,.2); border: 1px solid rgba(59,130,246,.4); }
+    .badge.test { background: rgba(245,158,11,.2); border: 1px solid rgba(245,158,11,.45); }
+    .badge.sa { background: rgba(239,68,68,.2); border: 1px solid rgba(239,68,68,.45); }
+    .badge.mu { background: rgba(34,197,94,.2); border: 1px solid rgba(34,197,94,.45); }
+
+    .list { display: grid; gap: 12px; }
+    .event {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.03);
+      border-radius: 16px;
+      padding: 14px;
+    }
+    .event-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 10px;
+    }
+    .event-title { margin: 0; font-size: 16px; }
+    .event-meta { color: var(--muted); font-size: 13px; margin-top: 4px; }
+    .event-desc { margin: 10px 0 0; color: #d1d5db; white-space: pre-wrap; }
+    .event-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+
+    .split {
+      display: grid;
+      grid-template-columns: .9fr 1.1fr;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .notice {
+      border-left: 4px solid var(--warning);
+      background: rgba(245,158,11,.08);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-top: 14px;
+      color: #fef3c7;
+    }
+
+    .ok {
+      border-left: 4px solid var(--accent-2);
+      background: rgba(34,197,94,.08);
+      padding: 12px 14px;
+      border-radius: 12px;
+      margin-top: 14px;
+      color: #dcfce7;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .role-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid var(--line);
+      padding: 8px 12px;
+      border-radius: 999px;
+      color: #f8fafc;
+      font-size: 13px;
+    }
+
+    .tiny {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .footer-note { margin-top: 14px; color: var(--muted); font-size: 12px; }
+
+    @media (max-width: 960px) {
+      .hero, .split, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; align-items: stretch; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="card hero-main">
+        <h1 class="title">Klassen-Terminkalender</h1>
+        <p class="subtitle">
+          Für HÜ, Tests, Schularbeiten und Mitarbeit. Schüler sehen erst nach Freigabe alles, du bestätigst neue Accounts als Admin, und Klassensprecher dürfen Termine eintragen.
+        </p>
+        <div class="chips">
+          <span class="chip">Login mit E-Mail & Passwort</span>
+          <span class="chip">Admin-Freigabe</span>
+          <span class="chip">Fach-Tabs mit Kürzeln</span>
+          <span class="chip">Rollen: Admin / Sprecher / User</span>
+        </div>
+        <div class="notice">
+          GitHub Pages ist nur statisch. Darum läuft der Login und die Datenhaltung hier über Firebase Auth + Firestore.
+        </div>
+      </div>
+
+      <div class="card hero-side">
+        <h2 class="section-title">Deine Starter-Konfiguration</h2>
+        <div class="row">
+          <div>
+            <label>Firebase API Key</label>
+            <input id="cfg-apiKey" placeholder="DEIN_API_KEY" />
+          </div>
+          <div>
+            <label>Firebase Auth Domain</label>
+            <input id="cfg-authDomain" placeholder="dein-projekt.firebaseapp.com" />
+          </div>
+          <div>
+            <label>Firebase Project ID</label>
+            <input id="cfg-projectId" placeholder="dein-projekt-id" />
+          </div>
+        </div>
+        <div class="btnbar">
+          <button class="btn" id="btnInit">Firebase verbinden</button>
+          <button class="btn secondary" id="btnSaveLocal">Werte merken</button>
+        </div>
+        <p class="footer-note">Wenn du die Werte einträgst und auf „Firebase verbinden“ klickst, startet die App mit deinem Projekt.</p>
+      </div>
+    </div>
+
+    <div id="authPanel" class="card panel">
+      <div class="grid-2">
+        <div>
+          <h2 class="section-title">Registrieren</h2>
+          <div class="row">
+            <div>
+              <label>Name</label>
+              <input id="regName" placeholder="Vorname Nachname" />
+            </div>
+            <div>
+              <label>E-Mail</label>
+              <input id="regEmail" type="email" placeholder="name@mail.com" />
+            </div>
+            <div>
+              <label>Passwort</label>
+              <input id="regPassword" type="password" placeholder="mindestens 6 Zeichen" />
+            </div>
+          </div>
+          <button class="btn good" id="btnRegister">Account erstellen</button>
+          <div class="tiny" id="registerHint"></div>
+        </div>
+
+        <div>
+          <h2 class="section-title">Anmelden</h2>
+          <div class="row">
+            <div>
+              <label>E-Mail</label>
+              <input id="loginEmail" type="email" placeholder="name@mail.com" />
+            </div>
+            <div>
+              <label>Passwort</label>
+              <input id="loginPassword" type="password" placeholder="Passwort" />
+            </div>
+          </div>
+          <button class="btn" id="btnLogin">Einloggen</button>
+          <div class="tiny" id="loginHint"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="appPanel" class="hidden">
+      <div class="topbar">
+        <div>
+          <div class="role-pill" id="userInfo">Nicht angemeldet</div>
+          <div class="tiny" id="statusInfo"></div>
+        </div>
+        <div class="btnbar">
+          <button class="btn secondary" id="btnReload">Neu laden</button>
+          <button class="btn danger" id="btnLogout">Ausloggen</button>
+        </div>
+      </div>
+
+      <div id="waitingBox" class="card panel hidden">
+        <h2 class="section-title">Freigabe ausständig</h2>
+        <p class="muted">Dein Konto ist noch nicht freigeschaltet. Sobald der Admin deinen Account bestätigt, siehst du die Termine.</p>
+      </div>
+
+      <div id="dashboardBox" class="card panel hidden">
+        <div class="tabs" id="subjectTabs"></div>
+        <div class="split">
+          <div class="card panel" style="padding:16px;">
+            <h2 class="section-title">Termine</h2>
+            <div id="eventList" class="list"></div>
+          </div>
+
+          <div>
+            <div id="speakerBox" class="card panel hidden" style="margin-bottom:16px;">
+              <h2 class="section-title">Termin eintragen</h2>
+              <div class="row">
+                <div>
+                  <label>Fach</label>
+                  <select id="eventSubject"></select>
+                </div>
+                <div>
+                  <label>Typ</label>
+                  <select id="eventType">
+                    <option value="HÜ">HÜ</option>
+                    <option value="Test">Test</option>
+                    <option value="SA">SA</option>
+                    <option value="Mitarbeit">Mitarbeit</option>
+                  </select>
+                </div>
+                <div>
+                  <label>Datum</label>
+                  <input id="eventDate" type="date" />
+                </div>
+                <div>
+                  <label>Titel</label>
+                  <input id="eventTitle" placeholder="z. B. Kapitel 5" />
+                </div>
+                <div>
+                  <label>Infos</label>
+                  <textarea id="eventDesc" placeholder="Zusatzinfos, Stoff, Seiten, Personen usw."></textarea>
+                </div>
+                <div>
+                  <label>Betroffene Personen (optional)</label>
+                  <input id="eventPeople" placeholder="Namen mit Komma trennen" />
+                </div>
+              </div>
+              <button class="btn good" id="btnAddEvent">Speichern</button>
+              <div class="tiny" id="speakerHint"></div>
+            </div>
+
+            <div id="adminBox" class="card panel hidden">
+              <h2 class="section-title">Admin-Freigaben</h2>
+              <div id="pendingList" class="list"></div>
+              <p class="footer-note">Hier bestätigst du neue Accounts oder weist Rollen zu.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, query, where, orderBy, addDoc, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+    const SUBJECTS = ["Deutsch", "Mathe", "Englisch", "Geschichte", "Geografie", "Biologie", "Physik", "Chemie", "Informatik"];
+
+    // Diese E-Mails in deinem Firebase-Projekt anpassen.
+    const ADMIN_EMAIL = "dein.admin@mail.com";
+    const SPEAKER_EMAILS = ["klassensprecher@mail.com", "stellvertreter@mail.com"];
+
+    const state = {
+      app: null,
+      auth: null,
+      db: null,
+      user: null,
+      profile: null,
+      activeSubject: SUBJECTS[0],
+      ready: false,
+    };
+
+    const el = (id) => document.getElementById(id);
+    const qs = (selector) => document.querySelector(selector);
+
+    const cached = JSON.parse(localStorage.getItem("termine-firebase-config") || "{}");
+    el("cfg-apiKey").value = cached.apiKey || "";
+    el("cfg-authDomain").value = cached.authDomain || "";
+    el("cfg-projectId").value = cached.projectId || "";
+
+    function saveConfigToLocal() {
+      const cfg = {
+        apiKey: el("cfg-apiKey").value.trim(),
+        authDomain: el("cfg-authDomain").value.trim(),
+        projectId: el("cfg-projectId").value.trim(),
+      };
+      localStorage.setItem("termine-firebase-config", JSON.stringify(cfg));
+      return cfg;
+    }
+
+    function getConfig() {
+      const cfg = saveConfigToLocal();
+      if (!cfg.apiKey || !cfg.authDomain || !cfg.projectId) throw new Error("Bitte API Key, Auth Domain und Project ID eintragen.");
+      return {
+        apiKey: cfg.apiKey,
+        authDomain: cfg.authDomain,
+        projectId: cfg.projectId,
+      };
+    }
+
+    function setHint(id, text, good = false) {
+      const node = el(id);
+      node.textContent = text;
+      node.style.color = good ? "#bbf7d0" : "#cbd5e1";
+    }
+
+    function normalizeRole(email, roleFromDb = "user") {
+      if (!email) return roleFromDb;
+      const e = email.toLowerCase();
+      if (e === ADMIN_EMAIL.toLowerCase()) return "admin";
+      if (SPEAKER_EMAILS.map(s => s.toLowerCase()).includes(e)) {
+        return roleFromDb === "admin" ? "admin" : "speaker";
+      }
+      return roleFromDb || "user";
+    }
+
+    function badgeClass(type) {
+      const t = String(type || "").toLowerCase();
+      if (t === "hü" || t === "hue") return "hue";
+      if (t === "test") return "test";
+      if (t === "sa") return "sa";
+      return "mu";
+    }
+
+    function fmtDate(iso) {
+      if (!iso) return "Ohne Datum";
+      try {
+        return new Intl.DateTimeFormat("de-AT", { dateStyle: "medium" }).format(new Date(iso));
+      } catch {
+        return iso;
+      }
+    }
+
+    async function initFirebase() {
+      const cfg = getConfig();
+      state.app = initializeApp(cfg);
+      state.auth = getAuth(state.app);
+      state.db = getFirestore(state.app);
+      state.ready = true;
+      attachAuthListener();
+      setHint("registerHint", "Firebase verbunden.", true);
+      setHint("loginHint", "Firebase verbunden.", true);
+    }
+
+    function attachAuthListener() {
+      onAuthStateChanged(state.auth, async (user) => {
+        state.user = user || null;
+        state.profile = null;
+
+        if (!user) {
+          el("authPanel").classList.remove("hidden");
+          el("appPanel").classList.add("hidden");
+          return;
+        }
+
+        const ref = doc(state.db, "users", user.uid);
+        const snap = await getDoc(ref);
+        let profile = snap.exists() ? snap.data() : null;
+
+        if (!profile) {
+          profile = {
+            uid: user.uid,
+            name: user.displayName || user.email?.split("@")[0] || "Unbekannt",
+            email: user.email || "",
+            role: normalizeRole(user.email, "user"),
+            status: user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase() ? "approved" : "pending",
+            createdAt: serverTimestamp(),
+          };
+          await setDoc(ref, profile, { merge: true });
+        }
+
+        profile.role = normalizeRole(user.email, profile.role || "user");
+        state.profile = profile;
+
+        el("authPanel").classList.add("hidden");
+        el("appPanel").classList.remove("hidden");
+        el("userInfo").textContent = `${profile.name} · ${profile.email} · ${profile.role.toUpperCase()}`;
+        el("statusInfo").textContent = `Status: ${profile.status || "pending"}`;
+
+        const approved = profile.status === "approved" || profile.role === "admin";
+        el("waitingBox").classList.toggle("hidden", approved);
+        el("dashboardBox").classList.toggle("hidden", !approved);
+        el("speakerBox").classList.toggle("hidden", !(approved && (profile.role === "speaker" || profile.role === "admin")));
+        el("adminBox").classList.toggle("hidden", !(approved && profile.role === "admin"));
+
+        if (approved) {
+          renderSubjects();
+          await renderEvents();
+          if (profile.role === "admin") await renderPendingUsers();
+        }
+      });
+    }
+
+    function renderSubjects() {
+      const tabs = el("subjectTabs");
+      const sel = el("eventSubject");
+      tabs.innerHTML = "";
+      sel.innerHTML = "";
+
+      SUBJECTS.forEach((subject) => {
+        const count = 0;
+        const tab = document.createElement("button");
+        tab.className = `tab ${subject === state.activeSubject ? "active" : ""}`;
+        tab.innerHTML = `<span>${subject}</span><span class="badge">${count}</span>`;
+        tab.addEventListener("click", async () => {
+          state.activeSubject = subject;
+          [...tabs.children].forEach((x) => x.classList.remove("active"));
+          tab.classList.add("active");
+          await renderEvents();
+        });
+        tabs.appendChild(tab);
+
+        const opt = document.createElement("option");
+        opt.value = subject;
+        opt.textContent = subject;
+        sel.appendChild(opt);
+      });
+      sel.value = state.activeSubject;
+    }
+
+    async function renderEvents() {
+      if (!state.db) return;
+      const container = el("eventList");
+      container.innerHTML = `<div class="muted">Lade Termine…</div>`;
+
+      const q = query(collection(state.db, "events"), where("subject", "==", state.activeSubject), orderBy("date", "asc"));
+      const snap = await getDocs(q);
+      const items = [];
+      snap.forEach((d) => items.push({ id: d.id, ...d.data() }));
+
+      // Zähler in Tabs aktualisieren
+      const tabs = [...el("subjectTabs").children];
+      tabs.forEach((tab) => {
+        const subject = tab.querySelector("span")?.textContent;
+        const count = subject ? items.filter(x => x.subject === subject).length : 0;
+        const badge = tab.querySelector(".badge");
+        if (badge) badge.textContent = count;
+      });
+
+      if (!items.length) {
+        container.innerHTML = `<div class="muted">Für ${state.activeSubject} sind noch keine Termine eingetragen.</div>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      items.forEach((item) => {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.innerHTML = `
+          <div class="event-head">
+            <div>
+              <h3 class="event-title">${item.title || item.type || "Termin"}</h3>
+              <div class="event-meta">
+                <span class="badge ${badgeClass(item.type)}">${item.type || "Info"}</span>
+                &nbsp;· ${fmtDate(item.date)}
+                ${item.subject ? `&nbsp;· ${item.subject}` : ""}
+              </div>
+            </div>
+          </div>
+          ${item.description ? `<p class="event-desc">${item.description}</p>` : ""}
+          ${item.people?.length ? `<div class="event-meta">Dabei: ${item.people.join(", ")}</div>` : ""}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    async function renderPendingUsers() {
+      const container = el("pendingList");
+      container.innerHTML = `<div class="muted">Lade Anfragen…</div>`;
+      const q = query(collection(state.db, "users"), where("status", "==", "pending"));
+      const snap = await getDocs(q);
+      const items = [];
+      snap.forEach((d) => items.push({ id: d.id, ...d.data() }));
+
+      if (!items.length) {
+        container.innerHTML = `<div class="muted">Keine offenen Freigaben.</div>`;
+        return;
+      }
+
+      container.innerHTML = "";
+      items.forEach((u) => {
+        const div = document.createElement("div");
+        div.className = "event";
+        div.innerHTML = `
+          <div class="event-head">
+            <div>
+              <h3 class="event-title">${u.name || "Unbekannt"}</h3>
+              <div class="event-meta">${u.email || ""} · Rolle: ${u.role || "user"}</div>
+            </div>
+            <span class="badge">pending</span>
+          </div>
+          <div class="event-actions">
+            <button class="btn good small" data-approve="${u.uid}">Freigeben</button>
+            <button class="btn secondary small" data-speaker="${u.uid}">Als Sprecher</button>
+            <button class="btn secondary small" data-user="${u.uid}">Als User</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+
+      container.querySelectorAll("[data-approve]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const uid = btn.getAttribute("data-approve");
+          await updateDoc(doc(state.db, "users", uid), { status: "approved" });
+          await renderPendingUsers();
+          await renderEvents();
+        });
+      });
+      container.querySelectorAll("[data-speaker]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const uid = btn.getAttribute("data-speaker");
+          await updateDoc(doc(state.db, "users", uid), { role: "speaker", status: "approved" });
+          await renderPendingUsers();
+        });
+      });
+      container.querySelectorAll("[data-user]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const uid = btn.getAttribute("data-user");
+          await updateDoc(doc(state.db, "users", uid), { role: "user", status: "approved" });
+          await renderPendingUsers();
+        });
+      });
+    }
+
+    async function register() {
+      if (!state.ready) return setHint("registerHint", "Erst Firebase verbinden.");
+      const name = el("regName").value.trim();
+      const email = el("regEmail").value.trim();
+      const password = el("regPassword").value.trim();
+      if (!name || !email || !password) return setHint("registerHint", "Name, E-Mail und Passwort sind Pflicht.");
+
+      const cred = await createUserWithEmailAndPassword(state.auth, email, password);
+      await updateProfile(cred.user, { displayName: name });
+
+      const role = normalizeRole(email, "user");
+      const status = role === "admin" ? "approved" : "pending";
+      await setDoc(doc(state.db, "users", cred.user.uid), {
+        uid: cred.user.uid,
+        name,
+        email,
+        role,
+        status,
+        createdAt: serverTimestamp(),
+      }, { merge: true });
+
+      setHint("registerHint", `Account erstellt. ${status === "approved" ? "Du bist direkt freigeschaltet." : "Warte auf Freigabe."}`, true);
+    }
+
+    async function login() {
+      if (!state.ready) return setHint("loginHint", "Erst Firebase verbinden.");
+      const email = el("loginEmail").value.trim();
+      const password = el("loginPassword").value.trim();
+      if (!email || !password) return setHint("loginHint", "E-Mail und Passwort eingeben.");
+      await signInWithEmailAndPassword(state.auth, email, password);
+      setHint("loginHint", "Angemeldet.", true);
+    }
+
+    async function logout() {
+      if (!state.ready) return;
+      await signOut(state.auth);
+    }
+
+    async function addEvent() {
+      if (!state.ready || !state.user) return setHint("speakerHint", "Nicht angemeldet.");
+      const role = state.profile?.role || "user";
+      if (!(role === "speaker" || role === "admin")) return setHint("speakerHint", "Keine Berechtigung.");
+
+      const subject = el("eventSubject").value;
+      const type = el("eventType").value;
+      const date = el("eventDate").value;
+      const title = el("eventTitle").value.trim();
+      const description = el("eventDesc").value.trim();
+      const people = el("eventPeople").value.split(",").map(s => s.trim()).filter(Boolean);
+
+      if (!subject || !type || !date || !title) return setHint("speakerHint", "Fach, Typ, Datum und Titel sind Pflicht.");
+
+      await addDoc(collection(state.db, "events"), {
+        subject,
+        type,
+        date,
+        title,
+        description,
+        people,
+        createdBy: state.user.uid,
+        createdByEmail: state.user.email,
+        createdAt: serverTimestamp(),
+      });
+
+      el("eventTitle").value = "";
+      el("eventDesc").value = "";
+      el("eventPeople").value = "";
+      setHint("speakerHint", "Termin gespeichert.", true);
+      await renderEvents();
+    }
+
+    // Buttons
+    el("btnSaveLocal").addEventListener("click", () => {
+      saveConfigToLocal();
+      setHint("registerHint", "Werte gespeichert.", true);
+      setHint("loginHint", "Werte gespeichert.", true);
+    });
+    el("btnInit").addEventListener("click", async () => {
+      try {
+        await initFirebase();
+        await renderSubjects();
+      } catch (e) {
+        alert(e.message || String(e));
+      }
+    });
+    el("btnRegister").addEventListener("click", () => register().catch(err => setHint("registerHint", err.message || String(err))));
+    el("btnLogin").addEventListener("click", () => login().catch(err => setHint("loginHint", err.message || String(err))));
+    el("btnLogout").addEventListener("click", () => logout().catch(console.error));
+    el("btnReload").addEventListener("click", async () => {
+      if (state.user) {
+        await renderEvents();
+        if (state.profile?.role === "admin") await renderPendingUsers();
+      }
+    });
+    el("btnAddEvent").addEventListener("click", () => addEvent().catch(err => setHint("speakerHint", err.message || String(err))));
+
+    // Preselect date today
+    const today = new Date();
+    el("eventDate").value = today.toISOString().slice(0, 10);
+  </script>
+</body>
+</html>
