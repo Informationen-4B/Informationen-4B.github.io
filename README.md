@@ -69,17 +69,3 @@ service cloud.firestore {
     }
   }
 }
-```
-
-## 4) Auf GitHub hochladen
-
-1. Repository erstellen (oder dieses nutzen).
-2. Dateien pushen.
-3. In GitHub unter **Settings > Pages**:
-   - Source: `Deploy from a branch`
-   - Branch: `main` (oder dein Branch) / `/root`
-4. Nach 1–2 Minuten ist die Seite online.
-
-## Hinweis
-
-Die Seite funktioniert client-seitig. Sicherheit passiert über Firebase Auth + Firestore Rules.
