@@ -15,7 +15,7 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-  rootAdminEmail: "dein.name@example.com",
+  rootAdminEmail: "Matthias.HANDL@ahsbruck.at",
   classRep1Email: "klassensprecherin1@example.com",
   classRep2Email: "klassensprecherin2@example.com",
   deputyRepEmail: "stellvertreter@example.com",
