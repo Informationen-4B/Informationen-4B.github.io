@@ -21,34 +21,21 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /**
- * TODO: Mit deinen Firebase-Zugangsdaten ersetzen.
- * Diese Website kann danach direkt auf GitHub Pages gehostet werden.
+ * Lege eine Datei firebase-config.js an (siehe firebase-config.example.js),
+ * die window.CLASSPLANNER_CONFIG setzt.
  */
-const firebaseConfig = {
-  apiKey: "REPLACE_ME",
-  authDomain: "REPLACE_ME",
-  projectId: "REPLACE_ME",
-  storageBucket: "REPLACE_ME",
-  messagingSenderId: "REPLACE_ME",
-  appId: "REPLACE_ME",
-};
+const runtimeConfig = window.CLASSPLANNER_CONFIG || {};
+const firebaseConfig = runtimeConfig.firebaseConfig || {};
 
-/**
- * Diese 4 E-Mails erhalten spezielle Rechte.
- * Tipp: Passe sie auf eure echten Mail-Adressen an.
- */
-const ROOT_ADMIN_EMAIL = "dein.name@example.com";
-const CLASS_REP_1_EMAIL = "klassensprecherin1@example.com";
-const CLASS_REP_2_EMAIL = "klassensprecherin2@example.com";
-const DEPUTY_REP_EMAIL = "stellvertreter@example.com";
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const ROOT_ADMIN_EMAIL = runtimeConfig.rootAdminEmail || "dein.name@example.com";
+const CLASS_REP_1_EMAIL = runtimeConfig.classRep1Email || "klassensprecherin1@example.com";
+const CLASS_REP_2_EMAIL = runtimeConfig.classRep2Email || "klassensprecherin2@example.com";
+const DEPUTY_REP_EMAIL = runtimeConfig.deputyRepEmail || "stellvertreter@example.com";
 
 const authSection = document.getElementById("auth-section");
 const appSection = document.getElementById("app-section");
 const pendingSection = document.getElementById("pending-section");
+const setupSection = document.getElementById("setup-section");
 const adminPanel = document.getElementById("admin-panel");
 const editorPanel = document.getElementById("editor-panel");
 const pendingUsersEl = document.getElementById("pending-users");
@@ -56,7 +43,11 @@ const tabsEl = document.getElementById("tabs");
 const eventsContainer = document.getElementById("events-container");
 const userInfo = document.getElementById("user-info");
 const logoutBtn = document.getElementById("logout-btn");
+const loginForm = document.getElementById("login-form");
+const registerForm = document.getElementById("register-form");
 
+let auth = null;
+let db = null;
 let currentRole = null;
 let currentSubject = null;
 let allEvents = [];
@@ -74,8 +65,19 @@ const SUBJECTS = [
   "Sonstiges",
 ];
 
-document.getElementById("register-form").addEventListener("submit", async (e) => {
+if (isFirebaseConfigured(firebaseConfig)) {
+  const app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  wireAuthState();
+} else {
+  showSetupNotice();
+}
+
+registerForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!auth || !db) return;
+
   const name = document.getElementById("register-name").value.trim();
   const email = document.getElementById("register-email").value.trim().toLowerCase();
   const password = document.getElementById("register-password").value;
@@ -94,26 +96,29 @@ document.getElementById("register-form").addEventListener("submit", async (e) =>
 
     toast(approved ? "Account erstellt und direkt freigeschaltet." : "Registriert. Warte auf Freischaltung.");
   } catch (err) {
-    toast(`Fehler bei Registrierung: ${err.message}`);
+    toast(`Fehler bei Registrierung: ${friendlyAuthError(err)}`);
   }
 });
 
-document.getElementById("login-form").addEventListener("submit", async (e) => {
+loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!auth) return;
+
   const email = document.getElementById("login-email").value.trim();
   const password = document.getElementById("login-password").value;
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
   } catch (err) {
-    toast(`Login fehlgeschlagen: ${err.message}`);
+    toast(`Login fehlgeschlagen: ${friendlyAuthError(err)}`);
   }
 });
 
-logoutBtn.addEventListener("click", () => signOut(auth));
+logoutBtn.addEventListener("click", () => auth && signOut(auth));
 
 document.getElementById("event-form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!auth || !db) return;
   if (!["admin", "representative", "deputy"].includes(currentRole)) {
     toast("Keine Berechtigung zum Eintragen.");
     return;
@@ -144,41 +149,43 @@ document.getElementById("event-form").addEventListener("submit", async (e) => {
   }
 });
 
-onAuthStateChanged(auth, async (user) => {
-  if (!user) {
-    authSection.classList.remove("hidden");
-    appSection.classList.add("hidden");
-    pendingSection.classList.add("hidden");
-    userInfo.classList.add("hidden");
-    logoutBtn.classList.add("hidden");
-    return;
-  }
+function wireAuthState() {
+  onAuthStateChanged(auth, async (user) => {
+    if (!user) {
+      authSection.classList.remove("hidden");
+      appSection.classList.add("hidden");
+      pendingSection.classList.add("hidden");
+      userInfo.classList.add("hidden");
+      logoutBtn.classList.add("hidden");
+      return;
+    }
 
-  const userDoc = await ensureUserDoc(user);
-  const profile = userDoc.data();
-  currentRole = profile.role;
+    const userDoc = await ensureUserDoc(user);
+    const profile = userDoc.data();
+    currentRole = profile.role;
 
-  userInfo.textContent = `${profile.name} (${profile.role})`;
-  userInfo.classList.remove("hidden");
-  logoutBtn.classList.remove("hidden");
+    userInfo.textContent = `${profile.name} (${profile.role})`;
+    userInfo.classList.remove("hidden");
+    logoutBtn.classList.remove("hidden");
 
-  if (!profile.approved) {
+    if (!profile.approved) {
+      authSection.classList.add("hidden");
+      appSection.classList.add("hidden");
+      pendingSection.classList.remove("hidden");
+      return;
+    }
+
     authSection.classList.add("hidden");
-    appSection.classList.add("hidden");
-    pendingSection.classList.remove("hidden");
-    return;
-  }
+    pendingSection.classList.add("hidden");
+    appSection.classList.remove("hidden");
 
-  authSection.classList.add("hidden");
-  pendingSection.classList.add("hidden");
-  appSection.classList.remove("hidden");
+    adminPanel.classList.toggle("hidden", currentRole !== "admin");
+    editorPanel.classList.toggle("hidden", !["admin", "representative", "deputy"].includes(currentRole));
 
-  adminPanel.classList.toggle("hidden", currentRole !== "admin");
-  editorPanel.classList.toggle("hidden", !["admin", "representative", "deputy"].includes(currentRole));
-
-  if (currentRole === "admin") await loadPendingUsers();
-  await loadEvents();
-});
+    if (currentRole === "admin") await loadPendingUsers();
+    await loadEvents();
+  });
+}
 
 async function ensureUserDoc(user) {
   const ref = doc(db, "users", user.uid);
@@ -305,9 +312,39 @@ function formatDate(v) {
   return d.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
 }
 
+function showSetupNotice() {
+  setupSection.classList.remove("hidden");
+  disableAuthForms();
+  toast("Firebase ist noch nicht konfiguriert. Bitte firebase-config.js eintragen.");
+}
+
+function disableAuthForms() {
+  [...loginForm.elements, ...registerForm.elements].forEach((el) => {
+    if ("disabled" in el) el.disabled = true;
+  });
+}
+
+function isFirebaseConfigured(config) {
+  const required = ["apiKey", "authDomain", "projectId", "storageBucket", "messagingSenderId", "appId"];
+  return required.every((key) => {
+    const value = (config[key] || "").trim();
+    return value && value !== "REPLACE_ME";
+  });
+}
+
+function friendlyAuthError(err) {
+  const code = err?.code || "";
+  if (code.includes("auth/email-already-in-use")) return "Diese E-Mail wird bereits verwendet.";
+  if (code.includes("auth/invalid-email")) return "Ungültige E-Mail-Adresse.";
+  if (code.includes("auth/weak-password")) return "Passwort ist zu kurz (mind. 6 Zeichen).";
+  if (code.includes("auth/invalid-credential")) return "E-Mail oder Passwort sind falsch.";
+  if (code.includes("auth/api-key-not-valid")) return "Firebase API-Key ist ungültig. Prüfe firebase-config.js.";
+  return err?.message || "Unbekannter Fehler";
+}
+
 function toast(message) {
   const el = document.getElementById("toast");
   el.textContent = message;
   el.classList.add("show");
-  setTimeout(() => el.classList.remove("show"), 2800);
+  setTimeout(() => el.classList.remove("show"), 3000);
 }
