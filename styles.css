@@ -40,6 +40,20 @@ main {
   margin-bottom: 1rem;
 }
 .hidden { display: none !important; }
+.warning {
+  border-color: #f59e0b;
+  background: #1f2937;
+}
+.warning code {
+  color: #fde68a;
+  background: #111827;
+  padding: 0.1rem 0.35rem;
+  border-radius: 6px;
+}
+input:disabled, select:disabled, button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
 .auth-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
