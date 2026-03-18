@@ -1,11 +1,12 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyCq0CpAKCMqKP30EEYZ3HxFNBHgjD7P4Ro",
-  authDomain: "informationen-4b.firebaseapp.com",
-  projectId: "informationen-4b",
-  storageBucket: "informationen-4b.firebasestorage.app",
-  messagingSenderId: "443143023390",
-  appId: "1:443143023390:web:aae3b9bc5e0d6d331fb70f"
-};
+window.CLASSPLANNER_CONFIG = {
+  firebaseConfig: {
+    apiKey: "AIza...",
+    authDomain: "dein-projekt.firebaseapp.com",
+    projectId: "dein-projekt-id",
+    storageBucket: "dein-projekt.appspot.com",
+    messagingSenderId: "1234567890",
+    appId: "1:1234567890:web:abc123",
+  },
   rootAdminEmail: "du@schule.at",
   classRep1Email: "sprecherin1@schule.at",
   classRep2Email: "sprecherin2@schule.at",
