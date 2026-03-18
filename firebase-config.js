@@ -2,12 +2,12 @@
 // Diese Datei wird im Browser geladen und muss daher bewusst öffentliche Web-App-Werte enthalten.
 window.CLASSPLANNER_CONFIG = {
   firebaseConfig: {
-    apiKey: "REPLACE_ME",
-    authDomain: "REPLACE_ME",
-    projectId: "REPLACE_ME",
-    storageBucket: "REPLACE_ME",
-    messagingSenderId: "REPLACE_ME",
-    appId: "REPLACE_ME",
+    apiKey: "AIzaSyCq0CpAKCMqKP30EEYZ3HxFNBHgjD7P4Ro",
+    authDomain: "informationen-4b.firebaseapp.com",
+    projectId: "informationen-4b",
+    storageBucket: "informationen-4b.firebasestorage.app",
+    messagingSenderId: "443143023390",
+    appId: "1:443143023390:web:270bd0a36fff92991fb70f",
   },
   rootAdminEmail: "dein.name@example.com",
   classRep1Email: "klassensprecherin1@example.com",
