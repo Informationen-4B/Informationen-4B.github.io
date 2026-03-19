@@ -1,623 +1,194 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Klassenplaner 4B</title>
-  <style>
-    :root{
-      --bg0:#07111f; --bg1:#0b1220; --bg2:#111827;
-      --panel:rgba(17,24,39,.78); --panel2:rgba(15,23,42,.88);
-      --line:rgba(148,163,184,.16); --text:#e5e7eb; --muted:#94a3b8;
-      --brand:#60a5fa; --brand2:#a78bfa; --green:#34d399; --yellow:#fbbf24; --red:#fb7185;
-      --shadow:0 24px 60px rgba(0,0,0,.35); --radius:24px;
-    }
-    *{box-sizing:border-box} html,body{margin:0;min-height:100%}
-    body{
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      color:var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 30%),
-        radial-gradient(circle at top right, rgba(167,139,250,.16), transparent 26%),
-        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 42%, var(--bg2) 100%);
-      min-height:100vh;
-    }
-    .wrap{max-width:1440px;margin:0 auto;padding:24px}
-    .panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-    .hero{display:grid;grid-template-columns:1.5fr 1fr;gap:18px;margin-bottom:18px}
-    .hero-main{padding:28px;position:relative;overflow:hidden}
-    .hero-main::after{content:"";position:absolute;width:260px;height:260px;right:-100px;bottom:-100px;background:radial-gradient(circle, rgba(96,165,250,.20), transparent 64%);pointer-events:none}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;border:1px solid rgba(96,165,250,.22);background:rgba(96,165,250,.10);color:#bfdbfe;font-size:13px;font-weight:800;margin-bottom:14px}
-    h1{margin:0 0 8px;font-size:clamp(30px,4vw,52px);line-height:1.02;letter-spacing:-.05em}
-    .subtitle{margin:0;max-width:72ch;color:var(--muted);line-height:1.6;font-size:15px}
-    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:22px}
-    .stat{padding:14px 16px;border-radius:18px;background:rgba(15,23,42,.56);border:1px solid var(--line)}
-    .stat .label{color:var(--muted);font-size:12px;margin-bottom:6px}.stat .value{font-size:20px;font-weight:900;letter-spacing:-.03em}
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.field{display:flex;flex-direction:column;gap:8px}.field label{font-size:12px;color:var(--muted);font-weight:700;letter-spacing:.02em}
-    input,select,textarea,button{font:inherit}
-    input,select,textarea{width:100%;background:rgba(15,23,42,.9);border:1px solid rgba(148,163,184,.18);color:var(--text);border-radius:16px;padding:13px 14px;outline:none;transition:.2s ease}
-    input:focus,select:focus,textarea:focus{border-color:rgba(96,165,250,.7);box-shadow:0 0 0 4px rgba(96,165,250,.12)}
-    textarea{min-height:100px;resize:vertical}
-    .btn-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
-    button{border:0;border-radius:16px;padding:12px 16px;cursor:pointer;font-weight:800;color:white;background:linear-gradient(135deg,var(--brand),var(--brand2));box-shadow:0 14px 34px rgba(96,165,250,.18);transition:transform .16s ease,filter .16s ease,opacity .16s ease}
-    button:hover{transform:translateY(-1px);filter:brightness(1.05)} button:disabled{opacity:.55;cursor:not-allowed;transform:none}
-    button.secondary{background:rgba(15,23,42,.82);border:1px solid rgba(148,163,184,.22);box-shadow:none}
-    button.danger{background:linear-gradient(135deg,#fb7185,#f43f5e)} button.ghost{background:rgba(15,23,42,.82);border:1px solid rgba(148,163,184,.18);box-shadow:none}
-    .layout{display:grid;grid-template-columns:290px 1fr 340px;gap:18px;margin-top:18px;align-items:start}
-    .section{padding:18px}.section h2,.auth-box h2,.auth-panel h2{margin:0 0 14px;font-size:18px;letter-spacing:-.02em}
-    .subjects{display:flex;flex-direction:column;gap:10px;max-height:74vh;overflow:auto;padding-right:2px}.scroll-area::-webkit-scrollbar{width:10px}.scroll-area::-webkit-scrollbar-thumb{background:rgba(148,163,184,.22);border-radius:999px}
-    .subject-btn{width:100%;text-align:left;border-radius:16px;padding:13px 14px;background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.14);color:var(--text);display:flex;align-items:center;justify-content:space-between;gap:10px;box-shadow:none}
-    .subject-btn.active{background:linear-gradient(135deg,rgba(96,165,250,.24),rgba(167,139,250,.22));border-color:rgba(96,165,250,.34)}
-    .pill{display:inline-flex;align-items:center;justify-content:center;min-width:34px;height:26px;padding:0 10px;border-radius:999px;font-size:12px;font-weight:900;background:rgba(96,165,250,.14);color:#dbeafe;border:1px solid rgba(96,165,250,.2)}
-    .content-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.big-title h2{margin:0;font-size:24px;letter-spacing:-.03em}.big-title p{margin:4px 0 0;color:var(--muted);font-size:13px}
-    .cards{display:grid;gap:12px}.event-card{padding:16px;background:linear-gradient(180deg,rgba(15,23,42,.72),rgba(17,24,39,.9));border:1px solid rgba(148,163,184,.16);border-radius:18px}
-    .event-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:8px}.event-title{margin:0;font-size:16px;font-weight:900;letter-spacing:-.02em}.event-meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;color:var(--muted);font-size:12px}
-    .tag{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:900}.tag.hue{background:rgba(52,211,153,.14);color:#bbf7d0;border:1px solid rgba(52,211,153,.2)}.tag.test{background:rgba(96,165,250,.14);color:#dbeafe;border:1px solid rgba(96,165,250,.2)}.tag.sa{background:rgba(251,191,36,.14);color:#fde68a;border:1px solid rgba(251,191,36,.2)}.tag.mu{background:rgba(251,113,133,.14);color:#fecdd3;border:1px solid rgba(251,113,133,.2)}.tag.info{background:rgba(167,139,250,.14);color:#e9d5ff;border:1px solid rgba(167,139,250,.2)}
-    .composer{display:grid;gap:12px}.calendar-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}.calendar-head h2{margin:0}
-    .mini-calendar{display:grid;gap:10px}.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.dow,.day{border-radius:14px;text-align:center;padding:10px 8px}.dow{color:var(--muted);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;background:rgba(15,23,42,.58);border:1px solid rgba(148,163,184,.10)}
-    .day{min-height:74px;text-align:left;background:rgba(15,23,42,.62);border:1px solid rgba(148,163,184,.12);display:flex;flex-direction:column;gap:6px;overflow:hidden}.day.empty{background:transparent;border:0}.day.today{outline:2px solid rgba(96,165,250,.5)}.day-num{font-size:12px;color:#dbeafe;font-weight:900}.dot-row{display:flex;flex-wrap:wrap;gap:5px}.dot{width:10px;height:10px;border-radius:999px;background:rgba(148,163,184,.42)}.dot.hue{background:var(--green)}.dot.test{background:var(--brand)}.dot.sa{background:var(--yellow)}.dot.mu{background:var(--red)}
-    .note{color:var(--muted);font-size:12px;line-height:1.5}.hidden{display:none !important}
-    .auth-overlay{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 28%),radial-gradient(circle at bottom right, rgba(167,139,250,.16), transparent 28%),linear-gradient(180deg, rgba(7,16,31,.98), rgba(17,24,39,.98))}
-    .auth-panel{width:min(1020px,100%);padding:22px;display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.auth-hero{padding:18px;border-radius:22px;background:linear-gradient(180deg,rgba(15,23,42,.72),rgba(17,24,39,.92));border:1px solid rgba(148,163,184,.14)}
-    .switch-row{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}.switch-btn{background:rgba(15,23,42,.82);border:1px solid rgba(148,163,184,.18);box-shadow:none}.switch-btn.active{background:linear-gradient(135deg,rgba(96,165,250,.24),rgba(167,139,250,.20));border-color:rgba(96,165,250,.34)}
-    .error-box{display:none;margin-bottom:14px;padding:12px 14px;border-radius:16px;background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.22);color:#fecdd3;line-height:1.45;white-space:pre-wrap}.error-box.show{display:block}
-    .smallmuted{color:var(--muted);font-size:13px;line-height:1.6}.bubbles{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.bubble{padding:7px 10px;border-radius:999px;background:rgba(96,165,250,.10);border:1px solid rgba(96,165,250,.16);color:#dbeafe;font-size:12px;font-weight:800}
-    .topbar{display:flex;justify-content:space-between;gap:12px;align-items:center;margin:0 0 18px;flex-wrap:wrap}.topbar .userbox{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-    .admin-list{display:grid;gap:10px}.admin-item{padding:12px;border-radius:16px;background:rgba(15,23,42,.72);border:1px solid rgba(148,163,184,.14);display:grid;gap:8px}.admin-item-head{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
-    .banner{padding:14px 16px;border-radius:18px;background:rgba(96,165,250,.10);border:1px solid rgba(96,165,250,.18);color:#dbeafe;line-height:1.55}
-    @media (max-width:1180px){.hero,.layout,.auth-panel{grid-template-columns:1fr}.subjects{max-height:none}}
-    @media (max-width:700px){.wrap{padding:14px}.hero-main,.auth-box,.section,.auth-panel,.auth-hero{padding:16px}.grid-2{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.cal-grid{gap:6px}.day{min-height:64px;padding:8px 6px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Klassenplaner 4B</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  /* Grundlayout */
+  body, html { margin:0; padding:0; font-family: Arial, sans-serif; height:100%; background:#f0f4f8; }
+  #login-container, #register-container { position: fixed; top:0; left:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:#f0f4f8; flex-direction:column; }
+  #login-container.hidden, #register-container.hidden { display:none; }
+  input { padding:10px; margin:5px; width:250px; border-radius:5px; border:1px solid #ccc; }
+  button { padding:10px 20px; margin:5px; border:none; border-radius:5px; background:#007bff; color:white; cursor:pointer; }
+  button:hover { background:#0056b3; }
+  #error-msg { color:red; margin-top:10px; }
+  #main-container { display:none; padding:20px; }
+  #logout { float:right; padding:5px 10px; background:#dc3545; margin-bottom:10px; }
+  .tabs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:10px; }
+  .tab { padding:8px 12px; background:#007bff; color:white; border-radius:5px; cursor:pointer; }
+  .tab.active { background:#0056b3; }
+  #calendar { background:white; padding:20px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+  .event { border-left:5px solid #007bff; padding:5px 10px; margin:5px 0; background:#f9f9f9; border-radius:5px; }
+  .event-type { font-weight:bold; }
+  #add-event { margin-top:10px; }
+</style>
 </head>
 <body>
-  <div id="authOverlay" class="auth-overlay">
-    <div class="panel auth-panel">
-      <div class="auth-hero">
-        <div class="eyebrow">📚 Klassenplaner · 4. Klasse Gymi · Bruck an der Mur</div>
-        <h1>Alle Termine in einer schönen Übersicht.</h1>
-        <p class="subtitle">Login und Registrierung sind getrennt. Neue Accounts werden zuerst freigegeben. Danach sieht man alle HÜs, Tests und Schularbeiten.</p>
-        <div class="bubbles">
-          <span class="bubble">Mathe</span><span class="bubble">Deutsch</span><span class="bubble">Englisch</span><span class="bubble">Geschichte</span><span class="bubble">Geographie</span><span class="bubble">Religion</span><span class="bubble">Physik</span><span class="bubble">Physik Labor</span><span class="bubble">Chemie</span><span class="bubble">Chemie Labor</span><span class="bubble">Biologie</span><span class="bubble">Grafisches Zeichnen</span><span class="bubble">Digitale Grundbildung</span><span class="bubble">Italienisch</span><span class="bubble">Sport</span>
-        </div>
-        <p class="smallmuted" style="margin-top:14px;">Ohne Backend ist das eine starke GitHub-Pages-Version. Die Daten werden im Browser gespeichert und sind pro Gerät sichtbar.</p>
-      </div>
 
-      <div class="auth-box panel" style="background:rgba(15,23,42,.64)">
-        <h2 id="authTitle">Anmelden</h2>
-        <div class="switch-row">
-          <button id="loginTab" class="switch-btn active" type="button">Login</button>
-          <button id="registerTab" class="switch-btn" type="button">Registrieren</button>
-        </div>
-        <div id="authError" class="error-box"></div>
-        <div class="grid-2">
-          <div class="field hidden" id="nameWrap"><label for="name">Name</label><input id="name" placeholder="Vor- und Nachname" /></div>
-          <div class="field"><label for="email">E-Mail</label><input id="email" type="email" placeholder="name@example.com" /></div>
-        </div>
-        <div class="grid-2" style="margin-top:12px;">
-          <div class="field"><label for="password">Passwort</label><input id="password" type="password" placeholder="Passwort" /></div>
-          <div class="field hidden" id="confirmWrap"><label for="confirmPassword">Passwort bestätigen</label><input id="confirmPassword" type="password" placeholder="Passwort erneut eingeben" /></div>
-        </div>
-        <div class="btn-row"><button id="authAction" type="button">Login</button></div>
-        <p class="note" style="margin-top:12px;">Erster Admin: Matthias.HANDL@ahsbruck.at. Du kannst ihn nach dem ersten Login freigeben.</p>
-      </div>
-    </div>
+<!-- LOGIN -->
+<div id="login-container">
+  <h2>Login</h2>
+  <input type="email" id="login-email" placeholder="E-Mail">
+  <input type="password" id="login-password" placeholder="Passwort">
+  <button id="login-btn">Login</button>
+  <p>Kein Account? <span style="color:#007bff;cursor:pointer;" id="to-register">Registrieren</span></p>
+  <div id="error-msg"></div>
+</div>
+
+<!-- REGISTER -->
+<div id="register-container" class="hidden">
+  <h2>Registrierung</h2>
+  <input type="text" id="register-name" placeholder="Name">
+  <input type="email" id="register-email" placeholder="E-Mail">
+  <input type="password" id="register-password" placeholder="Passwort">
+  <input type="password" id="register-password2" placeholder="Passwort bestätigen">
+  <button id="register-btn">Registrieren</button>
+  <p>Schon einen Account? <span style="color:#007bff;cursor:pointer;" id="to-login">Login</span></p>
+  <div id="register-error-msg" style="color:red;"></div>
+</div>
+
+<!-- MAIN -->
+<div id="main-container">
+  <button id="logout">Abmelden</button>
+  <h1>Klassenplaner 4B</h1>
+  <div class="tabs" id="subject-tabs"></div>
+  <div id="calendar"></div>
+
+  <!-- Event hinzufügen -->
+  <div id="add-event">
+    <h3>Neuen Termin hinzufügen</h3>
+    <select id="event-subject"></select>
+    <select id="event-type">
+      <option value="HÜ">HÜ</option>
+      <option value="Test">Test</option>
+      <option value="SA">SA</option>
+      <option value="MU">Mitarbeit</option>
+      <option value="Info">Info</option>
+    </select>
+    <input type="text" id="event-title" placeholder="Titel">
+    <input type="text" id="event-details" placeholder="Details">
+    <input type="date" id="event-date">
+    <button id="save-event">Speichern</button>
   </div>
+</div>
 
-  <div class="wrap">
-    <div class="topbar">
-      <div class="eyebrow">📅 Klassenplaner · sauber, modern, übersichtlich</div>
-      <div class="userbox hidden" id="topUserBox"><span class="pill" id="rolePill">student</span><button class="ghost" id="logoutBtn" type="button">Abmelden</button></div>
-    </div>
+<script>
+  // Supabase Konfiguration
+  const SUPABASE_URL = "https://db.sgppyreenfvsvznrvycd.supabase.co"; // dein Projekt-URL
+  const SUPABASE_ANON_KEY = "[@db.sgppyreenfvsvznrvycd.supabase.co:5432/postgres]"; // dein Anon-Key
+  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    <div class="hero">
-      <div class="panel hero-main">
-        <div class="eyebrow">📚 Alle HÜs, Tests und Schularbeiten auf einen Blick</div>
-        <h1>Terminplan für eure ganze Klasse.</h1>
-        <p class="subtitle">Fach-Tabs, Kalenderansicht, klare Kürzel und ein stabiles Frontend für GitHub Pages. Ohne Server geht alles im Browser, mit manueller Freigabe und Rollen.</p>
-        <div class="stats">
-          <div class="stat"><div class="label">Fächer</div><div class="value" id="subjectCount">15</div></div>
-          <div class="stat"><div class="label">Termine im Fach</div><div class="value" id="eventCount">0</div></div>
-          <div class="stat"><div class="label">Nächster Termin</div><div class="value" id="nextTerm">—</div></div>
-        </div>
-      </div>
-      <div class="panel auth-box"><h2>Status</h2><div class="banner" id="statusText">Bitte anmelden.</div></div>
-    </div>
+  let currentUser = null;
+  let currentRole = null;
+  let subjects = [];
 
-    <div id="app" class="layout hidden">
-      <div class="panel section">
-        <h2>Fächer</h2>
-        <div id="subjects" class="subjects scroll-area"></div>
-      </div>
+  // Umschalten Login/Register
+  document.getElementById("to-register").onclick = ()=>{ document.getElementById("login-container").classList.add("hidden"); document.getElementById("register-container").classList.remove("hidden"); };
+  document.getElementById("to-login").onclick = ()=>{ document.getElementById("register-container").classList.add("hidden"); document.getElementById("login-container").classList.remove("hidden"); };
 
-      <div class="panel section">
-        <div class="content-head">
-          <div class="big-title"><h2 id="currentSubject">Mathe</h2><p>Termine im aktuellen Fach mit Kürzel, Datum und Zusatzinfos.</p></div>
-          <span class="pill" id="subjectBadge">—</span>
-        </div>
+  // LOGIN
+  document.getElementById("login-btn").onclick = async () => {
+    const email = document.getElementById("login-email").value;
+    const password = document.getElementById("login-password").value;
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+    if(error){ document.getElementById("error-msg").innerText = error.message; return; }
+    // Prüfen, ob approved
+    let { data:userData } = await supabase.from("users").select("*").eq("email", email).single();
+    if(!userData.approved){ document.getElementById("error-msg").innerText = "Account noch nicht freigegeben."; return; }
+    currentUser = userData;
+    currentRole = userData.role;
+    showMain();
+  };
 
-        <div class="banner" id="roleBanner" style="margin-bottom:14px;display:none;"></div>
-        <div id="entries" class="cards"></div>
+  // REGISTER
+  document.getElementById("register-btn").onclick = async () => {
+    const name = document.getElementById("register-name").value;
+    const email = document.getElementById("register-email").value;
+    const pw1 = document.getElementById("register-password").value;
+    const pw2 = document.getElementById("register-password2").value;
+    const errorDiv = document.getElementById("register-error-msg");
+    errorDiv.innerText = "";
+    if(pw1 !== pw2){ errorDiv.innerText="Passwörter stimmen nicht überein."; return; }
+    const { data:signupData, error } = await supabase.auth.signUp({ email, password: pw1 });
+    if(error){ errorDiv.innerText = error.message; return; }
+    await supabase.from("users").insert({ name, email, role:"student", approved:false });
+    alert("Registrierung abgeschlossen. Admin muss freigeben."); 
+    document.getElementById("register-container").classList.add("hidden"); 
+    document.getElementById("login-container").classList.remove("hidden");
+  };
 
-        <div style="height:18px"></div>
-        <div id="editorBox" class="hidden">
-          <h2>Neuen Termin eintragen</h2>
-          <div class="composer">
-            <div class="grid-2">
-              <div class="field"><label for="type">Typ</label>
-                <select id="type"><option value="HÜ">HÜ</option><option value="Test">Test</option><option value="SA">SA</option><option value="MU">Mitarbeitsüberprüfung</option><option value="Info">Info</option></select>
-              </div>
-              <div class="field"><label for="date">Datum</label><input id="date" type="date" /></div>
-            </div>
-            <div class="field"><label for="title">Titel</label><input id="title" placeholder="z.B. Stoff der letzten 3 Kapitel" /></div>
-            <div class="field"><label for="details">Details</label><textarea id="details" placeholder="Seiten, Themen, Raum, Zusatzinfos..."></textarea></div>
-            <button id="saveBtn" type="button">Termin speichern</button>
-          </div>
-        </div>
-      </div>
+  // Logout
+  document.getElementById("logout").onclick = async ()=>{
+    await supabase.auth.signOut();
+    currentUser = null; currentRole = null;
+    document.getElementById("main-container").style.display="none";
+    document.getElementById("login-container").classList.remove("hidden");
+  };
 
-      <div class="panel section">
-        <div class="calendar-head"><h2 style="margin:0;">Kalender</h2><span class="tag info" id="monthLabel">—</span></div>
-        <div class="mini-calendar"><div class="cal-grid" id="dow"></div><div class="cal-grid" id="calendar"></div></div>
+  async function showMain(){
+    document.getElementById("login-container").classList.add("hidden");
+    document.getElementById("register-container").classList.add("hidden");
+    document.getElementById("main-container").style.display="block";
+    await loadSubjects();
+    await loadEvents();
+  }
 
-        <div id="adminBox" class="hidden" style="margin-top:18px;">
-          <h2>Freigaben</h2>
-          <div class="admin-list" id="pendingList"></div>
-        </div>
-      </div>
-    </div>
-  </div>
+  async function loadSubjects(){
+    const { data, error } = await supabase.from("subjects").select("*");
+    subjects = data;
+    const tabsDiv = document.getElementById("subject-tabs");
+    const selectSubject = document.getElementById("event-subject");
+    tabsDiv.innerHTML = ""; selectSubject.innerHTML="";
+    subjects.forEach((sub,j)=>{
+      const tab = document.createElement("div");
+      tab.className="tab"; tab.innerText=sub.label; tab.onclick=()=>showEvents(sub.id);
+      tabsDiv.appendChild(tab);
+      const option = document.createElement("option"); option.value=sub.id; option.innerText=sub.label;
+      selectSubject.appendChild(option);
+    });
+  }
 
-  <script>
-    const STORAGE_KEY = "klassenplaner_4b_v1";
+  let currentSubject = null;
+  async function showEvents(subId){
+    currentSubject = subId;
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelectorAll(".tab").forEach(t=>{ if(t.innerText === subjects.find(s=>s.id===subId).label) t.classList.add("active"); });
+    await loadEvents();
+  }
 
-    const subjects = [
-      { id: "mathe", label: "Mathe" },
-      { id: "deutsch", label: "Deutsch" },
-      { id: "englisch", label: "Englisch" },
-      { id: "geschichte", label: "Geschichte" },
-      { id: "geographie", label: "Geographie" },
-      { id: "religion", label: "Religion" },
-      { id: "physik", label: "Physik" },
-      { id: "physik-labor", label: "Physik Labor" },
-      { id: "chemie", label: "Chemie" },
-      { id: "chemie-labor", label: "Chemie Labor" },
-      { id: "biologie", label: "Biologie" },
-      { id: "grafisches-zeichnen", label: "Grafisches Zeichnen" },
-      { id: "digitale-grundbildung", label: "Digitale Grundbildung" },
-      { id: "italienisch", label: "Italienisch" },
-      { id: "sport", label: "Sport" }
-    ];
+  async function loadEvents(){
+    if(!currentSubject) return;
+    const { data, error } = await supabase.from("events").select("*").eq("subject_id", currentSubject).order("date",{ascending:true});
+    const cal = document.getElementById("calendar");
+    cal.innerHTML="";
+    data.forEach(e=>{
+      const div = document.createElement("div");
+      div.className="event";
+      div.innerHTML = `<span class="event-type">[${e.type}]</span> ${e.title} <br> ${e.details} <br> ${e.date}`;
+      cal.appendChild(div);
+    });
+  }
 
-    const typeInfo = {
-      "HÜ": { className: "hue", label: "HÜ" },
-      "Test": { className: "test", label: "Test" },
-      "SA": { className: "sa", label: "SA" },
-      "MU": { className: "mu", label: "MU" },
-      "Info": { className: "info", label: "Info" }
-    };
+  // Event speichern
+  document.getElementById("save-event").onclick = async ()=>{
+    if(!currentUser || !currentSubject) return alert("Wähle ein Fach!");
+    const type = document.getElementById("event-type").value;
+    const title = document.getElementById("event-title").value;
+    const details = document.getElementById("event-details").value;
+    const date = document.getElementById("event-date").value;
+    await supabase.from("events").insert({
+      subject_id: currentSubject,
+      type, title, details, date,
+      created_by: currentUser.id
+    });
+    document.getElementById("event-title").value="";
+    document.getElementById("event-details").value="";
+    document.getElementById("event-date").value="";
+    loadEvents();
+  };
+</script>
 
-    const $ = (id) => document.getElementById(id);
-    const state = {
-      mode: "login",
-      userEmail: null,
-      currentSubject: subjects[0].id,
-      data: loadData()
-    };
-
-    function loadData() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        try { return JSON.parse(raw); } catch {}
-      }
-      return seedData();
-    }
-
-    function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.data));
-    }
-
-    function seedData() {
-      return {
-        users: [
-          { name: "Matthias Handl", email: "Matthias.HANDL@ahsbruck.at", password: "Admin123!", approved: true, role: "admin" },
-          { name: "Klassensprecherin", email: "sprecherin@ahsbruck.at", password: "Speaker123!", approved: true, role: "speaker" },
-          { name: "Stellvertreter", email: "stellvertreter@ahsbruck.at", password: "Deputy123!", approved: true, role: "deputy" }
-        ],
-        subjects: subjects.reduce((acc, s) => {
-          acc[s.id] = [];
-          return acc;
-        }, {})
-      };
-    }
-
-    function ensureDataShape() {
-      if (!state.data.users) state.data.users = [];
-      if (!state.data.subjects) state.data.subjects = {};
-      for (const s of subjects) if (!Array.isArray(state.data.subjects[s.id])) state.data.subjects[s.id] = [];
-      saveData();
-    }
-
-    function escapeHtml(str = "") {
-      return String(str)
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;")
-        .replaceAll("'", "&#39;");
-    }
-
-    function showError(message) {
-      const box = $("authError");
-      box.textContent = message;
-      box.classList.add("show");
-    }
-
-    function clearError() {
-      $("authError").textContent = "";
-      $("authError").classList.remove("show");
-    }
-
-    function setMode(nextMode) {
-      state.mode = nextMode;
-      clearError();
-      const isLogin = nextMode === "login";
-      $("authTitle").textContent = isLogin ? "Anmelden" : "Registrieren";
-      $("authAction").textContent = isLogin ? "Login" : "Registrieren";
-      $("loginTab").classList.toggle("active", isLogin);
-      $("registerTab").classList.toggle("active", !isLogin);
-      $("confirmWrap").classList.toggle("hidden", isLogin);
-      $("nameWrap").classList.toggle("hidden", isLogin);
-    }
-
-    function currentUser() {
-      return state.data.users.find(u => u.email.toLowerCase() === String(state.userEmail || "").toLowerCase()) || null;
-    }
-
-    function isAdmin(user = currentUser()) { return !!user && user.role === "admin"; }
-    function isWriter(user = currentUser()) { return !!user && user.approved && (user.role === "admin" || user.role === "speaker" || user.role === "deputy"); }
-
-    function formatDate(iso) {
-      if (!iso) return "Ohne Datum";
-      const d = new Date(`${iso}T00:00:00`);
-      return d.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
-    }
-
-    function subjectName(id) { return subjects.find(s => s.id === id)?.label || id; }
-
-    function renderDow() {
-      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-      $("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
-    }
-
-    function renderSubjects() {
-      const container = $("subjects");
-      container.innerHTML = "";
-      subjects.forEach(sub => {
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "subject-btn" + (sub.id === state.currentSubject ? " active" : "");
-        btn.innerHTML = `<span>${escapeHtml(sub.label)}</span><span class="pill">${sub.id === state.currentSubject ? "✓" : ""}</span>`;
-        btn.onclick = () => {
-          state.currentSubject = sub.id;
-          $("currentSubject").textContent = sub.label;
-          renderSubjects();
-          renderEntries();
-          renderCalendar();
-        };
-        container.appendChild(btn);
-      });
-      $("subjectCount").textContent = String(subjects.length);
-    }
-
-    function sortedEntries(subjectId) {
-      return [...(state.data.subjects[subjectId] || [])].sort((a, b) => {
-        if (!a.date && !b.date) return 0;
-        if (!a.date) return 1;
-        if (!b.date) return -1;
-        return a.date.localeCompare(b.date);
-      });
-    }
-
-    function renderEntries() {
-      const list = $("entries");
-      const entries = sortedEntries(state.currentSubject);
-      list.innerHTML = "";
-
-      if (!entries.length) {
-        list.innerHTML = `<div class="event-card"><p class="note" style="margin:0;">Noch keine Termine in diesem Fach.</p></div>`;
-        $("eventCount").textContent = "0";
-        $("nextTerm").textContent = "—";
-        $("subjectBadge").textContent = "—";
-        return;
-      }
-
-      $("eventCount").textContent = String(entries.length);
-      $("nextTerm").textContent = `${entries[0].type} · ${formatDate(entries[0].date)}`;
-      $("subjectBadge").textContent = entries[0].type || "Info";
-
-      for (const e of entries) {
-        const t = typeInfo[e.type] || typeInfo.Info;
-        const card = document.createElement("div");
-        card.className = "event-card";
-        card.innerHTML = `
-          <div class="event-top">
-            <div>
-              <p class="event-title">${escapeHtml(e.title || "Ohne Titel")}</p>
-              <div class="event-meta">
-                <span class="tag ${t.className}">${t.label}</span>
-                <span>📅 ${formatDate(e.date)}</span>
-                ${e.by ? `<span>👤 ${escapeHtml(e.by)}</span>` : ""}
-              </div>
-            </div>
-            <span class="pill">${escapeHtml(subjectName(state.currentSubject))}</span>
-          </div>
-          ${e.details ? `<div class="note">${escapeHtml(e.details)}</div>` : ""}
-        `;
-        list.appendChild(card);
-      }
-    }
-
-    function renderCalendar() {
-      const now = new Date();
-      const year = now.getFullYear();
-      const month = now.getMonth();
-      const first = new Date(year, month, 1);
-      const last = new Date(year, month + 1, 0);
-      const monthText = first.toLocaleDateString("de-AT", { month: "long", year: "numeric" });
-      $("monthLabel").textContent = monthText.charAt(0).toUpperCase() + monthText.slice(1);
-
-      const firstDayIndex = (first.getDay() + 6) % 7;
-      const totalDays = last.getDate();
-      const currentEntries = state.data.subjects[state.currentSubject] || [];
-      const cells = [];
-      for (let i = 0; i < firstDayIndex; i++) cells.push(`<div class="day empty"></div>`);
-      for (let day = 1; day <= totalDays; day++) {
-        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
-        const dayEntries = currentEntries.filter(e => e.date === iso);
-        const dots = dayEntries.slice(0, 4).map(e => {
-          const t = typeInfo[e.type] || typeInfo.Info;
-          return `<span class="dot ${t.className}" title="${escapeHtml(e.type || "Info")}"></span>`;
-        }).join("");
-        const isToday = day === now.getDate();
-        cells.push(`
-          <div class="day ${isToday ? "today" : ""}">
-            <div class="day-num">${day}</div>
-            <div class="dot-row">${dots}</div>
-          </div>
-        `);
-      }
-      $("calendar").innerHTML = cells.join("");
-    }
-
-    function renderAdmin() {
-      const user = currentUser();
-      const adminBox = $("adminBox");
-      const pendingList = $("pendingList");
-      if (!isAdmin(user)) {
-        adminBox.classList.add("hidden");
-        return;
-      }
-      adminBox.classList.remove("hidden");
-      const pending = state.data.users.filter(u => !u.approved);
-      pendingList.innerHTML = "";
-      if (!pending.length) {
-        pendingList.innerHTML = `<div class="admin-item"><div class="note" style="margin:0;">Keine offenen Freigaben.</div></div>`;
-        return;
-      }
-      for (const u of pending) {
-        const item = document.createElement("div");
-        item.className = "admin-item";
-        item.innerHTML = `
-          <div class="admin-item-head">
-            <div>
-              <div style="font-weight:900;">${escapeHtml(u.name || "Ohne Name")}</div>
-              <div class="note" style="margin-top:4px;">${escapeHtml(u.email || "")}</div>
-            </div>
-            <span class="tag info">Wartet</span>
-          </div>
-          <div class="btn-row" style="margin-top:0;">
-            <button type="button" data-approve="${escapeHtml(u.email)}">Freigeben</button>
-            <button type="button" class="secondary" data-role-speaker="${escapeHtml(u.email)}">Klassensprecher</button>
-            <button type="button" class="secondary" data-role-deputy="${escapeHtml(u.email)}">Stellvertreter</button>
-          </div>
-        `;
-        pendingList.appendChild(item);
-      }
-
-      pendingList.querySelectorAll("[data-approve]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const email = btn.getAttribute("data-approve");
-          const u = state.data.users.find(x => x.email === email);
-          if (!u) return;
-          u.approved = true;
-          if (u.role === "student") u.role = "student";
-          saveData();
-          renderAll();
-        });
-      });
-      pendingList.querySelectorAll("[data-role-speaker]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const email = btn.getAttribute("data-role-speaker");
-          const u = state.data.users.find(x => x.email === email);
-          if (!u) return;
-          u.approved = true;
-          u.role = "speaker";
-          saveData();
-          renderAll();
-        });
-      });
-      pendingList.querySelectorAll("[data-role-deputy]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const email = btn.getAttribute("data-role-deputy");
-          const u = state.data.users.find(x => x.email === email);
-          if (!u) return;
-          u.approved = true;
-          u.role = "deputy";
-          saveData();
-          renderAll();
-        });
-      });
-    }
-
-    function renderUserState() {
-      const user = currentUser();
-      const app = $("app");
-      const authOverlay = $("authOverlay");
-      const topUserBox = $("topUserBox");
-      const rolePill = $("rolePill");
-      const statusText = $("statusText");
-      const editorBox = $("editorBox");
-      const roleBanner = $("roleBanner");
-
-      if (!state.userEmail || !user) {
-        statusText.textContent = "Bitte anmelden.";
-        app.classList.add("hidden");
-        topUserBox.classList.add("hidden");
-        authOverlay.classList.remove("hidden");
-        return;
-      }
-
-      topUserBox.classList.remove("hidden");
-      rolePill.textContent = user.role || "student";
-
-      if (!user.approved) {
-        statusText.textContent = "Dein Account wartet noch auf Freigabe.";
-        app.classList.add("hidden");
-        authOverlay.classList.remove("hidden");
-        showError("Dein Account wurde noch nicht freigeschaltet.");
-        return;
-      }
-
-      authOverlay.classList.add("hidden");
-      app.classList.remove("hidden");
-      statusText.textContent = `Eingeloggt als ${user.name || user.email} · Rolle: ${user.role}`;
-      editorBox.classList.toggle("hidden", !isWriter(user));
-      roleBanner.style.display = "block";
-      if (isAdmin(user)) roleBanner.textContent = "Admin: volle Rechte, Freigaben und Rollenverwaltung aktiv.";
-      else if (user.role === "speaker") roleBanner.textContent = "Klassensprecher: Termine eintragen und verwalten.";
-      else if (user.role === "deputy") roleBanner.textContent = "Stellvertreter: Termine eintragen und verwalten.";
-      else roleBanner.textContent = "Schüler: Termine ansehen.";
-      renderAdmin();
-    }
-
-    function renderAll() {
-      ensureDataShape();
-      renderSubjects();
-      renderEntries();
-      renderCalendar();
-      renderAdmin();
-      renderUserState();
-      $("subjectCount").textContent = String(subjects.length);
-    }
-
-    function firebaseStyleError(code) {
-      if (code === "missing-fields") return "Bitte alle Felder ausfüllen.";
-      if (code === "password-mismatch") return "Die beiden Passwörter stimmen nicht überein.";
-      if (code === "password-too-short") return "Das Passwort muss mindestens 6 Zeichen haben.";
-      if (code === "user-exists") return "Diese E-Mail ist bereits registriert.";
-      if (code === "user-not-found") return "Kein Account mit dieser E-Mail gefunden.";
-      if (code === "wrong-password") return "E-Mail oder Passwort ist falsch.";
-      return code || "Unbekannter Fehler.";
-    }
-
-    function registerUser() {
-      clearError();
-      const name = $("name").value.trim();
-      const email = $("email").value.trim().toLowerCase();
-      const password = $("password").value;
-      const confirmPassword = $("confirmPassword").value;
-
-      if (!name || !email || !password || !confirmPassword) return showError(firebaseStyleError("missing-fields"));
-      if (password !== confirmPassword) return showError(firebaseStyleError("password-mismatch"));
-      if (password.length < 6) return showError(firebaseStyleError("password-too-short"));
-      if (state.data.users.some(u => u.email.toLowerCase() === email)) return showError(firebaseStyleError("user-exists"));
-
-      const isFirstAdmin = email === "matthias.handl@ahsbruck.at";
-      state.data.users.push({
-        name,
-        email,
-        password,
-        approved: isFirstAdmin,
-        role: isFirstAdmin ? "admin" : "student"
-      });
-      saveData();
-      showError(isFirstAdmin ? "Admin erstellt und direkt freigeschaltet." : "Registrierung erfolgreich. Dein Account wartet jetzt auf Freigabe.");
-      setMode("login");
-      $("name").value = "";
-      $("email").value = email;
-      $("password").value = "";
-      $("confirmPassword").value = "";
-    }
-
-    function loginUser() {
-      clearError();
-      const email = $("email").value.trim().toLowerCase();
-      const password = $("password").value;
-      if (!email || !password) return showError(firebaseStyleError("missing-fields"));
-      const user = state.data.users.find(u => u.email.toLowerCase() === email);
-      if (!user) return showError(firebaseStyleError("user-not-found"));
-      if (user.password !== password) return showError(firebaseStyleError("wrong-password"));
-      if (!user.approved) {
-        showError("Dein Account wurde noch nicht freigeschaltet.");
-        return;
-      }
-      state.userEmail = user.email;
-      clearError();
-      renderAll();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function logout() {
-      state.userEmail = null;
-      renderAll();
-      setMode("login");
-      $("password").value = "";
-      $("confirmPassword").value = "";
-    }
-
-    function addEntry() {
-      clearError();
-      const user = currentUser();
-      if (!isWriter(user)) return showError("Du hast keine Rechte zum Eintragen.");
-      const type = $("type").value;
-      const date = $("date").value;
-      const title = $("title").value.trim();
-      const details = $("details").value.trim();
-      if (!date || !title) return showError("Bitte mindestens Datum und Titel eingeben.");
-
-      state.data.subjects[state.currentSubject].push({
-        type,
-        date,
-        title,
-        details,
-        by: user.name || user.email,
-        createdAt: new Date().toISOString()
-      });
-      saveData();
-      $("title").value = "";
-      $("details").value = "";
-      $("type").value = "HÜ";
-      renderAll();
-    }
-
-    function hookEvents() {
-      $("loginTab").addEventListener("click", () => setMode("login"));
-      $("registerTab").addEventListener("click", () => setMode("register"));
-      $("authAction").addEventListener("click", () => state.mode === "login" ? loginUser() : registerUser());
-      $("logoutBtn").addEventListener("click", logout);
-      $("saveBtn").addEventListener("click", addEntry);
-    }
-
-    // Init
-    ensureDataShape();
-    hookEvents();
-    setMode("login");
-    $("currentSubject").textContent = subjectName(state.currentSubject);
-    $("date").value = new Date().toISOString().slice(0, 10);
-    renderDow();
-    renderAll();
-    $("subjectCount").textContent = String(subjects.length);
-    $("nextTerm").textContent = "—";
-  </script>
 </body>
 </html>
