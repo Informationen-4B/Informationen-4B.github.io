@@ -6,9 +6,10 @@
   <title>Klassenplaner</title>
   <style>
     :root {
-      --bg: #0b1220;
+      --bg0: #07111f;
+      --bg1: #0b1220;
       --bg2: #111827;
-      --panel: rgba(17, 24, 39, 0.76);
+      --panel: rgba(17, 24, 39, 0.78);
       --panel2: rgba(15, 23, 42, 0.88);
       --line: rgba(148, 163, 184, 0.16);
       --text: #e5e7eb;
@@ -29,8 +30,8 @@
       color: var(--text);
       background:
         radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 30%),
-        radial-gradient(circle at top right, rgba(167,139,250,.18), transparent 28%),
-        linear-gradient(180deg, #07101f 0%, #0b1220 45%, #111827 100%);
+        radial-gradient(circle at top right, rgba(167,139,250,.16), transparent 26%),
+        linear-gradient(180deg, var(--bg0) 0%, var(--bg1) 42%, var(--bg2) 100%);
       min-height: 100vh;
     }
 
@@ -115,18 +116,15 @@
       background: rgba(15, 23, 42, 0.56);
       border: 1px solid var(--line);
     }
+
     .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
     .stat .value { font-size: 20px; font-weight: 900; letter-spacing: -0.03em; }
-
-    .auth-box { padding: 22px; }
-    .auth-box h2, .section h2, .auth-panel h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -0.02em; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .field { display: flex; flex-direction: column; gap: 8px; }
     .field label { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .02em; }
 
     input, select, textarea, button { font: inherit; }
-
     input, select, textarea {
       width: 100%;
       background: rgba(15, 23, 42, 0.9);
@@ -153,12 +151,21 @@
       color: white;
       background: linear-gradient(135deg, var(--brand), var(--brand2));
       box-shadow: 0 14px 34px rgba(96,165,250,.18);
-      transition: transform .16s ease, filter .16s ease;
+      transition: transform .16s ease, filter .16s ease, opacity .16s ease;
     }
     button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    button:disabled { opacity: .55; cursor: not-allowed; transform: none; }
     button.secondary {
       background: rgba(15,23,42,.82);
       border: 1px solid rgba(148,163,184,.22);
+      box-shadow: none;
+    }
+    button.danger {
+      background: linear-gradient(135deg, #fb7185, #f43f5e);
+    }
+    button.ghost {
+      background: rgba(15,23,42,.82);
+      border: 1px solid rgba(148,163,184,.18);
       box-shadow: none;
     }
 
@@ -169,10 +176,8 @@
       margin-top: 18px;
       align-items: start;
     }
-
     .section { padding: 18px; }
-    .scroll-area::-webkit-scrollbar { width: 10px; }
-    .scroll-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,.22); border-radius: 999px; }
+    .section h2, .auth-box h2, .auth-panel h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -.02em; }
 
     .subjects {
       display: flex;
@@ -182,6 +187,8 @@
       overflow: auto;
       padding-right: 2px;
     }
+    .scroll-area::-webkit-scrollbar { width: 10px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,.22); border-radius: 999px; }
 
     .subject-btn {
       width: 100%;
@@ -201,7 +208,6 @@
       background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.22));
       border-color: rgba(96,165,250,.34);
     }
-
     .pill {
       display: inline-flex;
       align-items: center;
@@ -284,7 +290,6 @@
     .note { color: var(--muted); font-size: 12px; line-height: 1.5; }
     .hidden { display: none !important; }
 
-    /* Vollbild Auth */
     .auth-overlay {
       position: fixed;
       inset: 0;
@@ -297,15 +302,13 @@
         radial-gradient(circle at bottom right, rgba(167,139,250,.16), transparent 28%),
         linear-gradient(180deg, rgba(7,16,31,.98), rgba(17,24,39,.98));
     }
-
     .auth-panel {
-      width: min(980px, 100%);
+      width: min(1020px, 100%);
       padding: 22px;
       display: grid;
-      grid-template-columns: 1.2fr .9fr;
+      grid-template-columns: 1.15fr .85fr;
       gap: 18px;
     }
-
     .auth-hero {
       padding: 18px;
       border-radius: 22px;
@@ -319,16 +322,8 @@
       margin-bottom: 16px;
       flex-wrap: wrap;
     }
-
-    .switch-btn {
-      background: rgba(15,23,42,.82);
-      border: 1px solid rgba(148,163,184,.18);
-      box-shadow: none;
-    }
-    .switch-btn.active {
-      background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.20));
-      border-color: rgba(96,165,250,.34);
-    }
+    .switch-btn { background: rgba(15,23,42,.82); border: 1px solid rgba(148,163,184,.18); box-shadow: none; }
+    .switch-btn.active { background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.20)); border-color: rgba(96,165,250,.34); }
 
     .error-box {
       display: none;
@@ -355,6 +350,41 @@
       font-weight: 800;
     }
 
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin: 0 0 18px;
+      flex-wrap: wrap;
+    }
+    .topbar .userbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-list {
+      display: grid;
+      gap: 10px;
+    }
+    .admin-item {
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148,163,184,.14);
+      display: grid;
+      gap: 8px;
+    }
+    .admin-item-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
     @media (max-width: 1180px) {
       .hero, .layout, .auth-panel { grid-template-columns: 1fr; }
       .subjects { max-height: none; }
@@ -370,15 +400,13 @@
   </style>
 </head>
 <body>
-  <!-- Vollbild Login/Registrierung -->
   <div id="authOverlay" class="auth-overlay">
     <div class="panel auth-panel">
       <div class="auth-hero">
         <div class="eyebrow">📚 Klassenplaner · 4. Klasse Gymi · Bruck an der Mur</div>
         <h1>Alle Termine in einer schönen Übersicht.</h1>
         <p class="subtitle">
-          Login und Registrierung sind getrennt. Neue Accounts werden mit Passwort-Bestätigung erstellt.
-          Fehler wie falsche E-Mail oder falsches Passwort werden direkt angezeigt.
+          Login und Registrierung sind getrennt. Neue Accounts werden zuerst freigegeben. Danach sieht man alle HÜs, Tests und Schularbeiten.
         </p>
         <div class="bubbles">
           <span class="bubble">Mathe</span>
@@ -398,7 +426,7 @@
           <span class="bubble">Sport</span>
         </div>
         <p class="smallmuted" style="margin-top:14px;">
-          Erst wenn du dich anmeldest, siehst du die Termine. Später bauen wir noch die Admin-Freigabe für Schüler ein.
+          Nach der Freigabe können Schüler die Termine sehen. Klassensprecher und Stellvertreter bekommen später eigene Rechte.
         </p>
       </div>
 
@@ -408,11 +436,10 @@
           <button id="loginTab" class="switch-btn active" type="button">Login</button>
           <button id="registerTab" class="switch-btn" type="button">Registrieren</button>
         </div>
-
         <div id="authError" class="error-box"></div>
 
         <div class="grid-2">
-          <div class="field">
+          <div class="field hidden" id="nameWrap">
             <label for="name">Name</label>
             <input id="name" placeholder="Vor- und Nachname" />
           </div>
@@ -421,12 +448,13 @@
             <input id="email" type="email" placeholder="name@example.com" />
           </div>
         </div>
+
         <div class="grid-2" style="margin-top:12px;">
           <div class="field">
             <label for="password">Passwort</label>
             <input id="password" type="password" placeholder="Passwort" />
           </div>
-          <div class="field" id="confirmWrap" style="display:none;">
+          <div class="field hidden" id="confirmWrap">
             <label for="confirmPassword">Passwort bestätigen</label>
             <input id="confirmPassword" type="password" placeholder="Passwort erneut eingeben" />
           </div>
@@ -436,19 +464,27 @@
           <button id="authAction" type="button">Login</button>
         </div>
         <p class="note" style="margin-top:12px;">
-          Tipp: Für Firebase muss Email/Passwort in der Authentication aktiviert sein.
+          Für Firebase muss Email/Passwort in Authentication aktiviert sein.
         </p>
       </div>
     </div>
   </div>
 
   <div class="wrap">
+    <div class="topbar">
+      <div class="eyebrow">📅 Klassenplaner · sauber, modern, übersichtlich</div>
+      <div class="userbox hidden" id="topUserBox">
+        <span class="pill" id="rolePill">student</span>
+        <button class="ghost" id="logoutBtn" type="button">Abmelden</button>
+      </div>
+    </div>
+
     <div class="hero">
       <div class="panel hero-main">
-        <div class="eyebrow">📅 Klassenplaner · sauber, modern, übersichtlich</div>
-        <h1>Alle HÜs, Tests und Schularbeiten auf einen Blick.</h1>
+        <div class="eyebrow">📚 Alle HÜs, Tests und Schularbeiten auf einen Blick</div>
+        <h1>Terminplan für eure ganze Klasse.</h1>
         <p class="subtitle">
-          Fach-Tabs, Kalenderansicht, farbige Kürzel und eine klare Oberfläche für eure Klasse. Dazu ein Login-System mit Firebase.
+          Fach-Tabs, Kalenderansicht, klare Kürzel und ein stabiles Firebase-Setup. Nach Freigabe sehen alle dieselben Termine.
         </p>
         <div class="stats">
           <div class="stat"><div class="label">Fächer</div><div class="value" id="subjectCount">15</div></div>
@@ -458,10 +494,8 @@
       </div>
 
       <div class="panel auth-box">
-        <h2>Info</h2>
-        <p class="note" style="margin:0;">
-          Neue Benutzer werden zuerst registriert und können später von dir freigeschaltet werden. Dieser Bereich ist nur der Startbildschirm im Design der Seite.
-        </p>
+        <h2>Aktueller Status</h2>
+        <p class="note" id="statusText" style="margin:0;">Bitte anmelden.</p>
       </div>
     </div>
 
@@ -473,45 +507,45 @@
 
       <div class="panel section">
         <div class="content-head">
-          <button onclick="logout()" style="margin-bottom:10px;">Abmelden</button>
           <div class="big-title">
             <h2 id="currentSubject">Mathe</h2>
             <p>Termine im aktuellen Fach mit Kürzel, Datum und Zusatzinfos.</p>
           </div>
-          <span class="pill" id="subjectBadge">HÜ</span>
+          <span class="pill" id="subjectBadge">—</span>
         </div>
 
         <div id="entries" class="cards"></div>
 
         <div style="height:18px"></div>
-
-        <h2>Neuen Termin eintragen</h2>
-        <div class="composer">
-          <div class="grid-2">
-            <div class="field">
-              <label for="type">Typ</label>
-              <select id="type">
-                <option value="HÜ">HÜ</option>
-                <option value="Test">Test</option>
-                <option value="SA">SA</option>
-                <option value="MU">Mitarbeitsüberprüfung</option>
-                <option value="Info">Info</option>
-              </select>
+        <div id="editorBox" class="hidden">
+          <h2>Neuen Termin eintragen</h2>
+          <div class="composer">
+            <div class="grid-2">
+              <div class="field">
+                <label for="type">Typ</label>
+                <select id="type">
+                  <option value="HÜ">HÜ</option>
+                  <option value="Test">Test</option>
+                  <option value="SA">SA</option>
+                  <option value="MU">Mitarbeitsüberprüfung</option>
+                  <option value="Info">Info</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="date">Datum</label>
+                <input id="date" type="date" />
+              </div>
             </div>
             <div class="field">
-              <label for="date">Datum</label>
-              <input id="date" type="date" />
+              <label for="title">Titel</label>
+              <input id="title" placeholder="z.B. Stoff der letzten 3 Kapitel" />
             </div>
+            <div class="field">
+              <label for="details">Details</label>
+              <textarea id="details" placeholder="Seiten, Themen, Raum, Zusatzinfos..."></textarea>
+            </div>
+            <button id="saveBtn" type="button">Termin speichern</button>
           </div>
-          <div class="field">
-            <label for="title">Titel</label>
-            <input id="title" placeholder="z.B. Stoff der letzten 3 Kapitel" />
-          </div>
-          <div class="field">
-            <label for="details">Details</label>
-            <textarea id="details" placeholder="z.B. Seiten, Themen, wer dabei ist, Raum, Zusatzinfos..."></textarea>
-          </div>
-          <button id="saveBtn" type="button">Termin speichern</button>
         </div>
       </div>
 
@@ -524,16 +558,19 @@
           <div class="cal-grid" id="dow"></div>
           <div class="cal-grid" id="calendar"></div>
         </div>
-        <div style="height:14px"></div>
-        <p class="note">Farbpunkte zeigen Termine im aktuellen Monat.</p>
+
+        <div id="adminBox" class="hidden" style="margin-top:18px;">
+          <h2>Freigaben</h2>
+          <div class="admin-list" id="pendingList"></div>
+        </div>
       </div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc, getDocs, collection, addDoc, query, orderBy, serverTimestamp, updateDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
@@ -567,11 +604,11 @@
     ];
 
     const typeInfo = {
-      HÜ: { className: "hue", label: "HÜ" },
-      Test: { className: "test", label: "Test" },
-      SA: { className: "sa", label: "SA" },
-      MU: { className: "mu", label: "MU" },
-      Info: { className: "info", label: "Info" }
+      "HÜ": { className: "hue", label: "HÜ" },
+      "Test": { className: "test", label: "Test" },
+      "SA": { className: "sa", label: "SA" },
+      "MU": { className: "mu", label: "MU" },
+      "Info": { className: "info", label: "Info" }
     };
 
     const $ = (id) => document.getElementById(id);
@@ -582,14 +619,23 @@
     const loginTab = $("loginTab");
     const registerTab = $("registerTab");
     const confirmWrap = $("confirmWrap");
+    const nameWrap = $("nameWrap");
+    const statusText = $("statusText");
     const appArea = $("app");
+    const editorBox = $("editorBox");
+    const adminBox = $("adminBox");
+    const pendingList = $("pendingList");
+    const topUserBox = $("topUserBox");
+    const rolePill = $("rolePill");
 
     let mode = "login";
     let user = null;
+    let userDoc = null;
     let currentSubject = subjects[0];
     let entriesCache = [];
+    let pendingUsersCache = [];
 
-    const escapeHtml = (str = "") => str
+    const escapeHtml = (str = "") => String(str)
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;")
@@ -614,21 +660,46 @@
       authAction.textContent = isLogin ? "Login" : "Registrieren";
       loginTab.classList.toggle("active", isLogin);
       registerTab.classList.toggle("active", !isLogin);
-      confirmWrap.style.display = isLogin ? "none" : "flex";
-      $("name").parentElement.style.display = isLogin ? "none" : "flex";
+      confirmWrap.classList.toggle("hidden", isLogin);
+      nameWrap.classList.toggle("hidden", isLogin);
     }
 
     loginTab.addEventListener("click", () => setMode("login"));
     registerTab.addEventListener("click", () => setMode("register"));
+    $("logoutBtn").addEventListener("click", logout);
 
-    function isoToDisplay(iso) {
+    function firebaseErrorToMessage(err) {
+      const code = err?.code || "";
+      if (code.includes("auth/invalid-email")) return "Die E-Mail-Adresse ist ungültig.";
+      if (code.includes("auth/email-already-in-use")) return "Diese E-Mail ist bereits registriert.";
+      if (code.includes("auth/weak-password")) return "Das Passwort ist zu schwach (mindestens 6 Zeichen).";
+      if (code.includes("auth/invalid-credential") || code.includes("auth/wrong-password") || code.includes("auth/invalid-login-credentials")) return "E-Mail oder Passwort ist falsch.";
+      if (code.includes("auth/user-not-found")) return "Kein Account mit dieser E-Mail gefunden.";
+      if (code.includes("auth/network-request-failed")) return "Netzwerkfehler. Bitte Internet prüfen.";
+      return err?.message ? `Fehler: ${err.message}` : "Unbekannter Fehler.";
+    }
+
+    function formatDate(iso) {
       if (!iso) return "Ohne Datum";
-      const d = new Date(iso + "T00:00:00");
+      const d = new Date(`${iso}T00:00:00`);
       return d.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
     }
 
-    function getSubjectDoc(subjId) {
+    function subjectDoc(subjId) {
       return collection(db, "subjects", subjId, "entries");
+    }
+
+    function isAdmin() {
+      return userDoc?.role === "admin";
+    }
+
+    function isWriter() {
+      return isAdmin() || userDoc?.role === "speaker" || userDoc?.role === "deputy";
+    }
+
+    function renderDow() {
+      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+      $("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
     }
 
     function sortEntries(a, b) {
@@ -638,18 +709,13 @@
       return a.date.localeCompare(b.date);
     }
 
-    function renderDow() {
-      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-      $("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
-    }
-
     function renderSubjects() {
       const container = $("subjects");
       container.innerHTML = "";
       subjects.forEach(sub => {
         const btn = document.createElement("button");
-        btn.className = "subject-btn" + (sub.id === currentSubject.id ? " active" : "");
         btn.type = "button";
+        btn.className = "subject-btn" + (sub.id === currentSubject.id ? " active" : "");
         btn.innerHTML = `<span>${escapeHtml(sub.label)}</span><span class="pill">${sub.id === currentSubject.id ? "✓" : ""}</span>`;
         btn.onclick = async () => {
           currentSubject = sub;
@@ -659,7 +725,7 @@
         };
         container.appendChild(btn);
       });
-      $("subjectCount").textContent = subjects.length;
+      $("subjectCount").textContent = String(subjects.length);
     }
 
     function renderEntries() {
@@ -676,7 +742,7 @@
 
       const sorted = [...entriesCache].sort(sortEntries);
       $("eventCount").textContent = String(sorted.length);
-      $("nextTerm").textContent = `${sorted[0].type} · ${isoToDisplay(sorted[0].date)}`;
+      $("nextTerm").textContent = `${sorted[0].type} · ${formatDate(sorted[0].date)}`;
       $("subjectBadge").textContent = sorted[0].type || "Info";
 
       sorted.forEach(e => {
@@ -689,7 +755,7 @@
               <p class="event-title">${escapeHtml(e.title || "Ohne Titel")}</p>
               <div class="event-meta">
                 <span class="tag ${t.className}">${t.label}</span>
-                <span>📅 ${isoToDisplay(e.date)}</span>
+                <span>📅 ${formatDate(e.date)}</span>
                 ${e.by ? `<span>👤 ${escapeHtml(e.by)}</span>` : ""}
               </div>
             </div>
@@ -713,7 +779,6 @@
       const firstDayIndex = (first.getDay() + 6) % 7;
       const totalDays = last.getDate();
       const cells = [];
-
       for (let i = 0; i < firstDayIndex; i++) cells.push(`<div class="day empty"></div>`);
 
       for (let day = 1; day <= totalDays; day++) {
@@ -735,21 +800,104 @@
       $("calendar").innerHTML = cells.join("");
     }
 
+    function renderPendingUsers() {
+      if (!isAdmin()) {
+        $("adminBox").classList.add("hidden");
+        return;
+      }
+      $("adminBox").classList.remove("hidden");
+      pendingList.innerHTML = "";
+      const pending = pendingUsersCache.filter(u => !u.approved);
+      if (!pending.length) {
+        pendingList.innerHTML = `<div class="admin-item"><div class="note" style="margin:0;">Keine offenen Freigaben.</div></div>`;
+        return;
+      }
+
+      pending.forEach(u => {
+        const item = document.createElement("div");
+        item.className = "admin-item";
+        item.innerHTML = `
+          <div class="admin-item-head">
+            <div>
+              <div style="font-weight:900;">${escapeHtml(u.name || "Ohne Name")}</div>
+              <div class="note" style="margin-top:4px;">${escapeHtml(u.email || "")}</div>
+            </div>
+            <span class="tag info">Wartet</span>
+          </div>
+          <div class="btn-row" style="margin-top:0;">
+            <button type="button" data-approve="${escapeHtml(u.uid)}">Freigeben</button>
+          </div>
+        `;
+        pendingList.appendChild(item);
+      });
+
+      pendingList.querySelectorAll("[data-approve]").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          const uid = btn.getAttribute("data-approve");
+          await updateDoc(doc(db, "users", uid), { approved: true });
+          await refreshUserState();
+        });
+      });
+    }
+
     async function loadEntries() {
       try {
-        const q = query(getSubjectDoc(currentSubject.id), orderBy("createdAt", "desc"));
+        const q = query(subjectDoc(currentSubject.id), orderBy("createdAt", "desc"));
         const snap = await getDocs(q);
-        entriesCache = snap.docs.map(d => d.data()).filter(Boolean);
-      } catch (err) {
-        // Fallback ohne orderBy, falls die Collection leer ist oder Index noch fehlt
-        const snap = await getDocs(getSubjectDoc(currentSubject.id));
-        entriesCache = snap.docs.map(d => d.data()).filter(Boolean);
+        entriesCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(Boolean);
+      } catch {
+        const snap = await getDocs(subjectDoc(currentSubject.id));
+        entriesCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(Boolean);
       }
       renderEntries();
       renderCalendar();
     }
 
-    async function handleRegister() {
+    async function loadPendingUsers() {
+      if (!isAdmin()) {
+        pendingUsersCache = [];
+        renderPendingUsers();
+        return;
+      }
+      const snap = await getDocs(collection(db, "users"));
+      pendingUsersCache = snap.docs.map(d => ({ id: d.id, ...d.data() })).filter(Boolean);
+      renderPendingUsers();
+    }
+
+    async function refreshUserState() {
+      if (!user) return;
+      const ref = doc(db, "users", user.uid);
+      const snap = await getDoc(ref);
+      userDoc = snap.exists() ? snap.data() : null;
+
+      if (!userDoc) {
+        statusText.textContent = "Dein Benutzerprofil wurde noch nicht angelegt.";
+        editorBox.classList.add("hidden");
+        adminBox.classList.add("hidden");
+        return;
+      }
+
+      topUserBox.classList.remove("hidden");
+      rolePill.textContent = userDoc.role || "student";
+      statusText.textContent = userDoc.approved ? `Eingeloggt als ${userDoc.name || user.email}.` : "Dein Account wartet noch auf Freigabe.";
+
+      if (!userDoc.approved) {
+        appArea.classList.add("hidden");
+        authOverlay.classList.remove("hidden");
+        showError("Dein Account wurde noch nicht freigeschaltet.");
+        return;
+      }
+
+      authOverlay.classList.add("hidden");
+      appArea.classList.remove("hidden");
+      editorBox.classList.toggle("hidden", !isWriter());
+      await loadEntries();
+      await loadPendingUsers();
+      renderPendingUsers();
+    }
+
+    async function registerUser() {
+      clearError();
       const name = $("name").value.trim();
       const email = $("email").value.trim();
       const password = $("password").value;
@@ -770,7 +918,7 @@
 
       try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
-        await addDoc(collection(db, "users"), {
+        await setDoc(doc(db, "users", res.user.uid), {
           uid: res.user.uid,
           name,
           email,
@@ -778,21 +926,20 @@
           role: "student",
           createdAt: serverTimestamp()
         });
-        showError("Account erstellt. Warte auf die Freigabe durch den Admin.");
+        showError("Registrierung erfolgreich. Dein Account wartet jetzt auf Freigabe.");
       } catch (err) {
         showError(firebaseErrorToMessage(err));
       }
     }
 
-    async function handleLogin() {
+    async function loginUser() {
+      clearError();
       const email = $("email").value.trim();
       const password = $("password").value;
-
       if (!email || !password) {
         showError("Bitte E-Mail und Passwort eingeben.");
         return;
       }
-
       try {
         await signInWithEmailAndPassword(auth, email, password);
       } catch (err) {
@@ -800,79 +947,84 @@
       }
     }
 
-    function firebaseErrorToMessage(err) {
-      const code = err?.code || "";
-      if (code.includes("auth/invalid-email")) return "Die E-Mail-Adresse ist ungültig.";
-      if (code.includes("auth/email-already-in-use")) return "Diese E-Mail ist bereits registriert.";
-      if (code.includes("auth/weak-password")) return "Das Passwort ist zu schwach (mindestens 6 Zeichen).";
-      if (code.includes("auth/invalid-credential") || code.includes("auth/wrong-password") || code.includes("auth/invalid-login-credentials")) return "E-Mail oder Passwort ist falsch.";
-      if (code.includes("auth/user-not-found")) return "Kein Account mit dieser E-Mail gefunden.";
-      if (code.includes("auth/network-request-failed")) return "Netzwerkfehler. Bitte Internetverbindung prüfen.";
-      return `Fehler: ${err?.message || "Unbekannter Fehler"}`;
+    async function logout() {
+      await signOut(auth);
+      user = null;
+      userDoc = null;
+      entriesCache = [];
+      pendingUsersCache = [];
+      appArea.classList.add("hidden");
+      topUserBox.classList.add("hidden");
+      authOverlay.classList.remove("hidden");
+      statusText.textContent = "Bitte anmelden.";
+      setMode("login");
+    }
+
+    function resetEntryForm() {
+      $("date").value = new Date().toISOString().slice(0, 10);
+      $("title").value = "";
+      $("details").value = "";
+      $("type").value = "HÜ";
     }
 
     $("authAction").addEventListener("click", () => {
-      if (mode === "login") handleLogin();
-      else handleRegister();
+      if (mode === "login") loginUser();
+      else registerUser();
     });
 
     $("saveBtn").addEventListener("click", async () => {
+      clearError();
+      if (!isWriter()) {
+        showError("Du hast keine Rechte zum Eintragen.");
+        return;
+      }
+
       const type = $("type").value;
       const date = $("date").value;
       const title = $("title").value.trim();
       const details = $("details").value.trim();
 
-      clearError();
       if (!date || !title) {
         showError("Bitte mindestens Datum und Titel eingeben.");
         return;
       }
 
       try {
-        await addDoc(getSubjectDoc(currentSubject.id), {
+        await addDoc(subjectDoc(currentSubject.id), {
           type,
           date,
           title,
           details,
           createdAt: serverTimestamp(),
-          by: user?.email || ""
+          by: userDoc?.name || user?.email || ""
         });
-
-        $("title").value = "";
-        $("details").value = "";
-        $("type").value = "HÜ";
+        resetEntryForm();
         await loadEntries();
       } catch (err) {
         showError(`Termin konnte nicht gespeichert werden: ${err?.message || err}`);
       }
     });
 
-    // 🔓 LOGOUT
-    window.logout = async () => {
-      await auth.signOut();
-    };
-
     onAuthStateChanged(auth, async (firebaseUser) => {
       user = firebaseUser || null;
-      if (user) {
-        authOverlay.classList.add("hidden");
-        appArea.classList.remove("hidden");
-        $("currentSubject").textContent = currentSubject.label;
-        renderSubjects();
-        renderDow();
-        await loadEntries();
-      } else {
+      if (!user) {
+        statusText.textContent = "Bitte anmelden.";
         appArea.classList.add("hidden");
-        authOverlay.classList.remove("hidden");
+        topUserBox.classList.add("hidden");
+        return;
       }
+      await refreshUserState();
     });
 
     // Init
+    $("currentSubject").textContent = currentSubject.label;
     $("date").value = new Date().toISOString().slice(0, 10);
     setMode("login");
     renderDow();
     renderSubjects();
     renderCalendar();
+    $("subjectCount").textContent = String(subjects.length);
+    $("nextTerm").textContent = "—";
   </script>
 </body>
 </html>
