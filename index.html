@@ -1,138 +1,785 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Klassenplaner</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-2: #111827;
+      --card: rgba(17, 24, 39, 0.78);
+      --card-2: rgba(30, 41, 59, 0.92);
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --line: rgba(148, 163, 184, 0.18);
+      --brand: #60a5fa;
+      --brand-2: #a78bfa;
+      --green: #34d399;
+      --yellow: #fbbf24;
+      --red: #fb7185;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,0.20), transparent 28%),
+        radial-gradient(circle at top right, rgba(167,139,250,0.18), transparent 28%),
+        linear-gradient(180deg, #0b1220 0%, #0f172a 45%, #111827 100%);
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+
+    .hero-main {
+      padding: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-main::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -80px auto;
+      width: 220px;
+      height: 220px;
+      background: radial-gradient(circle, rgba(96,165,250,0.20), transparent 65%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(96,165,250,0.12);
+      border: 1px solid rgba(96,165,250,0.22);
+      color: #bfdbfe;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.03;
+      letter-spacing: -0.04em;
+    }
+
+    .subtitle {
+      margin: 0;
+      max-width: 70ch;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.56);
+      border: 1px solid var(--line);
+    }
+
+    .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
+    .stat .value { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+
+    .auth-box {
+      padding: 22px;
+    }
+
+    .auth-box h2, .section h2 {
+      margin: 0 0 14px;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+    }
+
+    input, select, textarea, button {
+      font: inherit;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      color: var(--text);
+      border-radius: 16px;
+      padding: 13px 14px;
+      outline: none;
+      transition: 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: rgba(96, 165, 250, 0.6);
+      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      color: white;
+      background: linear-gradient(135deg, var(--brand), var(--brand-2));
+      box-shadow: 0 14px 34px rgba(96, 165, 250, 0.18);
+      transition: transform 0.16s ease, filter 0.16s ease;
+    }
+
+    button:hover { transform: translateY(-1px); filter: brightness(1.05); }
+    button.secondary {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      box-shadow: none;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px 1fr 340px;
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .section {
+      padding: 18px;
+    }
+
+    .subjects {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: 74vh;
+      overflow: auto;
+      padding-right: 2px;
+    }
+
+    .subject-btn {
+      width: 100%;
+      text-align: left;
+      border-radius: 16px;
+      padding: 13px 14px;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .subject-btn.active {
+      background: linear-gradient(135deg, rgba(96,165,250,0.24), rgba(167,139,250,0.22));
+      border-color: rgba(96,165,250,0.34);
+      box-shadow: 0 12px 24px rgba(59,130,246,0.12);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 34px;
+      height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      background: rgba(96, 165, 250, 0.14);
+      color: #dbeafe;
+      border: 1px solid rgba(96, 165, 250, 0.2);
+    }
+
+    .content-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .big-title {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .big-title h2 {
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .big-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .cards {
+      display: grid;
+      gap: 12px;
+    }
+
+    .event-card {
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(17,24,39,0.9));
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 18px;
+    }
+
+    .event-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .event-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .event-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .tag.hue { background: rgba(52,211,153,0.14); color: #bbf7d0; border: 1px solid rgba(52,211,153,0.2); }
+    .tag.test { background: rgba(96,165,250,0.14); color: #dbeafe; border: 1px solid rgba(96,165,250,0.2); }
+    .tag.sa { background: rgba(251,191,36,0.14); color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
+    .tag.mu { background: rgba(251,113,133,0.14); color: #fecdd3; border: 1px solid rgba(251,113,133,0.2); }
+    .tag.info { background: rgba(167,139,250,0.14); color: #e9d5ff; border: 1px solid rgba(167,139,250,0.2); }
+
+    .composer {
+      display: grid;
+      gap: 12px;
+    }
+
+    .mini-calendar {
+      display: grid;
+      gap: 10px;
+    }
+
+    .calendar-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .calendar-head h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 8px;
+    }
+
+    .dow, .day {
+      border-radius: 14px;
+      text-align: center;
+      padding: 10px 8px;
+    }
+
+    .dow {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      background: rgba(15, 23, 42, 0.58);
+      border: 1px solid rgba(148, 163, 184, 0.10);
+    }
+
+    .day {
+      min-height: 74px;
+      text-align: left;
+      background: rgba(15, 23, 42, 0.62);
+      border: 1px solid rgba(148, 163, 184, 0.12);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .day.empty { background: transparent; border: 0; }
+    .day.today { outline: 2px solid rgba(96,165,250,0.5); }
+
+    .day-num {
+      font-size: 12px;
+      color: #dbeafe;
+      font-weight: 800;
+    }
+
+    .dot-row { display: flex; flex-wrap: wrap; gap: 5px; }
+    .dot {
+      width: 10px; height: 10px; border-radius: 999px;
+      background: rgba(148,163,184,0.42);
+    }
+    .dot.hue { background: var(--green); }
+    .dot.test { background: var(--brand); }
+    .dot.sa { background: var(--yellow); }
+    .dot.mu { background: var(--red); }
+
+    .note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .hidden { display: none !important; }
+
+    .scroll-area::-webkit-scrollbar { width: 10px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.22); border-radius: 999px; }
+    .scroll-area::-webkit-scrollbar-track { background: transparent; }
+
+    @media (max-width: 1180px) {
+      .hero, .layout { grid-template-columns: 1fr; }
+      .subjects { max-height: none; }
+    }
+
+    @media (max-width: 700px) {
+      .wrap { padding: 14px; }
+      .hero-main, .auth-box, .section { padding: 16px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      .cal-grid { gap: 6px; }
+      .day { min-height: 64px; padding: 8px 6px; }
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="panel hero-main">
+        <div class="eyebrow">📚 Klassenplaner · 4. Klasse Gymnasium · Bruck an der Mur</div>
+        <h1>Alle Tests, Schularbeiten und HÜs an einem Ort.</h1>
+        <p class="subtitle">
+          Schön organisiert nach Fach, mit Kalenderansicht, klaren Kürzeln und einem modernen Überblick für die ganze Klasse.
+          Später kannst du das noch um Admin-Freigabe, Rollen und Benachrichtigungen erweitern.
+        </p>
+        <div class="stats">
+          <div class="stat"><div class="label">Fächer</div><div class="value" id="subjectCount">15</div></div>
+          <div class="stat"><div class="label">Termine im Fach</div><div class="value" id="eventCount">0</div></div>
+          <div class="stat"><div class="label">Nächster Termin</div><div class="value" id="nextTerm">—</div></div>
+        </div>
+      </div>
 
-<h1>Klassenplaner</h1>
+      <div class="panel auth-box">
+        <h2>Anmelden / Registrieren</h2>
+        <div class="grid-2">
+          <div class="field">
+            <label for="name">Name</label>
+            <input id="name" placeholder="Vor- und Nachname" />
+          </div>
+          <div class="field">
+            <label for="email">E-Mail</label>
+            <input id="email" type="email" placeholder="name@example.com" />
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px;">
+          <label for="password">Passwort</label>
+          <input id="password" type="password" placeholder="Passwort" />
+        </div>
+        <div class="btn-row">
+          <button onclick="register()">Registrieren</button>
+          <button class="secondary" onclick="login()">Login</button>
+        </div>
+        <p class="note" style="margin-top:12px;">
+          Hinweis: Diese Datei ist als schöne Basis gedacht. Für die echte Freigabe-Logik kommt später die Rollenprüfung dazu.
+        </p>
+      </div>
+    </div>
 
-<div id="auth">
-  <h2>Login / Registrierung</h2>
-  <input id="name" placeholder="Name"><br>
-  <input id="email" placeholder="Email"><br>
-  <input id="password" type="password" placeholder="Passwort"><br><br>
-  <button onclick="register()">Registrieren</button>
-  <button onclick="login()">Login</button>
-</div>
+    <div id="app" class="layout hidden">
+      <div class="panel section">
+        <h2>Fächer</h2>
+        <div id="subjects" class="subjects scroll-area"></div>
+      </div>
 
-<div id="app" style="display:none;">
-  <h2>Fächer</h2>
-  <div id="subjects"></div>
+      <div class="panel section">
+        <div class="content-head">
+          <div class="big-title">
+            <h2 id="currentSubject">Mathe</h2>
+            <p>Termine im aktuellen Fach mit Kürzel, Datum und Zusatzinfos.</p>
+          </div>
+          <span class="pill" id="subjectBadge">HÜ</span>
+        </div>
 
-  <h3 id="currentSubject"></h3>
-  <ul id="entries"></ul>
+        <div id="entries" class="cards"></div>
 
-  <input id="newEntry" placeholder="z.B. Mathe Test HÜ">
-  <button onclick="addEntry()">Eintragen</button>
-</div>
+        <div style="height:18px"></div>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+        <h2>Neuen Termin eintragen</h2>
+        <div class="composer">
+          <div class="grid-2">
+            <div class="field">
+              <label for="type">Typ</label>
+              <select id="type">
+                <option value="HÜ">HÜ</option>
+                <option value="Test">Test</option>
+                <option value="SA">SA</option>
+                <option value="MU">Mitarbeitsüberprüfung</option>
+                <option value="Info">Info</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="date">Datum</label>
+              <input id="date" type="date" />
+            </div>
+          </div>
+          <div class="field">
+            <label for="title">Titel</label>
+            <input id="title" placeholder="z.B. Stoff der letzten 3 Kapitel" />
+          </div>
+          <div class="field">
+            <label for="details">Details</label>
+            <textarea id="details" placeholder="z.B. Seiten, Themen, wer dabei ist, Raum, Zusatzinfos..."></textarea>
+          </div>
+          <button onclick="addEntry()">Termin speichern</button>
+        </div>
+      </div>
 
-// 🔥 DEINE FIREBASE DATEN HIER EINTRAGEN
-const firebaseConfig = {
-  apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
-  authDomain: "informationen-4b-dc655.firebaseapp.com",
-  projectId: "informationen-4b-dc655"
-};
+      <div class="panel section">
+        <div class="calendar-head">
+          <h2 style="margin:0;">Kalender</h2>
+          <span class="tag info" id="monthLabel">—</span>
+        </div>
+        <div class="mini-calendar">
+          <div class="cal-grid" id="dow"></div>
+          <div class="cal-grid" id="calendar"></div>
+        </div>
+        <div style="height:14px"></div>
+        <p class="note">
+          Farbige Punkte zeigen an, welche Termine in diesem Monat vorhanden sind.
+        </p>
+      </div>
+    </div>
+  </div>
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-const subjects = [
-  "Mathe","Deutsch","Englisch","Geschichte","Geographie","Religion",
-  "Physik","Physik Labor","Chemie","Chemie Labor","Biologie",
-  "Grafisches Zeichnen","Digitale Grundbildung","Italienisch","Sport"
-];
-
-let currentSubject = "Mathe";
-let user = null;
-
-// 🔐 REGISTER
-window.register = async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const name = document.getElementById("name").value;
-
-  const res = await createUserWithEmailAndPassword(auth, email, password);
-
-  await addDoc(collection(db, "users"), {
-    uid: res.user.uid,
-    name,
-    email,
-    approved: false,
-    role: "student"
-  });
-
-  alert("Account erstellt – warte auf Freigabe!");
-};
-
-// 🔐 LOGIN
-window.login = async () => {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-
-  const res = await signInWithEmailAndPassword(auth, email, password);
-  user = res.user;
-
-  document.getElementById("auth").style.display = "none";
-  document.getElementById("app").style.display = "block";
-
-  loadSubjects();
-  loadEntries();
-};
-
-// 📚 FÄCHER ANZEIGEN
-function loadSubjects() {
-  const container = document.getElementById("subjects");
-  container.innerHTML = "";
-
-  subjects.forEach(sub => {
-    const btn = document.createElement("button");
-    btn.innerText = sub;
-    btn.onclick = () => {
-      currentSubject = sub;
-      loadEntries();
+    // 🔥 HIER DEINE FIREBASE DATEN EINTRAGEN
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+      authDomain: "informationen-4b-dc655.firebaseapp.com",
+      projectId: "informationen-4b-dc655"
     };
-    container.appendChild(btn);
-  });
-}
 
-// 📥 EINTRÄGE LADEN
-async function loadEntries() {
-  document.getElementById("currentSubject").innerText = currentSubject;
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-  const list = document.getElementById("entries");
-  list.innerHTML = "";
+    const subjects = [
+      "Mathe","Deutsch","Englisch","Geschichte","Geographie","Religion",
+      "Physik","Physik Labor","Chemie","Chemie Labor","Biologie",
+      "Grafisches Zeichnen","Digitale Grundbildung","Italienisch","Sport"
+    ];
 
-  const querySnapshot = await getDocs(collection(db, currentSubject));
+    const typeInfo = {
+      HÜ: { className: "hue", label: "HÜ" },
+      Test: { className: "test", label: "Test" },
+      SA: { className: "sa", label: "SA" },
+      MU: { className: "mu", label: "MU" },
+      Info: { className: "info", label: "Info" }
+    };
 
-  querySnapshot.forEach(doc => {
-    const li = document.createElement("li");
-    li.innerText = doc.data().text;
-    list.appendChild(li);
-  });
-}
+    let currentSubject = subjects[0];
+    let user = null;
+    let entriesCache = [];
 
-// ➕ EINTRAG HINZUFÜGEN
-window.addEntry = async () => {
-  const text = document.getElementById("newEntry").value;
+    const el = (id) => document.getElementById(id);
 
-  await addDoc(collection(db, currentSubject), {
-    text,
-    date: new Date().toLocaleDateString()
-  });
+    function isoToDisplay(iso) {
+      if (!iso) return "Ohne Datum";
+      const [y, m, d] = iso.split("-").map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
+    }
 
-  document.getElementById("newEntry").value = "";
-  loadEntries();
-};
+    function parseDateSafe(iso) {
+      if (!iso) return null;
+      const d = new Date(iso + "T00:00:00");
+      return isNaN(d.getTime()) ? null : d;
+    }
 
-</script>
+    function sortEntries(a, b) {
+      const da = parseDateSafe(a.date);
+      const db = parseDateSafe(b.date);
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return da - db;
+    }
 
+    function getCurrentMonthInfo() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = now.getMonth();
+      const first = new Date(year, month, 1);
+      const last = new Date(year, month + 1, 0);
+      return { year, month, first, last, today: now };
+    }
+
+    function renderDow() {
+      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+      el("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
+    }
+
+    function renderCalendar() {
+      const { year, month, first, last, today } = getCurrentMonthInfo();
+      const label = first.toLocaleDateString("de-AT", { month: "long", year: "numeric" });
+      el("monthLabel").textContent = label.charAt(0).toUpperCase() + label.slice(1);
+
+      const firstDayIndex = (first.getDay() + 6) % 7; // Monday=0
+      const totalDays = last.getDate();
+      const cells = [];
+      for (let i = 0; i < firstDayIndex; i++) cells.push(`<div class="day empty"></div>`);
+      for (let day = 1; day <= totalDays; day++) {
+        const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+        const dayEntries = entriesCache.filter(e => e.date === iso);
+        const dots = dayEntries.slice(0, 4).map(e => {
+          const t = typeInfo[e.type] || typeInfo.Info;
+          return `<span class="dot ${t.className}" title="${e.type}"></span>`;
+        }).join("");
+        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        cells.push(`
+          <div class="day ${isToday ? "today" : ""}">
+            <div class="day-num">${day}</div>
+            <div class="dot-row">${dots}</div>
+          </div>
+        `);
+      }
+      el("calendar").innerHTML = cells.join("");
+    }
+
+    function updateStats() {
+      el("subjectCount").textContent = subjects.length;
+      el("eventCount").textContent = entriesCache.length;
+      const next = [...entriesCache].filter(e => parseDateSafe(e.date)).sort(sortEntries)[0];
+      el("nextTerm").textContent = next ? `${next.type} · ${isoToDisplay(next.date)}` : "—";
+    }
+
+    function renderSubjects() {
+      const container = el("subjects");
+      container.innerHTML = "";
+      subjects.forEach(sub => {
+        const btn = document.createElement("button");
+        btn.className = "subject-btn" + (sub === currentSubject ? " active" : "");
+        btn.innerHTML = `<span>${sub}</span><span class="pill">${sub === currentSubject ? "✓" : ""}</span>`;
+        btn.onclick = async () => {
+          currentSubject = sub;
+          el("currentSubject").textContent = sub;
+          renderSubjects();
+          await loadEntries();
+        };
+        container.appendChild(btn);
+      });
+    }
+
+    function renderEntries() {
+      const list = el("entries");
+      list.innerHTML = "";
+
+      if (!entriesCache.length) {
+        list.innerHTML = `<div class="event-card"><p class="note" style="margin:0;">Noch keine Termine in diesem Fach.</p></div>`;
+        return;
+      }
+
+      [...entriesCache].sort(sortEntries).forEach(e => {
+        const t = typeInfo[e.type] || typeInfo.Info;
+        const chipText = t.label;
+        const safeTitle = e.title || "Ohne Titel";
+        const safeDetails = e.details || "";
+        const dateText = isoToDisplay(e.date);
+
+        const card = document.createElement("div");
+        card.className = "event-card";
+        card.innerHTML = `
+          <div class="event-top">
+            <div>
+              <p class="event-title">${safeTitle}</p>
+              <div class="event-meta">
+                <span class="tag ${t.className}">${chipText}</span>
+                <span>📅 ${dateText}</span>
+              </div>
+            </div>
+            <span class="pill">${currentSubject}</span>
+          </div>
+          ${safeDetails ? `<div class="note">${safeDetails}</div>` : ""}
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    async function loadEntries() {
+      const snap = await getDocs(collection(db, currentSubject));
+      entriesCache = snap.docs.map(doc => doc.data());
+      renderEntries();
+      renderCalendar();
+      updateStats();
+      el("subjectBadge").textContent = (entriesCache[0]?.type || "HÜ");
+    }
+
+    window.register = async () => {
+      const email = el("email").value.trim();
+      const password = el("password").value;
+      const name = el("name").value.trim();
+      if (!email || !password || !name) return alert("Bitte Name, E-Mail und Passwort eingeben.");
+
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      await addDoc(collection(db, "users"), {
+        uid: res.user.uid,
+        name,
+        email,
+        approved: false,
+        role: "student",
+        createdAt: new Date().toISOString()
+      });
+      alert("Account erstellt – warte auf Freigabe!");
+    };
+
+    window.login = async () => {
+      const email = el("email").value.trim();
+      const password = el("password").value;
+      if (!email || !password) return alert("Bitte E-Mail und Passwort eingeben.");
+
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      user = res.user;
+      el("auth-box");
+      el("app").classList.remove("hidden");
+      el("currentSubject").textContent = currentSubject;
+      renderSubjects();
+      renderDow();
+      await loadEntries();
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    };
+
+    window.addEntry = async () => {
+      const type = el("type").value;
+      const date = el("date").value;
+      const title = el("title").value.trim();
+      const details = el("details").value.trim();
+
+      if (!date || !title) {
+        alert("Bitte Datum und Titel eingeben.");
+        return;
+      }
+
+      await addDoc(collection(db, currentSubject), {
+        type,
+        date,
+        title,
+        details,
+        createdAt: new Date().toISOString(),
+        by: user ? user.email : ""
+      });
+
+      el("title").value = "";
+      el("details").value = "";
+      el("date").value = "";
+      await loadEntries();
+    };
+
+    // Default date = today
+    const today = new Date();
+    el("date").value = today.toISOString().slice(0, 10);
+    renderDow();
+    renderCalendar();
+    renderSubjects();
+  </script>
 </body>
 </html>
