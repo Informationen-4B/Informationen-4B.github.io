@@ -6,13 +6,28 @@
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
 <div class="topbar">
   <h2>Termine</h2>
   <button onclick="logout()">Logout</button>
 </div>
 
+<div id="status"></div>
+
+<div class="tabs">
+  <button onclick="load('Mathe')">Mathe</button>
+  <button onclick="load('Deutsch')">Deutsch</button>
+  <button onclick="load('Englisch')">Englisch</button>
+</div>
+
 <div class="container">
-  <div class="card">
+
+  <div id="adminArea" class="card hidden">
+    <h3>Neue User freischalten</h3>
+    <ul id="users"></ul>
+  </div>
+
+  <div id="addArea" class="card hidden">
     <h3>Termin hinzufügen</h3>
     <input id="title" placeholder="Titel">
     <input id="date" type="date">
@@ -26,14 +41,16 @@
   </div>
 
   <div class="card">
-    <h3>Alle Termine</h3>
+    <h3>Termine</h3>
     <ul id="list"></ul>
   </div>
+
 </div>
 
 <p id="error"></p>
 
 <script type="module" src="firebase.js"></script>
 <script type="module" src="dashboard.js"></script>
+
 </body>
 </html>
