@@ -3,7 +3,7 @@ import { signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/1
 
 window.login = async () => {
   try{
-    await signInWithEmailAndPassword(auth, email.value, password.value);
+    await signInWithEmailAndPassword(auth,email.value,password.value);
     window.location.href = "dashboard.html";
   }catch(e){
     error.innerText = e.code;
