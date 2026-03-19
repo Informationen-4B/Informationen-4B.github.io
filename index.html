@@ -6,55 +6,54 @@
   <title>Klassenplaner</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --bg-2: #111827;
-      --card: rgba(17, 24, 39, 0.78);
-      --card-2: rgba(30, 41, 59, 0.92);
+      --bg: #0b1220;
+      --bg2: #111827;
+      --panel: rgba(17, 24, 39, 0.76);
+      --panel2: rgba(15, 23, 42, 0.88);
+      --line: rgba(148, 163, 184, 0.16);
       --text: #e5e7eb;
       --muted: #94a3b8;
-      --line: rgba(148, 163, 184, 0.18);
       --brand: #60a5fa;
-      --brand-2: #a78bfa;
+      --brand2: #a78bfa;
       --green: #34d399;
       --yellow: #fbbf24;
       --red: #fb7185;
-      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
-      --radius: 22px;
+      --shadow: 0 24px 60px rgba(0,0,0,0.35);
+      --radius: 24px;
     }
 
     * { box-sizing: border-box; }
-    html, body { margin: 0; padding: 0; }
+    html, body { margin: 0; min-height: 100%; }
     body {
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(96,165,250,0.20), transparent 28%),
-        radial-gradient(circle at top right, rgba(167,139,250,0.18), transparent 28%),
-        linear-gradient(180deg, #0b1220 0%, #0f172a 45%, #111827 100%);
+        radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 30%),
+        radial-gradient(circle at top right, rgba(167,139,250,.18), transparent 28%),
+        linear-gradient(180deg, #07101f 0%, #0b1220 45%, #111827 100%);
       min-height: 100vh;
     }
 
     .wrap {
-      max-width: 1400px;
+      max-width: 1440px;
       margin: 0 auto;
       padding: 24px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
     .hero {
       display: grid;
       grid-template-columns: 1.5fr 1fr;
       gap: 18px;
-      align-items: stretch;
       margin-bottom: 18px;
-    }
-
-    .panel {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
     }
 
     .hero-main {
@@ -66,40 +65,40 @@
     .hero-main::after {
       content: "";
       position: absolute;
-      inset: auto -80px -80px auto;
-      width: 220px;
-      height: 220px;
-      background: radial-gradient(circle, rgba(96,165,250,0.20), transparent 65%);
+      width: 260px;
+      height: 260px;
+      right: -100px;
+      bottom: -100px;
+      background: radial-gradient(circle, rgba(96,165,250,.20), transparent 64%);
       pointer-events: none;
     }
 
     .eyebrow {
       display: inline-flex;
-      gap: 8px;
       align-items: center;
-      padding: 7px 12px;
+      gap: 8px;
+      padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(96,165,250,0.12);
-      border: 1px solid rgba(96,165,250,0.22);
+      border: 1px solid rgba(96,165,250,.22);
+      background: rgba(96,165,250,.10);
       color: #bfdbfe;
       font-size: 13px;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-weight: 800;
       margin-bottom: 14px;
     }
 
     h1 {
       margin: 0 0 8px;
-      font-size: clamp(28px, 4vw, 48px);
-      line-height: 1.03;
-      letter-spacing: -0.04em;
+      font-size: clamp(30px, 4vw, 52px);
+      line-height: 1.02;
+      letter-spacing: -0.05em;
     }
 
     .subtitle {
       margin: 0;
-      max-width: 70ch;
+      max-width: 72ch;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.6;
       font-size: 15px;
     }
 
@@ -116,87 +115,50 @@
       background: rgba(15, 23, 42, 0.56);
       border: 1px solid var(--line);
     }
-
     .stat .label { color: var(--muted); font-size: 12px; margin-bottom: 6px; }
-    .stat .value { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+    .stat .value { font-size: 20px; font-weight: 900; letter-spacing: -0.03em; }
 
-    .auth-box {
-      padding: 22px;
-    }
+    .auth-box { padding: 22px; }
+    .auth-box h2, .section h2, .auth-panel h2 { margin: 0 0 14px; font-size: 18px; letter-spacing: -0.02em; }
 
-    .auth-box h2, .section h2 {
-      margin: 0 0 14px;
-      font-size: 18px;
-      letter-spacing: -0.02em;
-    }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .field { display: flex; flex-direction: column; gap: 8px; }
+    .field label { font-size: 12px; color: var(--muted); font-weight: 700; letter-spacing: .02em; }
 
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .field {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .field label {
-      font-size: 12px;
-      color: var(--muted);
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
-    input, select, textarea, button {
-      font: inherit;
-    }
+    input, select, textarea, button { font: inherit; }
 
     input, select, textarea {
       width: 100%;
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.2);
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.18);
       color: var(--text);
       border-radius: 16px;
       padding: 13px 14px;
       outline: none;
-      transition: 0.2s ease;
+      transition: .2s ease;
     }
-
     input:focus, select:focus, textarea:focus {
-      border-color: rgba(96, 165, 250, 0.6);
-      box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+      border-color: rgba(96,165,250,.7);
+      box-shadow: 0 0 0 4px rgba(96,165,250,.12);
     }
+    textarea { min-height: 100px; resize: vertical; }
 
-    textarea {
-      min-height: 92px;
-      resize: vertical;
-    }
-
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-    }
-
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
     button {
       border: 0;
       border-radius: 16px;
       padding: 12px 16px;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
       color: white;
-      background: linear-gradient(135deg, var(--brand), var(--brand-2));
-      box-shadow: 0 14px 34px rgba(96, 165, 250, 0.18);
-      transition: transform 0.16s ease, filter 0.16s ease;
+      background: linear-gradient(135deg, var(--brand), var(--brand2));
+      box-shadow: 0 14px 34px rgba(96,165,250,.18);
+      transition: transform .16s ease, filter .16s ease;
     }
-
     button:hover { transform: translateY(-1px); filter: brightness(1.05); }
     button.secondary {
-      background: rgba(15, 23, 42, 0.8);
-      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(15,23,42,.82);
+      border: 1px solid rgba(148,163,184,.22);
       box-shadow: none;
     }
 
@@ -208,9 +170,9 @@
       align-items: start;
     }
 
-    .section {
-      padding: 18px;
-    }
+    .section { padding: 18px; }
+    .scroll-area::-webkit-scrollbar { width: 10px; }
+    .scroll-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,.22); border-radius: 999px; }
 
     .subjects {
       display: flex;
@@ -227,18 +189,17 @@
       border-radius: 16px;
       padding: 13px 14px;
       background: rgba(15, 23, 42, 0.72);
-      border: 1px solid rgba(148, 163, 184, 0.14);
+      border: 1px solid rgba(148,163,184,.14);
       color: var(--text);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 10px;
+      box-shadow: none;
     }
-
     .subject-btn.active {
-      background: linear-gradient(135deg, rgba(96,165,250,0.24), rgba(167,139,250,0.22));
-      border-color: rgba(96,165,250,0.34);
-      box-shadow: 0 12px 24px rgba(59,130,246,0.12);
+      background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.22));
+      border-color: rgba(96,165,250,.34);
     }
 
     .pill {
@@ -250,187 +211,157 @@
       padding: 0 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      background: rgba(96, 165, 250, 0.14);
+      font-weight: 900;
+      background: rgba(96,165,250,.14);
       color: #dbeafe;
-      border: 1px solid rgba(96, 165, 250, 0.2);
+      border: 1px solid rgba(96,165,250,.2);
     }
 
     .content-head {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
       align-items: center;
+      gap: 12px;
       margin-bottom: 14px;
     }
+    .big-title h2 { margin: 0; font-size: 24px; letter-spacing: -.03em; }
+    .big-title p { margin: 4px 0 0; color: var(--muted); font-size: 13px; }
 
-    .big-title {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
-
-    .big-title h2 {
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -0.03em;
-    }
-
-    .big-title p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .cards {
-      display: grid;
-      gap: 12px;
-    }
-
+    .cards { display: grid; gap: 12px; }
     .event-card {
       padding: 16px;
-      background: linear-gradient(180deg, rgba(15,23,42,0.72), rgba(17,24,39,0.9));
-      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(17,24,39,.9));
+      border: 1px solid rgba(148,163,184,.16);
       border-radius: 18px;
     }
+    .event-top { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; margin-bottom: 8px; }
+    .event-title { margin: 0; font-size: 16px; font-weight: 900; letter-spacing: -.02em; }
+    .event-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; color: var(--muted); font-size: 12px; }
 
-    .event-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      align-items: flex-start;
-      margin-bottom: 8px;
-    }
+    .tag { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 900; }
+    .tag.hue { background: rgba(52,211,153,.14); color: #bbf7d0; border: 1px solid rgba(52,211,153,.2); }
+    .tag.test { background: rgba(96,165,250,.14); color: #dbeafe; border: 1px solid rgba(96,165,250,.2); }
+    .tag.sa { background: rgba(251,191,36,.14); color: #fde68a; border: 1px solid rgba(251,191,36,.2); }
+    .tag.mu { background: rgba(251,113,133,.14); color: #fecdd3; border: 1px solid rgba(251,113,133,.2); }
+    .tag.info { background: rgba(167,139,250,.14); color: #e9d5ff; border: 1px solid rgba(167,139,250,.2); }
 
-    .event-title {
-      font-size: 16px;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin: 0;
-    }
+    .composer { display: grid; gap: 12px; }
+    .calendar-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .calendar-head h2 { margin: 0; }
 
-    .event-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 8px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-    }
-
-    .tag.hue { background: rgba(52,211,153,0.14); color: #bbf7d0; border: 1px solid rgba(52,211,153,0.2); }
-    .tag.test { background: rgba(96,165,250,0.14); color: #dbeafe; border: 1px solid rgba(96,165,250,0.2); }
-    .tag.sa { background: rgba(251,191,36,0.14); color: #fde68a; border: 1px solid rgba(251,191,36,0.2); }
-    .tag.mu { background: rgba(251,113,133,0.14); color: #fecdd3; border: 1px solid rgba(251,113,133,0.2); }
-    .tag.info { background: rgba(167,139,250,0.14); color: #e9d5ff; border: 1px solid rgba(167,139,250,0.2); }
-
-    .composer {
-      display: grid;
-      gap: 12px;
-    }
-
-    .mini-calendar {
-      display: grid;
-      gap: 10px;
-    }
-
-    .calendar-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 10px;
-    }
-
-    .calendar-head h3 {
-      margin: 0;
-      font-size: 16px;
-    }
-
-    .cal-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 8px;
-    }
-
-    .dow, .day {
-      border-radius: 14px;
-      text-align: center;
-      padding: 10px 8px;
-    }
-
+    .mini-calendar { display: grid; gap: 10px; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+    .dow, .day { border-radius: 14px; text-align: center; padding: 10px 8px; }
     .dow {
       color: var(--muted);
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 800;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      background: rgba(15, 23, 42, 0.58);
-      border: 1px solid rgba(148, 163, 184, 0.10);
+      letter-spacing: .08em;
+      background: rgba(15,23,42,.58);
+      border: 1px solid rgba(148,163,184,.10);
     }
-
     .day {
       min-height: 74px;
       text-align: left;
-      background: rgba(15, 23, 42, 0.62);
-      border: 1px solid rgba(148, 163, 184, 0.12);
+      background: rgba(15,23,42,.62);
+      border: 1px solid rgba(148,163,184,.12);
       display: flex;
       flex-direction: column;
       gap: 6px;
       overflow: hidden;
     }
-
     .day.empty { background: transparent; border: 0; }
-    .day.today { outline: 2px solid rgba(96,165,250,0.5); }
-
-    .day-num {
-      font-size: 12px;
-      color: #dbeafe;
-      font-weight: 800;
-    }
-
+    .day.today { outline: 2px solid rgba(96,165,250,.5); }
+    .day-num { font-size: 12px; color: #dbeafe; font-weight: 900; }
     .dot-row { display: flex; flex-wrap: wrap; gap: 5px; }
-    .dot {
-      width: 10px; height: 10px; border-radius: 999px;
-      background: rgba(148,163,184,0.42);
-    }
+    .dot { width: 10px; height: 10px; border-radius: 999px; background: rgba(148,163,184,.42); }
     .dot.hue { background: var(--green); }
     .dot.test { background: var(--brand); }
     .dot.sa { background: var(--yellow); }
     .dot.mu { background: var(--red); }
 
-    .note {
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-    }
-
+    .note { color: var(--muted); font-size: 12px; line-height: 1.5; }
     .hidden { display: none !important; }
 
-    .scroll-area::-webkit-scrollbar { width: 10px; }
-    .scroll-area::-webkit-scrollbar-thumb { background: rgba(148,163,184,0.22); border-radius: 999px; }
-    .scroll-area::-webkit-scrollbar-track { background: transparent; }
-
-    @media (max-width: 1180px) {
-      .hero, .layout { grid-template-columns: 1fr; }
-      .subjects { max-height: none; }
+    /* Vollbild Auth */
+    .auth-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,.20), transparent 28%),
+        radial-gradient(circle at bottom right, rgba(167,139,250,.16), transparent 28%),
+        linear-gradient(180deg, rgba(7,16,31,.98), rgba(17,24,39,.98));
     }
 
+    .auth-panel {
+      width: min(980px, 100%);
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1.2fr .9fr;
+      gap: 18px;
+    }
+
+    .auth-hero {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(15,23,42,.72), rgba(17,24,39,.92));
+      border: 1px solid rgba(148,163,184,.14);
+    }
+
+    .switch-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .switch-btn {
+      background: rgba(15,23,42,.82);
+      border: 1px solid rgba(148,163,184,.18);
+      box-shadow: none;
+    }
+    .switch-btn.active {
+      background: linear-gradient(135deg, rgba(96,165,250,.24), rgba(167,139,250,.20));
+      border-color: rgba(96,165,250,.34);
+    }
+
+    .error-box {
+      display: none;
+      margin-bottom: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(251,113,133,.12);
+      border: 1px solid rgba(251,113,133,.22);
+      color: #fecdd3;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+    .error-box.show { display: block; }
+
+    .smallmuted { color: var(--muted); font-size: 13px; line-height: 1.6; }
+    .bubbles { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+    .bubble {
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(96,165,250,.10);
+      border: 1px solid rgba(96,165,250,.16);
+      color: #dbeafe;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    @media (max-width: 1180px) {
+      .hero, .layout, .auth-panel { grid-template-columns: 1fr; }
+      .subjects { max-height: none; }
+    }
     @media (max-width: 700px) {
       .wrap { padding: 14px; }
-      .hero-main, .auth-box, .section { padding: 16px; }
+      .hero-main, .auth-box, .section, .auth-panel, .auth-hero { padding: 16px; }
       .grid-2 { grid-template-columns: 1fr; }
       .stats { grid-template-columns: 1fr; }
       .cal-grid { gap: 6px; }
@@ -439,24 +370,47 @@
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="hero">
-      <div class="panel hero-main">
-        <div class="eyebrow">📚 Klassenplaner · 4. Klasse Gymnasium · Bruck an der Mur</div>
-        <h1>Alle Tests, Schularbeiten und HÜs an einem Ort.</h1>
+  <!-- Vollbild Login/Registrierung -->
+  <div id="authOverlay" class="auth-overlay">
+    <div class="panel auth-panel">
+      <div class="auth-hero">
+        <div class="eyebrow">📚 Klassenplaner · 4. Klasse Gymi · Bruck an der Mur</div>
+        <h1>Alle Termine in einer schönen Übersicht.</h1>
         <p class="subtitle">
-          Schön organisiert nach Fach, mit Kalenderansicht, klaren Kürzeln und einem modernen Überblick für die ganze Klasse.
-          Später kannst du das noch um Admin-Freigabe, Rollen und Benachrichtigungen erweitern.
+          Login und Registrierung sind getrennt. Neue Accounts werden mit Passwort-Bestätigung erstellt.
+          Fehler wie falsche E-Mail oder falsches Passwort werden direkt angezeigt.
         </p>
-        <div class="stats">
-          <div class="stat"><div class="label">Fächer</div><div class="value" id="subjectCount">15</div></div>
-          <div class="stat"><div class="label">Termine im Fach</div><div class="value" id="eventCount">0</div></div>
-          <div class="stat"><div class="label">Nächster Termin</div><div class="value" id="nextTerm">—</div></div>
+        <div class="bubbles">
+          <span class="bubble">Mathe</span>
+          <span class="bubble">Deutsch</span>
+          <span class="bubble">Englisch</span>
+          <span class="bubble">Geschichte</span>
+          <span class="bubble">Geographie</span>
+          <span class="bubble">Religion</span>
+          <span class="bubble">Physik</span>
+          <span class="bubble">Physik Labor</span>
+          <span class="bubble">Chemie</span>
+          <span class="bubble">Chemie Labor</span>
+          <span class="bubble">Biologie</span>
+          <span class="bubble">Grafisches Zeichnen</span>
+          <span class="bubble">Digitale Grundbildung</span>
+          <span class="bubble">Italienisch</span>
+          <span class="bubble">Sport</span>
         </div>
+        <p class="smallmuted" style="margin-top:14px;">
+          Erst wenn du dich anmeldest, siehst du die Termine. Später bauen wir noch die Admin-Freigabe für Schüler ein.
+        </p>
       </div>
 
-      <div class="panel auth-box">
-        <h2>Anmelden / Registrieren</h2>
+      <div class="auth-box panel" style="background: rgba(15,23,42,.64);">
+        <h2 id="authTitle">Anmelden</h2>
+        <div class="switch-row">
+          <button id="loginTab" class="switch-btn active" type="button">Login</button>
+          <button id="registerTab" class="switch-btn" type="button">Registrieren</button>
+        </div>
+
+        <div id="authError" class="error-box"></div>
+
         <div class="grid-2">
           <div class="field">
             <label for="name">Name</label>
@@ -467,16 +421,46 @@
             <input id="email" type="email" placeholder="name@example.com" />
           </div>
         </div>
-        <div class="field" style="margin-top:12px;">
-          <label for="password">Passwort</label>
-          <input id="password" type="password" placeholder="Passwort" />
+        <div class="grid-2" style="margin-top:12px;">
+          <div class="field">
+            <label for="password">Passwort</label>
+            <input id="password" type="password" placeholder="Passwort" />
+          </div>
+          <div class="field" id="confirmWrap" style="display:none;">
+            <label for="confirmPassword">Passwort bestätigen</label>
+            <input id="confirmPassword" type="password" placeholder="Passwort erneut eingeben" />
+          </div>
         </div>
+
         <div class="btn-row">
-          <button onclick="register()">Registrieren</button>
-          <button class="secondary" onclick="login()">Login</button>
+          <button id="authAction" type="button">Login</button>
         </div>
         <p class="note" style="margin-top:12px;">
-          Hinweis: Diese Datei ist als schöne Basis gedacht. Für die echte Freigabe-Logik kommt später die Rollenprüfung dazu.
+          Tipp: Für Firebase muss Email/Passwort in der Authentication aktiviert sein.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="hero">
+      <div class="panel hero-main">
+        <div class="eyebrow">📅 Klassenplaner · sauber, modern, übersichtlich</div>
+        <h1>Alle HÜs, Tests und Schularbeiten auf einen Blick.</h1>
+        <p class="subtitle">
+          Fach-Tabs, Kalenderansicht, farbige Kürzel und eine klare Oberfläche für eure Klasse. Dazu ein Login-System mit Firebase.
+        </p>
+        <div class="stats">
+          <div class="stat"><div class="label">Fächer</div><div class="value" id="subjectCount">15</div></div>
+          <div class="stat"><div class="label">Termine im Fach</div><div class="value" id="eventCount">0</div></div>
+          <div class="stat"><div class="label">Nächster Termin</div><div class="value" id="nextTerm">—</div></div>
+        </div>
+      </div>
+
+      <div class="panel auth-box">
+        <h2>Info</h2>
+        <p class="note" style="margin:0;">
+          Neue Benutzer werden zuerst registriert und können später von dir freigeschaltet werden. Dieser Bereich ist nur der Startbildschirm im Design der Seite.
         </p>
       </div>
     </div>
@@ -526,7 +510,7 @@
             <label for="details">Details</label>
             <textarea id="details" placeholder="z.B. Seiten, Themen, wer dabei ist, Raum, Zusatzinfos..."></textarea>
           </div>
-          <button onclick="addEntry()">Termin speichern</button>
+          <button id="saveBtn" type="button">Termin speichern</button>
         </div>
       </div>
 
@@ -540,23 +524,23 @@
           <div class="cal-grid" id="calendar"></div>
         </div>
         <div style="height:14px"></div>
-        <p class="note">
-          Farbige Punkte zeigen an, welche Termine in diesem Monat vorhanden sind.
-        </p>
+        <p class="note">Farbpunkte zeigen Termine im aktuellen Monat.</p>
       </div>
     </div>
   </div>
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, getDocs, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // 🔥 HIER DEINE FIREBASE DATEN EINTRAGEN
     const firebaseConfig = {
       apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
       authDomain: "informationen-4b-dc655.firebaseapp.com",
-      projectId: "informationen-4b-dc655"
+      projectId: "informationen-4b-dc655",
+      storageBucket: "informationen-4b-dc655.firebasestorage.app",
+      messagingSenderId: "523568445266",
+      appId: "1:523568445266:web:f38bc3a96adc3180f26c8b"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -564,9 +548,21 @@
     const db = getFirestore(app);
 
     const subjects = [
-      "Mathe","Deutsch","Englisch","Geschichte","Geographie","Religion",
-      "Physik","Physik Labor","Chemie","Chemie Labor","Biologie",
-      "Grafisches Zeichnen","Digitale Grundbildung","Italienisch","Sport"
+      { id: "mathe", label: "Mathe" },
+      { id: "deutsch", label: "Deutsch" },
+      { id: "englisch", label: "Englisch" },
+      { id: "geschichte", label: "Geschichte" },
+      { id: "geographie", label: "Geographie" },
+      { id: "religion", label: "Religion" },
+      { id: "physik", label: "Physik" },
+      { id: "physik-labor", label: "Physik Labor" },
+      { id: "chemie", label: "Chemie" },
+      { id: "chemie-labor", label: "Chemie Labor" },
+      { id: "biologie", label: "Biologie" },
+      { id: "grafisches-zeichnen", label: "Grafisches Zeichnen" },
+      { id: "digitale-grundbildung", label: "Digitale Grundbildung" },
+      { id: "italienisch", label: "Italienisch" },
+      { id: "sport", label: "Sport" }
     ];
 
     const typeInfo = {
@@ -577,65 +573,156 @@
       Info: { className: "info", label: "Info" }
     };
 
-    let currentSubject = subjects[0];
+    const $ = (id) => document.getElementById(id);
+    const authOverlay = $("authOverlay");
+    const authTitle = $("authTitle");
+    const authAction = $("authAction");
+    const authError = $("authError");
+    const loginTab = $("loginTab");
+    const registerTab = $("registerTab");
+    const confirmWrap = $("confirmWrap");
+    const appArea = $("app");
+
+    let mode = "login";
     let user = null;
+    let currentSubject = subjects[0];
     let entriesCache = [];
 
-    const el = (id) => document.getElementById(id);
+    const escapeHtml = (str = "") => str
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+
+    function showError(message) {
+      authError.textContent = message;
+      authError.classList.add("show");
+    }
+
+    function clearError() {
+      authError.textContent = "";
+      authError.classList.remove("show");
+    }
+
+    function setMode(nextMode) {
+      mode = nextMode;
+      clearError();
+      const isLogin = mode === "login";
+      authTitle.textContent = isLogin ? "Anmelden" : "Registrieren";
+      authAction.textContent = isLogin ? "Login" : "Registrieren";
+      loginTab.classList.toggle("active", isLogin);
+      registerTab.classList.toggle("active", !isLogin);
+      confirmWrap.style.display = isLogin ? "none" : "flex";
+      $("name").parentElement.style.display = isLogin ? "none" : "flex";
+    }
+
+    loginTab.addEventListener("click", () => setMode("login"));
+    registerTab.addEventListener("click", () => setMode("register"));
 
     function isoToDisplay(iso) {
       if (!iso) return "Ohne Datum";
-      const [y, m, d] = iso.split("-").map(Number);
-      const dt = new Date(y, m - 1, d);
-      return dt.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const d = new Date(iso + "T00:00:00");
+      return d.toLocaleDateString("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" });
     }
 
-    function parseDateSafe(iso) {
-      if (!iso) return null;
-      const d = new Date(iso + "T00:00:00");
-      return isNaN(d.getTime()) ? null : d;
+    function getSubjectDoc(subjId) {
+      return collection(db, "subjects", subjId, "entries");
     }
 
     function sortEntries(a, b) {
-      const da = parseDateSafe(a.date);
-      const db = parseDateSafe(b.date);
-      if (!da && !db) return 0;
-      if (!da) return 1;
-      if (!db) return -1;
-      return da - db;
+      if (!a.date && !b.date) return 0;
+      if (!a.date) return 1;
+      if (!b.date) return -1;
+      return a.date.localeCompare(b.date);
     }
 
-    function getCurrentMonthInfo() {
+    function renderDow() {
+      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
+      $("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
+    }
+
+    function renderSubjects() {
+      const container = $("subjects");
+      container.innerHTML = "";
+      subjects.forEach(sub => {
+        const btn = document.createElement("button");
+        btn.className = "subject-btn" + (sub.id === currentSubject.id ? " active" : "");
+        btn.type = "button";
+        btn.innerHTML = `<span>${escapeHtml(sub.label)}</span><span class="pill">${sub.id === currentSubject.id ? "✓" : ""}</span>`;
+        btn.onclick = async () => {
+          currentSubject = sub;
+          $("currentSubject").textContent = sub.label;
+          renderSubjects();
+          await loadEntries();
+        };
+        container.appendChild(btn);
+      });
+      $("subjectCount").textContent = subjects.length;
+    }
+
+    function renderEntries() {
+      const list = $("entries");
+      list.innerHTML = "";
+
+      if (!entriesCache.length) {
+        list.innerHTML = `<div class="event-card"><p class="note" style="margin:0;">Noch keine Termine in diesem Fach.</p></div>`;
+        $("eventCount").textContent = "0";
+        $("nextTerm").textContent = "—";
+        $("subjectBadge").textContent = "—";
+        return;
+      }
+
+      const sorted = [...entriesCache].sort(sortEntries);
+      $("eventCount").textContent = String(sorted.length);
+      $("nextTerm").textContent = `${sorted[0].type} · ${isoToDisplay(sorted[0].date)}`;
+      $("subjectBadge").textContent = sorted[0].type || "Info";
+
+      sorted.forEach(e => {
+        const t = typeInfo[e.type] || typeInfo.Info;
+        const card = document.createElement("div");
+        card.className = "event-card";
+        card.innerHTML = `
+          <div class="event-top">
+            <div>
+              <p class="event-title">${escapeHtml(e.title || "Ohne Titel")}</p>
+              <div class="event-meta">
+                <span class="tag ${t.className}">${t.label}</span>
+                <span>📅 ${isoToDisplay(e.date)}</span>
+                ${e.by ? `<span>👤 ${escapeHtml(e.by)}</span>` : ""}
+              </div>
+            </div>
+            <span class="pill">${escapeHtml(currentSubject.label)}</span>
+          </div>
+          ${e.details ? `<div class="note">${escapeHtml(e.details)}</div>` : ""}
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    function renderCalendar() {
       const now = new Date();
       const year = now.getFullYear();
       const month = now.getMonth();
       const first = new Date(year, month, 1);
       const last = new Date(year, month + 1, 0);
-      return { year, month, first, last, today: now };
-    }
+      const monthText = first.toLocaleDateString("de-AT", { month: "long", year: "numeric" });
+      $("monthLabel").textContent = monthText.charAt(0).toUpperCase() + monthText.slice(1);
 
-    function renderDow() {
-      const days = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"];
-      el("dow").innerHTML = days.map(d => `<div class="dow">${d}</div>`).join("");
-    }
-
-    function renderCalendar() {
-      const { year, month, first, last, today } = getCurrentMonthInfo();
-      const label = first.toLocaleDateString("de-AT", { month: "long", year: "numeric" });
-      el("monthLabel").textContent = label.charAt(0).toUpperCase() + label.slice(1);
-
-      const firstDayIndex = (first.getDay() + 6) % 7; // Monday=0
+      const firstDayIndex = (first.getDay() + 6) % 7;
       const totalDays = last.getDate();
       const cells = [];
+
       for (let i = 0; i < firstDayIndex; i++) cells.push(`<div class="day empty"></div>`);
+
       for (let day = 1; day <= totalDays; day++) {
         const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
         const dayEntries = entriesCache.filter(e => e.date === iso);
         const dots = dayEntries.slice(0, 4).map(e => {
           const t = typeInfo[e.type] || typeInfo.Info;
-          return `<span class="dot ${t.className}" title="${e.type}"></span>`;
+          return `<span class="dot ${t.className}" title="${escapeHtml(e.type || "Info")}"></span>`;
         }).join("");
-        const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+        const isToday = day === now.getDate();
         cells.push(`
           <div class="day ${isToday ? "today" : ""}">
             <div class="day-num">${day}</div>
@@ -643,143 +730,143 @@
           </div>
         `);
       }
-      el("calendar").innerHTML = cells.join("");
-    }
 
-    function updateStats() {
-      el("subjectCount").textContent = subjects.length;
-      el("eventCount").textContent = entriesCache.length;
-      const next = [...entriesCache].filter(e => parseDateSafe(e.date)).sort(sortEntries)[0];
-      el("nextTerm").textContent = next ? `${next.type} · ${isoToDisplay(next.date)}` : "—";
-    }
-
-    function renderSubjects() {
-      const container = el("subjects");
-      container.innerHTML = "";
-      subjects.forEach(sub => {
-        const btn = document.createElement("button");
-        btn.className = "subject-btn" + (sub === currentSubject ? " active" : "");
-        btn.innerHTML = `<span>${sub}</span><span class="pill">${sub === currentSubject ? "✓" : ""}</span>`;
-        btn.onclick = async () => {
-          currentSubject = sub;
-          el("currentSubject").textContent = sub;
-          renderSubjects();
-          await loadEntries();
-        };
-        container.appendChild(btn);
-      });
-    }
-
-    function renderEntries() {
-      const list = el("entries");
-      list.innerHTML = "";
-
-      if (!entriesCache.length) {
-        list.innerHTML = `<div class="event-card"><p class="note" style="margin:0;">Noch keine Termine in diesem Fach.</p></div>`;
-        return;
-      }
-
-      [...entriesCache].sort(sortEntries).forEach(e => {
-        const t = typeInfo[e.type] || typeInfo.Info;
-        const chipText = t.label;
-        const safeTitle = e.title || "Ohne Titel";
-        const safeDetails = e.details || "";
-        const dateText = isoToDisplay(e.date);
-
-        const card = document.createElement("div");
-        card.className = "event-card";
-        card.innerHTML = `
-          <div class="event-top">
-            <div>
-              <p class="event-title">${safeTitle}</p>
-              <div class="event-meta">
-                <span class="tag ${t.className}">${chipText}</span>
-                <span>📅 ${dateText}</span>
-              </div>
-            </div>
-            <span class="pill">${currentSubject}</span>
-          </div>
-          ${safeDetails ? `<div class="note">${safeDetails}</div>` : ""}
-        `;
-        list.appendChild(card);
-      });
+      $("calendar").innerHTML = cells.join("");
     }
 
     async function loadEntries() {
-      const snap = await getDocs(collection(db, currentSubject));
-      entriesCache = snap.docs.map(doc => doc.data());
+      try {
+        const q = query(getSubjectDoc(currentSubject.id), orderBy("createdAt", "desc"));
+        const snap = await getDocs(q);
+        entriesCache = snap.docs.map(d => d.data()).filter(Boolean);
+      } catch (err) {
+        // Fallback ohne orderBy, falls die Collection leer ist oder Index noch fehlt
+        const snap = await getDocs(getSubjectDoc(currentSubject.id));
+        entriesCache = snap.docs.map(d => d.data()).filter(Boolean);
+      }
       renderEntries();
       renderCalendar();
-      updateStats();
-      el("subjectBadge").textContent = (entriesCache[0]?.type || "HÜ");
     }
 
-    window.register = async () => {
-      const email = el("email").value.trim();
-      const password = el("password").value;
-      const name = el("name").value.trim();
-      if (!email || !password || !name) return alert("Bitte Name, E-Mail und Passwort eingeben.");
+    async function handleRegister() {
+      const name = $("name").value.trim();
+      const email = $("email").value.trim();
+      const password = $("password").value;
+      const confirmPassword = $("confirmPassword").value;
 
-      const res = await createUserWithEmailAndPassword(auth, email, password);
-      await addDoc(collection(db, "users"), {
-        uid: res.user.uid,
-        name,
-        email,
-        approved: false,
-        role: "student",
-        createdAt: new Date().toISOString()
-      });
-      alert("Account erstellt – warte auf Freigabe!");
-    };
-
-    window.login = async () => {
-      const email = el("email").value.trim();
-      const password = el("password").value;
-      if (!email || !password) return alert("Bitte E-Mail und Passwort eingeben.");
-
-      const res = await signInWithEmailAndPassword(auth, email, password);
-      user = res.user;
-      el("auth-box");
-      el("app").classList.remove("hidden");
-      el("currentSubject").textContent = currentSubject;
-      renderSubjects();
-      renderDow();
-      await loadEntries();
-      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
-    };
-
-    window.addEntry = async () => {
-      const type = el("type").value;
-      const date = el("date").value;
-      const title = el("title").value.trim();
-      const details = el("details").value.trim();
-
-      if (!date || !title) {
-        alert("Bitte Datum und Titel eingeben.");
+      if (!name || !email || !password || !confirmPassword) {
+        showError("Bitte alle Felder ausfüllen.");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showError("Die beiden Passwörter stimmen nicht überein.");
+        return;
+      }
+      if (password.length < 6) {
+        showError("Das Passwort muss mindestens 6 Zeichen haben.");
         return;
       }
 
-      await addDoc(collection(db, currentSubject), {
-        type,
-        date,
-        title,
-        details,
-        createdAt: new Date().toISOString(),
-        by: user ? user.email : ""
-      });
+      try {
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        await addDoc(collection(db, "users"), {
+          uid: res.user.uid,
+          name,
+          email,
+          approved: false,
+          role: "student",
+          createdAt: serverTimestamp()
+        });
+        showError("Account erstellt. Warte auf die Freigabe durch den Admin.");
+      } catch (err) {
+        showError(firebaseErrorToMessage(err));
+      }
+    }
 
-      el("title").value = "";
-      el("details").value = "";
-      el("date").value = "";
-      await loadEntries();
-    };
+    async function handleLogin() {
+      const email = $("email").value.trim();
+      const password = $("password").value;
 
-    // Default date = today
-    const today = new Date();
-    el("date").value = today.toISOString().slice(0, 10);
+      if (!email || !password) {
+        showError("Bitte E-Mail und Passwort eingeben.");
+        return;
+      }
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+      } catch (err) {
+        showError(firebaseErrorToMessage(err));
+      }
+    }
+
+    function firebaseErrorToMessage(err) {
+      const code = err?.code || "";
+      if (code.includes("auth/invalid-email")) return "Die E-Mail-Adresse ist ungültig.";
+      if (code.includes("auth/email-already-in-use")) return "Diese E-Mail ist bereits registriert.";
+      if (code.includes("auth/weak-password")) return "Das Passwort ist zu schwach (mindestens 6 Zeichen).";
+      if (code.includes("auth/invalid-credential") || code.includes("auth/wrong-password") || code.includes("auth/invalid-login-credentials")) return "E-Mail oder Passwort ist falsch.";
+      if (code.includes("auth/user-not-found")) return "Kein Account mit dieser E-Mail gefunden.";
+      if (code.includes("auth/network-request-failed")) return "Netzwerkfehler. Bitte Internetverbindung prüfen.";
+      return `Fehler: ${err?.message || "Unbekannter Fehler"}`;
+    }
+
+    $("authAction").addEventListener("click", () => {
+      if (mode === "login") handleLogin();
+      else handleRegister();
+    });
+
+    $("saveBtn").addEventListener("click", async () => {
+      const type = $("type").value;
+      const date = $("date").value;
+      const title = $("title").value.trim();
+      const details = $("details").value.trim();
+
+      clearError();
+      if (!date || !title) {
+        showError("Bitte mindestens Datum und Titel eingeben.");
+        return;
+      }
+
+      try {
+        await addDoc(getSubjectDoc(currentSubject.id), {
+          type,
+          date,
+          title,
+          details,
+          createdAt: serverTimestamp(),
+          by: user?.email || ""
+        });
+
+        $("title").value = "";
+        $("details").value = "";
+        $("type").value = "HÜ";
+        await loadEntries();
+      } catch (err) {
+        showError(`Termin konnte nicht gespeichert werden: ${err?.message || err}`);
+      }
+    });
+
+    onAuthStateChanged(auth, async (firebaseUser) => {
+      user = firebaseUser || null;
+      if (user) {
+        authOverlay.classList.add("hidden");
+        appArea.classList.remove("hidden");
+        $("currentSubject").textContent = currentSubject.label;
+        renderSubjects();
+        renderDow();
+        await loadEntries();
+      } else {
+        appArea.classList.add("hidden");
+        authOverlay.classList.remove("hidden");
+      }
+    });
+
+    // Init
+    $("date").value = new Date().toISOString().slice(0, 10);
+    setMode("login");
     renderDow();
-    renderCalendar();
     renderSubjects();
+    renderCalendar();
   </script>
 </body>
 </html>
