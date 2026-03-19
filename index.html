@@ -531,10 +531,16 @@
         state.profile = null;
 
         if (!user) {
+          // NICHT eingeloggt → Login/Register anzeigen
           el("authPanel").classList.remove("hidden");
           el("appPanel").classList.add("hidden");
           return;
         }
+
+        // 👉 EINGELOGGT → direkt zum Planner scrollen ("Weiterleitung")
+        el("authPanel").classList.add("hidden");
+        el("appPanel").classList.remove("hidden");
+        window.scrollTo({ top: el("appPanel").offsetTop, behavior: "smooth" });
 
         const ref = doc(state.db, "users", user.uid);
         const snap = await getDoc(ref);
@@ -550,6 +556,26 @@
             createdAt: serverTimestamp(),
           };
           await setDoc(ref, profile, { merge: true });
+        }
+
+        profile.role = normalizeRole(user.email, profile.role || "user");
+        state.profile = profile;
+
+        el("userInfo").textContent = `${profile.name} · ${profile.email} · ${profile.role.toUpperCase()}`;
+        el("statusInfo").textContent = `Status: ${profile.status || "pending"}`;
+
+        const approved = profile.status === "approved" || profile.role === "admin";
+        el("waitingBox").classList.toggle("hidden", approved);
+        el("dashboardBox").classList.toggle("hidden", !approved);
+        el("speakerBox").classList.toggle("hidden", !(approved && (profile.role === "speaker" || profile.role === "admin")));
+        el("adminBox").classList.toggle("hidden", !(approved && profile.role === "admin"));
+
+        if (approved) {
+          renderSubjects();
+          await renderEvents();
+          if (profile.role === "admin") await renderPendingUsers();
+        }
+      });
         }
 
         profile.role = normalizeRole(user.email, profile.role || "user");
