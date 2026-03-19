@@ -2,28 +2,248 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>Start</title>
-<link rel="stylesheet" href="style.css">
+<title>Klassenplaner</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Arial;
+  background:#0f172a;
+  color:white;
+}
+
+.center{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+
+.card{
+  background:#1e293b;
+  padding:20px;
+  border-radius:10px;
+  width:300px;
+}
+
+input,select,button{
+  width:100%;
+  margin:5px 0;
+  padding:10px;
+  border:none;
+  border-radius:5px;
+}
+
+button{
+  background:#7c3aed;
+  color:white;
+  cursor:pointer;
+}
+
+.hidden{display:none;}
+
+.topbar{
+  display:flex;
+  justify-content:space-between;
+  padding:10px;
+}
+
+.tabs button{
+  margin:5px;
+}
+
+.container{
+  padding:20px;
+}
+</style>
+
 </head>
 <body>
 
-<div class="center">
+<!-- LOGIN -->
+<div id="loginView" class="center">
   <div class="card">
-    <h2>Lade...</h2>
+    <h2>Login</h2>
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Passwort">
+    <button onclick="login()">Einloggen</button>
+    <button onclick="showRegister()">Registrieren</button>
+    <p id="error"></p>
   </div>
 </div>
 
-<script type="module">
-import { auth } from "./firebase.js";
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+<!-- REGISTER -->
+<div id="registerView" class="center hidden">
+  <div class="card">
+    <h2>Registrieren</h2>
+    <input id="name" placeholder="Name">
+    <input id="emailR" placeholder="Email">
+    <input id="passwordR" type="password" placeholder="Passwort">
+    <button onclick="register()">Erstellen</button>
+    <button onclick="showLogin()">Zurück</button>
+    <p id="errorR"></p>
+  </div>
+</div>
 
-onAuthStateChanged(auth, user => {
+<!-- DASHBOARD -->
+<div id="dashboardView" class="hidden">
+
+  <div class="topbar">
+    <h2>Termine</h2>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <div id="status"></div>
+
+  <div class="tabs">
+    <button onclick="load('Mathe')">Mathe</button>
+    <button onclick="load('Deutsch')">Deutsch</button>
+    <button onclick="load('Englisch')">Englisch</button>
+  </div>
+
+  <div class="container">
+
+    <div id="addArea" class="card hidden">
+      <h3>Termin hinzufügen</h3>
+      <input id="title" placeholder="Titel">
+      <input id="date" type="date">
+      <select id="type">
+        <option>HÜ</option>
+        <option>Test</option>
+        <option>SA</option>
+        <option>Mitarbeit</option>
+      </select>
+      <button onclick="addEvent()">Speichern</button>
+    </div>
+
+    <div class="card">
+      <h3>Termine</h3>
+      <ul id="list"></ul>
+    </div>
+
+  </div>
+
+  <p id="errorD"></p>
+
+</div>
+
+<script type="module">
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, updateProfile } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "DEIN_KEY",
+  authDomain: "DEIN_DOMAIN",
+  projectId: "DEIN_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+let currentSubject = "Mathe";
+
+function showLogin(){
+  loginView.classList.remove("hidden");
+  registerView.classList.add("hidden");
+}
+
+function showRegister(){
+  registerView.classList.remove("hidden");
+  loginView.classList.add("hidden");
+}
+
+window.showLogin = showLogin;
+window.showRegister = showRegister;
+
+window.login = async () => {
+  try{
+    await signInWithEmailAndPassword(auth,email.value,password.value);
+  }catch(e){
+    error.innerText = e.code;
+  }
+}
+
+window.register = async () => {
+  try{
+    const user = await createUserWithEmailAndPassword(auth,emailR.value,passwordR.value);
+
+    await updateProfile(user.user,{displayName:name.value});
+
+    await setDoc(doc(db,"users",user.user.uid),{
+      name:name.value,
+      role:"user",
+      status:"pending"
+    });
+
+    errorR.innerText="Warte auf Freigabe";
+  }catch(e){
+    errorR.innerText=e.code;
+  }
+}
+
+onAuthStateChanged(auth, async user => {
   if(user){
-    window.location.href = "dashboard.html";
-  } else {
-    window.location.href = "login.html";
+    loginView.classList.add("hidden");
+    registerView.classList.add("hidden");
+    dashboardView.classList.remove("hidden");
+
+    const snap = await getDocs(collection(db,"users"));
+    snap.forEach(d=>{
+      if(d.id===user.uid){
+        const data=d.data();
+
+        if(data.status!=="approved"){
+          status.innerText="Nicht freigeschaltet!";
+        }
+
+        if(data.role==="admin" || data.role==="sprecher"){
+          addArea.classList.remove("hidden");
+        }
+      }
+    });
+
+    load();
+  }else{
+    dashboardView.classList.add("hidden");
+    loginView.classList.remove("hidden");
   }
 });
+
+window.logout = () => signOut(auth);
+
+window.load = async (subject) => {
+  if(subject) currentSubject = subject;
+
+  const snap = await getDocs(collection(db,"events"));
+  list.innerHTML="";
+
+  snap.forEach(d=>{
+    const data=d.data();
+    if(data.subject===currentSubject){
+      const li=document.createElement("li");
+      li.innerText=data.title+" ("+data.type+") - "+data.date;
+      list.appendChild(li);
+    }
+  });
+}
+
+window.addEvent = async () => {
+  try{
+    await addDoc(collection(db,"events"),{
+      title:title.value,
+      date:date.value,
+      type:type.value,
+      subject:currentSubject
+    });
+    load();
+  }catch(e){
+    errorD.innerText=e.code;
+  }
+}
+
 </script>
 
 </body>
