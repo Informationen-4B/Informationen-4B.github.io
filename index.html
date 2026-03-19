@@ -473,6 +473,7 @@
 
       <div class="panel section">
         <div class="content-head">
+          <button onclick="logout()" style="margin-bottom:10px;">Abmelden</button>
           <div class="big-title">
             <h2 id="currentSubject">Mathe</h2>
             <p>Termine im aktuellen Fach mit Kürzel, Datum und Zusatzinfos.</p>
@@ -845,6 +846,11 @@
         showError(`Termin konnte nicht gespeichert werden: ${err?.message || err}`);
       }
     });
+
+    // 🔓 LOGOUT
+    window.logout = async () => {
+      await auth.signOut();
+    };
 
     onAuthStateChanged(auth, async (firebaseUser) => {
       user = firebaseUser || null;
