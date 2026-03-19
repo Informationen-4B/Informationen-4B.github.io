@@ -1,13 +1,138 @@
 <!DOCTYPE html>
 <html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Klassenplaner</title>
-  </head>
-  <body>
-    <div id="root"></div>
+<head>
+  <meta charset="UTF-8">
+  <title>Klassenplaner</title>
+</head>
+<body>
 
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<h1>Klassenplaner</h1>
+
+<div id="auth">
+  <h2>Login / Registrierung</h2>
+  <input id="name" placeholder="Name"><br>
+  <input id="email" placeholder="Email"><br>
+  <input id="password" type="password" placeholder="Passwort"><br><br>
+  <button onclick="register()">Registrieren</button>
+  <button onclick="login()">Login</button>
+</div>
+
+<div id="app" style="display:none;">
+  <h2>Fächer</h2>
+  <div id="subjects"></div>
+
+  <h3 id="currentSubject"></h3>
+  <ul id="entries"></ul>
+
+  <input id="newEntry" placeholder="z.B. Mathe Test HÜ">
+  <button onclick="addEntry()">Eintragen</button>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+// 🔥 DEINE FIREBASE DATEN HIER EINTRAGEN
+const firebaseConfig = {
+  apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+  authDomain: "informationen-4b-dc655.firebaseapp.com",
+  projectId: "informationen-4b-dc655"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+const subjects = [
+  "Mathe","Deutsch","Englisch","Geschichte","Geographie","Religion",
+  "Physik","Physik Labor","Chemie","Chemie Labor","Biologie",
+  "Grafisches Zeichnen","Digitale Grundbildung","Italienisch","Sport"
+];
+
+let currentSubject = "Mathe";
+let user = null;
+
+// 🔐 REGISTER
+window.register = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value;
+
+  const res = await createUserWithEmailAndPassword(auth, email, password);
+
+  await addDoc(collection(db, "users"), {
+    uid: res.user.uid,
+    name,
+    email,
+    approved: false,
+    role: "student"
+  });
+
+  alert("Account erstellt – warte auf Freigabe!");
+};
+
+// 🔐 LOGIN
+window.login = async () => {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  const res = await signInWithEmailAndPassword(auth, email, password);
+  user = res.user;
+
+  document.getElementById("auth").style.display = "none";
+  document.getElementById("app").style.display = "block";
+
+  loadSubjects();
+  loadEntries();
+};
+
+// 📚 FÄCHER ANZEIGEN
+function loadSubjects() {
+  const container = document.getElementById("subjects");
+  container.innerHTML = "";
+
+  subjects.forEach(sub => {
+    const btn = document.createElement("button");
+    btn.innerText = sub;
+    btn.onclick = () => {
+      currentSubject = sub;
+      loadEntries();
+    };
+    container.appendChild(btn);
+  });
+}
+
+// 📥 EINTRÄGE LADEN
+async function loadEntries() {
+  document.getElementById("currentSubject").innerText = currentSubject;
+
+  const list = document.getElementById("entries");
+  list.innerHTML = "";
+
+  const querySnapshot = await getDocs(collection(db, currentSubject));
+
+  querySnapshot.forEach(doc => {
+    const li = document.createElement("li");
+    li.innerText = doc.data().text;
+    list.appendChild(li);
+  });
+}
+
+// ➕ EINTRAG HINZUFÜGEN
+window.addEntry = async () => {
+  const text = document.getElementById("newEntry").value;
+
+  await addDoc(collection(db, currentSubject), {
+    text,
+    date: new Date().toLocaleDateString()
+  });
+
+  document.getElementById("newEntry").value = "";
+  loadEntries();
+};
+
+</script>
+
+</body>
 </html>
