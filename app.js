@@ -8,9 +8,9 @@ import { getFirestore, collection, addDoc, getDocs } from "firebase/firestore";
 
 // 🔥 HIER DEINE FIREBASE DATEN EINTRAGEN
 const firebaseConfig = {
-  apiKey: "DEIN_API_KEY",
-  authDomain: "DEIN_PROJECT.firebaseapp.com",
-  projectId: "DEIN_PROJECT_ID",
+  apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+  authDomain: "informationen-4b-dc655.firebaseapp.com",
+  projectId: "informationen-4b-dc655",
 };
 
 const app = initializeApp(firebaseConfig);
