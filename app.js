@@ -17,12 +17,13 @@ import {
   query,
   where,
   updateDoc,
-  deleteDoc, // ⭐ NEU
+  deleteDoc,
   orderBy,
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 let firebaseConfig = {};
-let ROOT_ADMIN_EMAIL = "Matthias.HANDL@ahsbruck.at";
+// ⭐ ÄNDERE DIESE E-MAILS! Setze hier deine E-Mail damit du auto-freigeschaltet wirst
+let ROOT_ADMIN_EMAIL = "Matthias.HANDL@ahsbruck.at"; // Ändere zu deiner E-Mail!
 let CLASS_REP_1_EMAIL = "klassensprecherin1@example.com";
 let CLASS_REP_2_EMAIL = "klassensprecherin2@example.com";
 let DEPUTY_REP_EMAIL = "stellvertreter@example.com";
@@ -46,7 +47,7 @@ let db = null;
 let currentRole = null;
 let currentSubject = null;
 let allEvents = [];
-let editingEventId = null; // ⭐ NEU
+let editingEventId = null;
 
 const SUBJECTS = [
   "Mathematik",
@@ -86,7 +87,7 @@ async function loadRuntimeConfig() {
     const res = await fetch("./firebase-config.json", { cache: "no-store" });
     if (res.ok) return await res.json();
   } catch (_) {
-    // fallback unten
+    // fallback
   }
   return window.CLASSPLANNER_CONFIG || {};
 }
@@ -111,9 +112,9 @@ registerForm.addEventListener("submit", async (e) => {
       createdAt: new Date().toISOString(),
     });
 
-    toast(approved ? "Account erstellt und direkt freigeschaltet." : "Registriert. Warte auf Freischaltung.");
+    toast(approved ? "✅ Account erstellt und direkt freigeschaltet." : "⏳ Registriert. Warte auf Freischaltung.");
   } catch (err) {
-    toast(`Fehler bei Registrierung: ${friendlyAuthError(err)}`);
+    toast(`❌ Fehler bei Registrierung: ${friendlyAuthError(err)}`);
   }
 });
 
@@ -121,19 +122,20 @@ loginForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!auth) return;
 
-  const email = document.getElementById("login-email").value.trim();
+  const email = document.getElementById("login-email").value.trim().toLowerCase();
   const password = document.getElementById("login-password").value;
 
   try {
     await signInWithEmailAndPassword(auth, email, password);
+    toast("✅ Angemeldet!");
   } catch (err) {
-    toast(`Login fehlgeschlagen: ${friendlyAuthError(err)}`);
+    toast(`❌ Login fehlgeschlagen: ${friendlyAuthError(err)}`);
   }
 });
 
 logoutBtn.addEventListener("click", () => auth && signOut(auth));
 
-// ⭐ NEU: Event Bearbeitung starten
+// Event Bearbeitung starten
 function startEditEvent(eventId) {
   const event = allEvents.find(e => e.id === eventId);
   if (!event) return;
@@ -145,7 +147,6 @@ function startEditEvent(eventId) {
   document.getElementById("event-title").value = event.title;
   document.getElementById("event-participants").value = event.participants?.join(", ") || "";
   
-  // UI aktualisieren
   const submitBtn = document.querySelector("#event-form button[type='submit']");
   const cancelBtn = document.getElementById("cancel-edit-btn");
   submitBtn.textContent = "Änderungen speichern";
@@ -154,7 +155,7 @@ function startEditEvent(eventId) {
   editorPanel.scrollIntoView({ behavior: "smooth" });
 }
 
-// ⭐ NEU: Event Bearbeitung abbrechen
+// Event Bearbeitung abbrechen
 function cancelEditEvent() {
   editingEventId = null;
   document.getElementById("event-form").reset();
@@ -168,7 +169,7 @@ document.getElementById("event-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!auth || !db) return;
   if (!["admin", "representative", "deputy"].includes(currentRole)) {
-    toast("Keine Berechtigung zum Eintragen.");
+    toast("❌ Keine Berechtigung zum Eintragen.");
     return;
   }
 
@@ -180,7 +181,6 @@ document.getElementById("event-form").addEventListener("submit", async (e) => {
   const participants = participantsRaw ? participantsRaw.split(",").map((n) => n.trim()).filter(Boolean) : [];
 
   try {
-    // ⭐ GEÄNDERT: Update oder Create
     if (editingEventId) {
       await updateDoc(doc(db, "events", editingEventId), {
         subject,
@@ -208,15 +208,16 @@ document.getElementById("event-form").addEventListener("submit", async (e) => {
     cancelEditEvent();
     await loadEvents();
   } catch (err) {
-    toast(`Speichern fehlgeschlagen: ${err.message}`);
+    toast(`❌ Speichern fehlgeschlagen: ${err.message}`);
   }
 });
 
-// ⭐ NEU: Cancel Button Event Listener
 document.getElementById("cancel-edit-btn").addEventListener("click", cancelEditEvent);
 
+// ⭐ WICHTIG: Diese Funktion kontrolliert das Routing nach dem Login!
 function wireAuthState() {
   onAuthStateChanged(auth, async (user) => {
+    // Nicht angemeldet
     if (!user) {
       authSection.classList.remove("hidden");
       appSection.classList.add("hidden");
@@ -226,30 +227,47 @@ function wireAuthState() {
       return;
     }
 
-    const userDoc = await ensureUserDoc(user);
-    const profile = userDoc.data();
-    currentRole = profile.role;
+    try {
+      const userDoc = await ensureUserDoc(user);
+      const profile = userDoc.data();
+      currentRole = profile.role;
 
-    userInfo.textContent = `${profile.name} (${profile.role})`;
-    userInfo.classList.remove("hidden");
-    logoutBtn.classList.remove("hidden");
+      // Zeige Benutzerinfo
+      userInfo.textContent = `👤 ${profile.name} (${profile.role})`;
+      userInfo.classList.remove("hidden");
+      logoutBtn.classList.remove("hidden");
 
-    if (!profile.approved) {
+      // ⭐ WICHTIG: Wenn nicht freigeschaltet -> warte auf Admin
+      if (!profile.approved) {
+        console.warn("Benutzer nicht freigeschaltet:", profile.email);
+        authSection.classList.add("hidden");
+        appSection.classList.add("hidden");
+        pendingSection.classList.remove("hidden");
+        toast("⏳ Dein Account wartet auf Freischaltung durch einen Admin.");
+        return;
+      }
+
+      // ✅ FREIGESCHALTET - Zeige alles!
+      console.log("✅ Benutzer freigeschaltet. Zeige Dashboard...");
       authSection.classList.add("hidden");
-      appSection.classList.add("hidden");
-      pendingSection.classList.remove("hidden");
-      return;
+      pendingSection.classList.add("hidden");
+      appSection.classList.remove("hidden");
+
+      // Zeige Admin-Panel nur für Admins
+      adminPanel.classList.toggle("hidden", currentRole !== "admin");
+      
+      // Zeige Editor-Panel nur für Lehrer/Vertreter
+      editorPanel.classList.toggle("hidden", !["admin", "representative", "deputy"].includes(currentRole));
+
+      // Lade Daten
+      if (currentRole === "admin") await loadPendingUsers();
+      await loadEvents();
+      
+      toast(`✅ Willkommen, ${profile.name}!`);
+    } catch (err) {
+      console.error("Auth Error:", err);
+      toast(`❌ Fehler: ${err.message}`);
     }
-
-    authSection.classList.add("hidden");
-    pendingSection.classList.add("hidden");
-    appSection.classList.remove("hidden");
-
-    adminPanel.classList.toggle("hidden", currentRole !== "admin");
-    editorPanel.classList.toggle("hidden", !["admin", "representative", "deputy"].includes(currentRole));
-
-    if (currentRole === "admin") await loadPendingUsers();
-    await loadEvents();
   });
 }
 
@@ -283,7 +301,7 @@ async function loadPendingUsers() {
   const q = query(collection(db, "users"), where("approved", "==", false));
   const snap = await getDocs(q);
   if (snap.empty) {
-    pendingUsersEl.innerHTML = "<p>Keine offenen Freigaben.</p>";
+    pendingUsersEl.innerHTML = "<p>✅ Keine offenen Freigaben.</p>";
     return;
   }
 
@@ -307,7 +325,7 @@ async function loadPendingUsers() {
   document.querySelectorAll(".approve-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       await updateDoc(doc(db, "users", btn.dataset.id), { approved: true });
-      toast("User freigeschaltet.");
+      toast("✅ User freigeschaltet.");
       await loadPendingUsers();
     });
   });
@@ -347,7 +365,6 @@ function renderTabs() {
   });
 }
 
-// ⭐ GEÄNDERT: Event Rendering mit Edit/Delete Buttons
 function renderEvents(subject) {
   currentSubject = subject;
   document.querySelectorAll(".tab").forEach((t) => t.classList.toggle("active", t.firstChild?.textContent === subject));
@@ -365,13 +382,13 @@ function renderEvents(subject) {
         <article class="event" data-event-id="${e.id}">
           <div class="event-content">
             <strong>${e.type}: ${e.title}</strong><br>
-            <small>Datum: ${formatDate(e.date)}</small>
-            ${e.participants?.length ? `<br><small>Namen: ${e.participants.join(", ")}</small>` : ""}
+            <small>📅 ${formatDate(e.date)}</small>
+            ${e.participants?.length ? `<br><small>👥 ${e.participants.join(", ")}</small>` : ""}
           </div>
           ${canEdit ? `
             <div class="event-actions">
-              <button class="edit-btn" data-id="${e.id}">✏️</button>
-              <button class="delete-btn" data-id="${e.id}">🗑️</button>
+              <button class="edit-btn" data-id="${e.id}" title="Bearbeiten">✏️</button>
+              <button class="delete-btn" data-id="${e.id}" title="Löschen">🗑️</button>
             </div>
           ` : ""}
         </article>
@@ -379,12 +396,10 @@ function renderEvents(subject) {
     })
     .join("");
 
-  // ⭐ NEU: Event Listener für Edit-Buttons
   document.querySelectorAll(".edit-btn").forEach((btn) => {
     btn.addEventListener("click", () => startEditEvent(btn.dataset.id));
   });
 
-  // ⭐ NEU: Event Listener für Delete-Buttons
   document.querySelectorAll(".delete-btn").forEach((btn) => {
     btn.addEventListener("click", async () => {
       if (confirm("🗑️ Diesen Termin wirklich löschen?")) {
@@ -393,7 +408,7 @@ function renderEvents(subject) {
           toast("✅ Termin gelöscht!");
           await loadEvents();
         } catch (err) {
-          toast(`Fehler beim Löschen: ${err.message}`);
+          toast(`❌ Fehler beim Löschen: ${err.message}`);
         }
       }
     });
@@ -409,7 +424,7 @@ function formatDate(v) {
 function showSetupNotice() {
   setupSection.classList.remove("hidden");
   disableAuthForms();
-  toast("Firebase ist noch nicht konfiguriert. Bitte firebase-config.json eintragen.");
+  toast("❌ Firebase ist noch nicht konfiguriert. Bitte firebase-config.json eintragen.");
 }
 
 function disableAuthForms() {
