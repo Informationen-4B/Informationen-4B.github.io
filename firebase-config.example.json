@@ -1,13 +1,13 @@
 {
   "firebaseConfig": {
-    "apiKey": "AIza...",
-    "authDomain": "dein-projekt.firebaseapp.com",
-    "projectId": "dein-projekt-id",
-    "storageBucket": "dein-projekt.appspot.com",
-    "messagingSenderId": "1234567890",
-    "appId": "1:1234567890:web:abc123"
+    "apiKey": "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+    "authDomain": "informationen-4b-dc655.firebaseapp.com",
+    "projectId": "informationen-4b-dc655",
+    "storageBucket": "informationen-4b-dc655.firebasestorage.app",
+    "messagingSenderId": "523568445266",
+    "appId": "1:523568445266:web:f38bc3a96adc3180f26c8b"
   },
-  "rootAdminEmail": "du@schule.at",
+  "rootAdminEmail": "Matthias.HANDL@ahsbruck.at",
   "classRep1Email": "sprecherin1@schule.at",
   "classRep2Email": "sprecherin2@schule.at",
   "deputyRepEmail": "stellvertretung@schule.at"
