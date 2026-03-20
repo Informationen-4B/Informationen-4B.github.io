@@ -25,7 +25,7 @@ import {
  * Fallback: window.CLASSPLANNER_CONFIG (falls jemand weiterhin firebase-config.js nutzt).
  */
 let firebaseConfig = {};
-let ROOT_ADMIN_EMAIL = "dein.name@example.com";
+let ROOT_ADMIN_EMAIL = "Matthias.HANDL@ahsbruck.at";
 let CLASS_REP_1_EMAIL = "klassensprecherin1@example.com";
 let CLASS_REP_2_EMAIL = "klassensprecherin2@example.com";
 let DEPUTY_REP_EMAIL = "stellvertreter@example.com";
