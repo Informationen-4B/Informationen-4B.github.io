@@ -1,0 +1,14 @@
+{
+  "firebaseConfig": {
+    "apiKey": "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+    "authDomain": "informationen-4b-dc655.firebaseapp.com",
+    "projectId": "informationen-4b-dc655",
+    "storageBucket": "informationen-4b-dc655.firebasestorage.app",
+    "messagingSenderId": "523568445266",
+    "appId": "1:523568445266:web:f38bc3a96adc3180f26c8b"
+  },
+  "rootAdminEmail": "Matthias.HANDL@ahsbruck.at",
+  "classRep1Email": "sprecherin1@schule.at",
+  "classRep2Email": "sprecherin2@schule.at",
+  "deputyRepEmail": "stellvertretung@schule.at"
+}
