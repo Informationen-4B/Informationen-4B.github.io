@@ -8,153 +8,768 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#030712;--bg-2:#0b1120;--surface:#111827;--surface-2:#172033;--surface-3:#1f2937;--line:rgba(148,163,184,.18);--text:#e5eefc;--muted:#9fb0c8;--sidebar:#0f172a;--sidebar-line:#1e293b;--sidebar-text:#e2e8f0;--sidebar-muted:#93a4bf;--blue:#3b82f6;--blue-strong:#60a5fa;--red:#ef4444;--yellow:#f59e0b;--green:#10b981;--indigo:#8b5cf6;--pink:#ec4899;--cyan:#22d3ee;--shadow:0 10px 30px rgba(0,0,0,.28);--shadow-soft:0 16px 40px rgba(0,0,0,.22);--r1:18px;--r2:12px;--r3:8px}
+    :root{
+      --bg1:#f6f9ff;
+      --bg2:#eef4ff;
+      --surface:#ffffff;
+      --surface-2:#f8fbff;
+      --surface-3:#edf4ff;
+      --line:rgba(15,23,42,.08);
+      --line-strong:rgba(59,130,246,.16);
+      --text:#0f172a;
+      --muted:#64748b;
+      --blue:#3b82f6;
+      --blue-strong:#2563eb;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --green:#10b981;
+      --indigo:#8b5cf6;
+      --pink:#ec4899;
+      --cyan:#06b6d4;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --shadow-soft:0 16px 40px rgba(15,23,42,.10);
+      --r1:20px;
+      --r2:14px;
+      --r3:10px;
+    }
+
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%}
-    body{font-family:"IBM Plex Sans",sans-serif;background:
-      radial-gradient(circle at top left,rgba(59,130,246,.22),transparent 26%),
-      radial-gradient(circle at top right,rgba(139,92,246,.18),transparent 24%),
-      radial-gradient(circle at bottom right,rgba(236,72,153,.16),transparent 22%),
-      linear-gradient(180deg,#020617 0%,#0b1120 100%);
-      color:var(--text)}
-    h1,h2,h3{margin:0;font-family:"Bricolage Grotesque",sans-serif;line-height:1.05}
-    p{margin:0;line-height:1.55}
+    html,body{
+      margin:0;
+      height:100%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at top left,rgba(59,130,246,.14),transparent 28%),
+        radial-gradient(circle at top right,rgba(139,92,246,.12),transparent 26%),
+        radial-gradient(circle at bottom right,rgba(236,72,153,.10),transparent 24%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);
+      color:var(--text);
+      font-family:"IBM Plex Sans",sans-serif;
+      font-size:clamp(12px,1vw,16px);
+    }
+
+    body{overscroll-behavior:none}
+    h1,h2,h3,p{margin:0}
+    h1,h2,h3{
+      font-family:"Bricolage Grotesque",sans-serif;
+      line-height:1.05;
+      letter-spacing:-.02em;
+    }
+    p{line-height:1.5}
+    button,input,select,textarea{font:inherit}
+    button{
+      border:none;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease, opacity .15s ease;
+    }
+    button:hover:not(:disabled){transform:translateY(-1px)}
+    button:disabled{opacity:.65;cursor:wait;transform:none}
     .hidden{display:none!important}
 
-    .screen{min-height:100vh;padding:32px}
-    .card,.panel{background:rgba(17,24,39,.92);border:1px solid var(--line);border-radius:var(--r1);box-shadow:var(--shadow);color:var(--text);backdrop-filter:blur(12px)}
+    .screen{
+      height:100vh;
+      overflow:hidden;
+      padding:20px;
+    }
 
-    .loading-screen{display:grid;place-items:center}
-    .loading-card{width:min(420px,100%);padding:32px;text-align:center}
-    .spinner{width:46px;height:46px;margin:0 auto 16px;border-radius:50%;border:4px solid rgba(59,130,246,.18);border-top-color:var(--blue-strong);animation:spin 1s linear infinite}
+    .card,.panel{
+      background:rgba(255,255,255,.84);
+      border:1px solid var(--line);
+      border-radius:var(--r1);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      color:var(--text);
+    }
+
+    .eyebrow,.pill,.day-count,.type-badge,.status-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+      line-height:1;
+      white-space:nowrap;
+    }
+
+    .eyebrow{
+      background:rgba(59,130,246,.12);
+      color:var(--blue-strong);
+    }
+    .pill{
+      background:var(--surface-2);
+      border:1px solid var(--line);
+      color:var(--text);
+    }
+    .day-count{
+      background:rgba(59,130,246,.12);
+      color:var(--blue-strong);
+    }
+
+    .loading-screen{
+      display:grid;
+      place-items:center;
+    }
+    .loading-card{
+      width:min(420px,100%);
+      padding:28px;
+      text-align:center;
+    }
+    .spinner{
+      width:46px;
+      height:46px;
+      margin:0 auto 16px;
+      border-radius:50%;
+      border:4px solid rgba(59,130,246,.14);
+      border-top-color:var(--blue);
+      animation:spin 1s linear infinite;
+    }
     @keyframes spin{to{transform:rotate(360deg)}}
 
-    .auth-screen{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(360px,.95fr);gap:24px;align-items:stretch}
-    .auth-hero,.auth-card{padding:32px}
-    .auth-hero{display:flex;flex-direction:column;justify-content:space-between;gap:28px;background:
-      linear-gradient(145deg,rgba(17,24,39,.95),rgba(30,41,59,.94)),
-      linear-gradient(135deg,rgba(59,130,246,.14),transparent 50%)}
-    .auth-hero h1{font-size:clamp(2.2rem,4vw,4rem);max-width:12ch}
-    .eyebrow,.pill,.day-count,.type-badge,.status-badge{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:6px 10px;border-radius:999px;font-size:.82rem;font-weight:700;line-height:1}
-    .eyebrow{background:rgba(59,130,246,.18);color:#dbeafe}
-    .pill{background:rgba(255,255,255,.06);border:1px solid rgba(148,163,184,.16);color:var(--text)}
-    .day-count{background:rgba(59,130,246,.18);color:#dbeafe}
-    .subject-cloud{display:flex;flex-wrap:wrap;gap:10px}
-    .subject-chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(148,163,184,.16);font-size:.9rem}
-    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:16px;background:rgba(15,23,42,.9)}
-    .switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:6px;border-radius:12px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.14)}
+    .auth-screen{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);
+      gap:18px;
+      align-items:stretch;
+    }
 
-    button,input,select,textarea{font:inherit}
-    button{padding:10px 14px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;border:none;cursor:pointer;transition:background .2s ease,transform .2s ease,box-shadow .2s ease;box-shadow:0 10px 20px rgba(59,130,246,.2)}
-    button:hover:not(:disabled){background:linear-gradient(135deg,var(--blue-strong),var(--indigo));transform:translateY(-1px)}
-    button:disabled{cursor:wait;opacity:.65;transform:none}
-    .switch-btn{background:transparent;color:var(--muted);padding:12px 14px;border-radius:8px;box-shadow:none}
-    .switch-btn:hover:not(:disabled){background:rgba(255,255,255,.08);color:var(--text)}
-    .switch-btn.active{background:#111827;color:#fff;box-shadow:var(--shadow)}
+    .auth-hero,.auth-card{
+      padding:28px;
+    }
 
-    .notice{padding:14px 16px;border-radius:12px;border:1px solid transparent;font-size:.95rem}
-    .notice.error{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.24);color:#fecaca}
-    .notice.success{background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.22);color:#bbf7d0}
-    .notice.info{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.22);color:#bfdbfe}
+    .auth-hero{
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap:20px;
+      background:
+        linear-gradient(145deg,rgba(255,255,255,.92),rgba(243,248,255,.92)),
+        linear-gradient(135deg,rgba(59,130,246,.10),transparent 40%);
+    }
 
-    form{display:grid;gap:14px}
-    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .field{display:grid;gap:6px}
-    .field label{font-size:.92rem;font-weight:700;color:#dbe5f4}
-    input,select,textarea{width:100%;padding:10px;margin-top:5px;border-radius:8px;border:1px solid rgba(148,163,184,.2);background:#0f172a;color:var(--text);outline:none;transition:border-color .18s ease,box-shadow .18s ease}
-    input:focus,select:focus,textarea:focus{border-color:rgba(96,165,250,.7);box-shadow:0 0 0 3px rgba(59,130,246,.12)}
-    textarea{min-height:120px;resize:vertical}
+    .auth-hero h1{
+      font-size:clamp(2rem,3.6vw,4rem);
+      max-width:12ch;
+      margin-top:10px;
+    }
 
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:8px;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;font-weight:700}
-    .btn.secondary{background:#334155;color:#f8fafc}
-    .btn.ghost{background:#111827;color:#e5eefc;border:1px solid rgba(148,163,184,.18)}
-    .btn.light{background:#0f172a;color:#e2e8f0;border:1px solid #334155}
-    .btn.danger{background:linear-gradient(135deg,var(--red),#b91c1c)}
-    .btn.small{padding:9px 12px;font-size:.9rem}
-    .btn.secondary:hover:not(:disabled){background:#475569;color:#fff}
-    .btn.ghost:hover:not(:disabled){background:#1e293b;color:#fff}
-    .btn.light:hover:not(:disabled){background:#111827;color:#fff}
-    .btn.danger:hover:not(:disabled){background:linear-gradient(135deg,#dc2626,#991b1b)}
+    .subject-cloud{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:auto;
+    }
+    .subject-chip{
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--line);
+      box-shadow:0 8px 20px rgba(15,23,42,.05);
+      font-size:.92rem;
+    }
 
-    .main-screen{display:grid;grid-template-columns:250px 1fr;grid-template-rows:72px 1fr;height:100vh;max-width:none;margin:0;padding:0;overflow:hidden;background:transparent}
-    .topbar{grid-column:1 / -1;grid-row:1;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:0 24px;background:rgba(2,6,23,.88);border-bottom:1px solid rgba(148,163,184,.12);box-shadow:0 1px 8px rgba(0,0,0,.18);position:sticky;top:0;z-index:30;backdrop-filter:blur(10px)}
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .mark{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;flex:0 0 auto;box-shadow:0 10px 18px rgba(59,130,246,.25)}
-    .topbar-copy h2{font-size:1.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#f8fafc}
-    .header-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto}
+    .auth-card{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:14px;
+      background:rgba(255,255,255,.90);
+    }
 
-    .sidebar{grid-column:1;grid-row:2;background:linear-gradient(180deg,#0f172a 0%,#111827 100%);color:var(--sidebar-text);border:none;border-right:1px solid rgba(148,163,184,.1);border-radius:0;box-shadow:none;padding:18px 14px;height:calc(100vh - 72px);overflow:auto}
-    .sidebar .profile-chip{display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(148,163,184,.14);margin-bottom:18px}
-    .sidebar .avatar{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;font-weight:800;flex:0 0 auto}
-    .sidebar .profile-copy{display:grid;gap:2px;min-width:0}
-    .sidebar .profile-copy strong{color:#f8fafc}
-    .sidebar .profile-copy span{color:var(--sidebar-muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .sidebar .panel-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .sidebar .panel-head h2{font-size:1.2rem;color:#f8fafc}
-    .sidebar .btn.light{width:100%;justify-content:center;margin-bottom:14px}
-    .subject-list{display:grid;gap:6px}
-    .subject-item{width:100%;padding:12px;border-radius:10px;cursor:pointer;background:transparent;color:var(--sidebar-text);border:none;box-shadow:none;text-align:left;display:grid;gap:8px}
-    .subject-item:hover:not(:disabled){background:#1e293b;color:#fff;transform:none}
-    .subject-item.active{background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff}
-    .subject-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-    .subject-head strong{font-size:.96rem;color:inherit}
-    .sidebar .term-meta{display:flex;flex-wrap:wrap;gap:6px}
+    .switch-row{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+      padding:6px;
+      border-radius:14px;
+      background:var(--surface-2);
+      border:1px solid var(--line);
+    }
+    .switch-btn{
+      background:transparent;
+      color:var(--muted);
+      padding:12px 14px;
+      border-radius:10px;
+      box-shadow:none;
+      font-weight:700;
+    }
+    .switch-btn:hover:not(:disabled){
+      background:rgba(59,130,246,.08);
+      color:var(--text);
+    }
+    .switch-btn.active{
+      background:var(--surface);
+      color:var(--text);
+      box-shadow:var(--shadow);
+    }
 
-    .content-shell{grid-column:2;grid-row:2;overflow:auto;padding:24px}
-    .trend-panel{padding:18px;background:linear-gradient(135deg,rgba(17,24,39,.96),rgba(31,41,55,.92))}
-    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .day-bar{display:flex;gap:10px;overflow-x:auto;padding-top:14px;padding-bottom:4px}
-    .day-card{min-width:104px;padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.05);border:1px solid rgba(148,163,184,.16);color:var(--text);text-align:left;display:grid;gap:6px;box-shadow:none}
-    .day-card:hover:not(:disabled){background:rgba(59,130,246,.14);color:#fff;transform:none}
-    .day-card.active{background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;border-color:transparent;box-shadow:0 12px 30px rgba(59,130,246,.24)}
-    .day-card.active .day-count{background:rgba(255,255,255,.18);color:#fff}
-    .day-card.has-terms{border-color:rgba(59,130,246,.5)}
-    .day-card small{font-weight:700;opacity:.82}
+    .notice{
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid transparent;
+      font-size:.95rem;
+    }
+    .notice.error{
+      background:rgba(239,68,68,.10);
+      border-color:rgba(239,68,68,.20);
+      color:#b91c1c;
+    }
+    .notice.success{
+      background:rgba(16,185,129,.10);
+      border-color:rgba(16,185,129,.20);
+      color:#047857;
+    }
+    .notice.info{
+      background:rgba(59,130,246,.10);
+      border-color:rgba(59,130,246,.18);
+      color:#1d4ed8;
+    }
 
-    .workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:24px;align-items:start;margin-top:24px}
-    .content-panel,.form-panel,.admin-panel{padding:18px}
-    .content-panel{min-width:0;background:rgba(15,23,42,.84)}
-    .form-panel,.admin-panel{background:rgba(17,24,39,.92)}
-    .content-header{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:14px}
-    .content-header h2{font-size:1.9rem}
-    .content-header p{color:var(--muted)}
-    .side-panel{display:grid;gap:18px;align-self:start}
-    .term-list,.user-list{display:grid;gap:10px}
-    .term-meta,.form-actions,.user-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-    .term-card,.user-card{background:linear-gradient(145deg,rgba(30,41,59,.96),rgba(17,24,39,.98));border-radius:14px;padding:16px;margin-bottom:0;box-shadow:var(--shadow);border:1px solid rgba(148,163,184,.14);display:grid;gap:12px}
-    .term-top,.user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
-    .term-title,.user-title{display:grid;gap:8px}
+    form{
+      display:grid;
+      gap:12px;
+    }
 
-    .type-badge,.status-badge{padding:3px 8px;border-radius:8px;font-size:12px}
-    .type-hu{background:#10b981;color:#fff}
-    .type-sa{background:#ef4444;color:#fff}
-    .type-test{background:#f59e0b;color:#fff}
-    .type-mu{background:#8b5cf6;color:#fff}
-    .empty-state{padding:18px;border-radius:12px;background:rgba(15,23,42,.8);border:1px dashed rgba(148,163,184,.18);color:var(--muted)}
+    .form-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
 
-    .toast-wrap{position:fixed;right:16px;bottom:16px;z-index:60;display:grid;gap:10px;width:min(320px,calc(100vw - 32px))}
-    .toast{padding:14px 16px;border-radius:12px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.24)}
-    .toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
+    .field{
+      display:grid;
+      gap:6px;
+    }
+    .field label{
+      font-size:.9rem;
+      font-weight:700;
+      color:#334155;
+    }
+
+    input,select,textarea{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--text);
+      outline:none;
+      box-shadow:none;
+      transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    input:focus,select:focus,textarea:focus{
+      border-color:rgba(59,130,246,.6);
+      box-shadow:0 0 0 4px rgba(59,130,246,.10);
+    }
+    textarea{
+      min-height:84px;
+      resize:none;
+    }
+
+    .btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      padding:10px 14px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--blue),var(--indigo));
+      color:#fff;
+      font-weight:700;
+      box-shadow:0 12px 22px rgba(59,130,246,.18);
+    }
+    .btn:hover:not(:disabled){
+      background:linear-gradient(135deg,#60a5fa,var(--indigo));
+    }
+    .btn.secondary{
+      background:#e8f0ff;
+      color:#1d4ed8;
+      box-shadow:none;
+      border:1px solid rgba(59,130,246,.12);
+    }
+    .btn.secondary:hover:not(:disabled){background:#dbeafe}
+    .btn.ghost{
+      background:#eff6ff;
+      color:#1d4ed8;
+      box-shadow:none;
+      border:1px solid rgba(59,130,246,.12);
+    }
+    .btn.ghost:hover:not(:disabled){background:#dbeafe}
+    .btn.light{
+      background:#fff;
+      color:#334155;
+      border:1px solid var(--line);
+      box-shadow:none;
+    }
+    .btn.light:hover:not(:disabled){background:#f8fbff}
+    .btn.danger{
+      background:linear-gradient(135deg,#ef4444,#dc2626);
+      box-shadow:0 12px 22px rgba(239,68,68,.16);
+    }
+    .btn.danger:hover:not(:disabled){background:linear-gradient(135deg,#f87171,#ef4444)}
+    .btn.small{
+      padding:8px 11px;
+      border-radius:10px;
+      font-size:.9rem;
+    }
+
+    .main-screen{
+      height:100vh;
+      display:grid;
+      grid-template-columns:260px minmax(0,1fr);
+      grid-template-rows:72px minmax(0,1fr);
+      overflow:hidden;
+      padding:0;
+      gap:0;
+    }
+
+    .topbar{
+      grid-column:1 / -1;
+      grid-row:1;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:0 20px;
+      background:rgba(255,255,255,.88);
+      border-bottom:1px solid var(--line);
+      backdrop-filter:blur(16px);
+      box-shadow:0 2px 14px rgba(15,23,42,.04);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+    .mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--blue),var(--pink));
+      color:#fff;
+      font-family:"Bricolage Grotesque",sans-serif;
+      font-weight:800;
+      flex:0 0 auto;
+      box-shadow:0 10px 18px rgba(59,130,246,.20);
+    }
+    .topbar-copy{
+      min-width:0;
+    }
+    .topbar-copy h2{
+      font-size:1.35rem;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .topbar-copy p{
+      color:var(--muted);
+      font-size:.88rem;
+    }
+
+    .header-actions{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      flex:0 0 auto;
+      min-width:0;
+    }
+    .header-user{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .header-user .pill{
+      max-width:260px;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .sidebar{
+      grid-column:1;
+      grid-row:2;
+      height:100%;
+      overflow:hidden;
+      background:linear-gradient(180deg,#ffffff 0%,#f5f8ff 100%);
+      border-right:1px solid var(--line);
+      border-radius:0;
+      box-shadow:none;
+      padding:16px 14px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .sidebar .panel-head{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .sidebar .panel-head h2{
+      font-size:1.12rem;
+    }
+
+    .sidebar .btn.light{
+      width:100%;
+      justify-content:center;
+    }
+
+    .subject-list{
+      display:grid;
+      gap:7px;
+      min-height:0;
+    }
+
+    .subject-item{
+      width:100%;
+      padding:10px 11px;
+      border-radius:12px;
+      cursor:pointer;
+      background:rgba(255,255,255,.86);
+      border:1px solid var(--line);
+      color:var(--text);
+      text-align:left;
+      display:grid;
+      gap:8px;
+      box-shadow:0 8px 18px rgba(15,23,42,.04);
+    }
+    .subject-item:hover:not(:disabled){
+      background:#f8fbff;
+      border-color:rgba(59,130,246,.18);
+      transform:none;
+    }
+    .subject-item.active{
+      background:linear-gradient(135deg,var(--blue),var(--indigo));
+      color:#fff;
+      border-color:transparent;
+    }
+    .subject-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+    }
+    .subject-head strong{
+      font-size:.95rem;
+      line-height:1.15;
+    }
+    .sidebar .term-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      min-height:0;
+    }
+
+    .content-shell{
+      grid-column:2;
+      grid-row:2;
+      height:100%;
+      overflow:hidden;
+      padding:16px;
+      min-width:0;
+      min-height:0;
+    }
+
+    .trend-panel{
+      padding:16px;
+      background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(245,249,255,.95));
+      margin-bottom:14px;
+    }
+
+    .panel-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .day-bar{
+      display:grid;
+      grid-template-columns:repeat(7,minmax(0,1fr));
+      gap:10px;
+      padding-top:12px;
+      min-width:0;
+    }
+
+    .day-card{
+      min-width:0;
+      padding:12px 10px;
+      border-radius:16px;
+      background:#fff;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-align:left;
+      display:grid;
+      gap:8px;
+      box-shadow:0 8px 18px rgba(15,23,42,.04);
+    }
+    .day-card:hover:not(:disabled){
+      background:#f8fbff;
+      border-color:rgba(59,130,246,.18);
+      transform:none;
+    }
+    .day-card.active{
+      background:linear-gradient(135deg,var(--blue),var(--pink));
+      color:#fff;
+      border-color:transparent;
+      box-shadow:0 14px 28px rgba(59,130,246,.18);
+    }
+    .day-card.active .day-count{
+      background:rgba(255,255,255,.18);
+      color:#fff;
+    }
+    .day-card.has-terms{
+      border-color:rgba(59,130,246,.30);
+    }
+    .day-card small{
+      font-size:.78rem;
+      font-weight:700;
+      opacity:.78;
+    }
+    .day-card strong{
+      font-size:.95rem;
+      line-height:1.12;
+    }
+
+    .workspace{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 320px;
+      gap:14px;
+      align-items:stretch;
+      min-height:0;
+      height:calc(100% - 90px);
+    }
+
+    .content-panel,
+    .form-panel,
+    .admin-panel{
+      padding:16px;
+      background:rgba(255,255,255,.90);
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .content-panel{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      min-width:0;
+    }
+
+    .content-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .content-header h2{
+      font-size:1.65rem;
+    }
+    .content-header p{
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .term-list{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      min-height:0;
+      overflow:hidden;
+      align-content:start;
+    }
+
+    .term-card,
+    .user-card{
+      background:linear-gradient(145deg,#ffffff,#f8fbff);
+      border-radius:16px;
+      padding:14px;
+      box-shadow:0 10px 20px rgba(15,23,42,.05);
+      border:1px solid var(--line);
+      display:grid;
+      gap:10px;
+      min-width:0;
+    }
+
+    .term-top,
+    .user-top{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .term-title,
+    .user-title{
+      display:grid;
+      gap:8px;
+      min-width:0;
+      flex:1 1 auto;
+    }
+
+    .term-title h3,
+    .user-title h3{
+      font-size:1.05rem;
+      line-height:1.2;
+      word-break:break-word;
+    }
+
+    .term-meta,
+    .user-controls,
+    .form-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+      min-width:0;
+    }
+
+    .type-badge,
+    .status-badge{
+      padding:4px 9px;
+      border-radius:10px;
+      font-size:12px;
+    }
+
+    .type-hu{background:rgba(16,185,129,.14);color:#047857;border:1px solid rgba(16,185,129,.18)}
+    .type-sa{background:rgba(239,68,68,.12);color:#b91c1c;border:1px solid rgba(239,68,68,.16)}
+    .type-test{background:rgba(245,158,11,.14);color:#b45309;border:1px solid rgba(245,158,11,.18)}
+    .type-mu{background:rgba(139,92,246,.12);color:#6d28d9;border:1px solid rgba(139,92,246,.18)}
+
+    .empty-state{
+      padding:18px;
+      border-radius:14px;
+      background:rgba(255,255,255,.90);
+      border:1px dashed rgba(59,130,246,.20);
+      color:var(--muted);
+      grid-column:1 / -1;
+    }
+
+    .side-panel{
+      display:grid;
+      gap:12px;
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .form-panel,
+    .admin-panel{
+      display:grid;
+      gap:12px;
+      align-content:start;
+    }
+
+    .form-panel h2,
+    .admin-panel h2{
+      font-size:1.22rem;
+    }
+
+    .user-list{
+      display:grid;
+      gap:10px;
+      min-height:0;
+      overflow:hidden;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .toast-wrap{
+      position:fixed;
+      right:14px;
+      bottom:14px;
+      z-index:60;
+      display:grid;
+      gap:10px;
+      width:min(320px,calc(100vw - 28px));
+      pointer-events:none;
+    }
+    .toast{
+      padding:14px 16px;
+      border-radius:14px;
+      color:#fff;
+      box-shadow:0 18px 36px rgba(0,0,0,.18);
+    }
+    .toast.info{background:#2563eb}
+    .toast.success{background:#16a34a}
+    .toast.error{background:#dc2626}
 
     @media (max-width:1180px){
-      .workspace{grid-template-columns:1fr}
-      .side-panel{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .workspace{
+        grid-template-columns:1fr;
+      }
+      .side-panel{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+      .form-panel,
+      .admin-panel{
+        min-height:auto;
+      }
     }
+
     @media (max-width:980px){
-      .auth-screen{grid-template-columns:1fr}
-      .main-screen{grid-template-columns:1fr;grid-template-rows:72px auto auto}
-      .sidebar{grid-column:1;grid-row:2;height:auto;border-right:none;border-bottom:1px solid rgba(148,163,184,.1)}
-      .content-shell{grid-column:1;grid-row:3;padding:16px}
-      .side-panel{grid-template-columns:1fr}
+      .auth-screen{
+        grid-template-columns:1fr;
+      }
+      .main-screen{
+        grid-template-columns:1fr;
+        grid-template-rows:72px auto auto;
+      }
+      .sidebar{
+        grid-column:1;
+        grid-row:2;
+        height:auto;
+        border-right:none;
+        border-bottom:1px solid var(--line);
+      }
+      .content-shell{
+        grid-column:1;
+        grid-row:3;
+        padding:14px;
+      }
+      .workspace{
+        grid-template-columns:1fr;
+        height:auto;
+      }
+      .term-list{
+        grid-template-columns:1fr;
+      }
+      .side-panel{
+        grid-template-columns:1fr;
+      }
+      .day-bar{
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
     }
+
     @media (max-width:720px){
-      .screen{padding:16px}
+      .screen{padding:12px}
+      .auth-hero,.auth-card{padding:18px}
+      .topbar{padding:0 12px}
+      .topbar-copy h2{font-size:1.12rem}
+      .header-user .pill{max-width:160px}
+      .content-panel,.form-panel,.admin-panel{padding:14px}
       .form-grid{grid-template-columns:1fr}
-      .topbar{padding:0 16px}
-      .brand{min-width:0}
-      .topbar-copy h2{font-size:1.25rem}
-      .content-header h2{font-size:1.55rem}
+      .day-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .content-header h2{font-size:1.35rem}
     }
+
+    ::-webkit-scrollbar{width:0;height:0}
   </style>
 </head>
 <body>
@@ -170,7 +785,7 @@
     <div class="card auth-hero">
       <div class="eyebrow">4B Klasse</div>
       <div>
-        <h1>14 Tage, alle Fächer, alles auf einen Blick.</h1>
+        <h1>Alle Fächer, alle Termine, klar und kompakt.</h1>
       </div>
       <div id="subjectCloud" class="subject-cloud"></div>
     </div>
@@ -179,24 +794,46 @@
       <div>
         <h2>Login oder Registrierung</h2>
       </div>
+
       <div class="switch-row">
         <button id="showLoginBtn" class="switch-btn active" type="button">Login</button>
         <button id="showRegisterBtn" class="switch-btn" type="button">Registrieren</button>
       </div>
+
       <div id="authNotice" class="notice hidden" aria-live="polite"></div>
+
       <form id="loginForm" novalidate>
-        <div class="field"><label for="loginEmail">E-Mail</label><input id="loginEmail" type="email" autocomplete="email" required></div>
-        <div class="field"><label for="loginPassword">Passwort</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
+        <div class="field">
+          <label for="loginEmail">E-Mail</label>
+          <input id="loginEmail" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Passwort</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
         <button id="loginSubmitBtn" class="btn" type="submit">Einloggen</button>
       </form>
+
       <form id="registerForm" class="hidden" novalidate>
         <div class="form-grid">
-          <div class="field"><label for="registerName">Name</label><input id="registerName" type="text" autocomplete="name" required></div>
-          <div class="field"><label for="registerEmail">E-Mail</label><input id="registerEmail" type="email" autocomplete="email" required></div>
+          <div class="field">
+            <label for="registerName">Name</label>
+            <input id="registerName" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="registerEmail">E-Mail</label>
+            <input id="registerEmail" type="email" autocomplete="email" required>
+          </div>
         </div>
         <div class="form-grid">
-          <div class="field"><label for="registerPassword">Passwort</label><input id="registerPassword" type="password" autocomplete="new-password" required></div>
-          <div class="field"><label for="registerPasswordConfirm">Passwort bestätigen</label><input id="registerPasswordConfirm" type="password" autocomplete="new-password" required></div>
+          <div class="field">
+            <label for="registerPassword">Passwort</label>
+            <input id="registerPassword" type="password" autocomplete="new-password" required>
+          </div>
+          <div class="field">
+            <label for="registerPasswordConfirm">Passwort bestätigen</label>
+            <input id="registerPasswordConfirm" type="password" autocomplete="new-password" required>
+          </div>
         </div>
         <button id="registerSubmitBtn" class="btn" type="submit">Konto erstellen</button>
       </form>
@@ -209,21 +846,20 @@
         <div class="mark">4B</div>
         <div class="topbar-copy">
           <h2>Schulplaner</h2>
+          <p>Kompakt, klar und direkt aus Firebase geladen.</p>
         </div>
       </div>
+
       <div class="header-actions">
+        <div class="header-user">
+          <span id="profileNamePill" class="pill">Name</span>
+          <span id="profileEmailPill" class="pill">E-Mail</span>
+        </div>
         <button id="logoutBtn" class="btn ghost" type="button">Abmelden</button>
       </div>
     </header>
 
     <aside class="panel sidebar">
-      <div class="profile-chip">
-        <div id="profileAvatar" class="avatar">4B</div>
-        <div class="profile-copy">
-          <strong id="profileName">Gast</strong>
-          <span id="profileEmail">-</span>
-        </div>
-      </div>
       <div class="panel-head">
         <h2>Fächer</h2>
       </div>
@@ -234,7 +870,7 @@
     <section class="content-shell">
       <section class="panel trend-panel">
         <div class="panel-head">
-          <h2>14-Tage-Ansicht</h2>
+          <h2>7-Tage-Übersicht</h2>
           <button id="resetFilterBtn" class="btn ghost small" type="button">Heute</button>
         </div>
         <div id="dayBar" class="day-bar"></div>
@@ -256,11 +892,26 @@
           <section id="termFormPanel" class="panel form-panel hidden">
             <h2 id="termFormTitle">Termin hinzufügen</h2>
             <form id="termForm" novalidate>
-              <div class="field"><label for="termSubject">Fach</label><select id="termSubject" required></select></div>
-              <div class="field"><label for="termType">Typ</label><select id="termType" required></select></div>
-              <div class="field"><label for="termDate">Datum</label><input id="termDate" type="date" required></div>
-              <div class="field"><label for="termDescription">Beschreibung</label><textarea id="termDescription" required></textarea></div>
-              <div class="field"><label for="termPeople">Personen</label><input id="termPeople" type="text" placeholder="Optional"></div>
+              <div class="field">
+                <label for="termSubject">Fach</label>
+                <select id="termSubject" required></select>
+              </div>
+              <div class="field">
+                <label for="termType">Typ</label>
+                <select id="termType" required></select>
+              </div>
+              <div class="field">
+                <label for="termDate">Datum</label>
+                <input id="termDate" type="date" required>
+              </div>
+              <div class="field">
+                <label for="termDescription">Beschreibung</label>
+                <textarea id="termDescription" required></textarea>
+              </div>
+              <div class="field">
+                <label for="termPeople">Personen</label>
+                <input id="termPeople" type="text" placeholder="Optional">
+              </div>
               <div class="form-actions">
                 <button id="saveTermBtn" class="btn" type="submit">Termin speichern</button>
                 <button id="cancelEditBtn" class="btn secondary hidden" type="button">Bearbeitung abbrechen</button>
@@ -281,8 +932,22 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
-    import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-    import { getDatabase, ref, set, update, remove, push, onValue } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      update,
+      remove,
+      push,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
@@ -295,13 +960,14 @@
     };
 
     const ADMIN_EMAIL = "matthias.handl@ahsbruck.at";
-    const TERM_TYPES = ["Test", "SA", "H\u00DC", "M\u00DC"];
+    const TERM_TYPES = ["Test", "SA", "HÜ", "MÜ"];
     const SUBJECTS = [
       ["mathe", "Mathe"], ["deutsch", "Deutsch"], ["englisch", "Englisch"], ["geschichte", "Geschichte"],
       ["geographie", "Geographie"], ["religion", "Religion"], ["physik", "Physik"], ["physik_labor", "Physik Labor"],
-      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["kunst", "Kunst"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
+      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
       ["digitale_grundbildung", "Digitale Grundbildung"], ["italienisch", "Italienisch"], ["sport", "Sport"]
     ].map(([key, label]) => ({ key, label }));
+
     const ROLE_LABELS = {
       user: "Schüler",
       schueler: "Schüler",
@@ -310,6 +976,7 @@
       klassensprecher: "Klassensprecher",
       admin: "Admin"
     };
+
     const EDITOR_ROLES = new Set(["admin", "sprecher", "klassensprecher"]);
 
     const app = initializeApp(firebaseConfig);
@@ -334,9 +1001,8 @@
       registerPassword: document.getElementById("registerPassword"),
       registerPasswordConfirm: document.getElementById("registerPasswordConfirm"),
       registerSubmitBtn: document.getElementById("registerSubmitBtn"),
-      profileAvatar: document.getElementById("profileAvatar"),
-      profileName: document.getElementById("profileName"),
-      profileEmail: document.getElementById("profileEmail"),
+      profileNamePill: document.getElementById("profileNamePill"),
+      profileEmailPill: document.getElementById("profileEmailPill"),
       logoutBtn: document.getElementById("logoutBtn"),
       resetFilterBtn: document.getElementById("resetFilterBtn"),
       dayBar: document.getElementById("dayBar"),
@@ -395,10 +1061,10 @@
 
     function typeClass(type) {
       return {
-        "H\u00DC": "type-hu",
+        "HÜ": "type-hu",
         "SA": "type-sa",
         "Test": "type-test",
-        "M\u00DC": "type-mu"
+        "MÜ": "type-mu"
       }[type] || "";
     }
 
@@ -415,14 +1081,23 @@
     }
 
     function getInitials(name) {
-      return (name || "4B").split(" ").filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "4B";
+      return (name || "4B")
+        .split(" ")
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0].toUpperCase())
+        .join("") || "4B";
     }
 
     function formatDate(dateString) {
       if (!dateString) return "Kein Datum";
       const date = new Date(dateString + "T12:00:00");
       if (Number.isNaN(date.getTime())) return dateString;
-      return new Intl.DateTimeFormat("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+      return new Intl.DateTimeFormat("de-AT", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric"
+      }).format(date);
     }
 
     function formatDayLabel(dateString) {
@@ -433,7 +1108,7 @@
     }
 
     function nextSevenDays() {
-      return Array.from({ length: 14 }, (_, index) => {
+      return Array.from({ length: 7 }, (_, index) => {
         const base = new Date(todayValue() + "T12:00:00");
         base.setDate(base.getDate() + index);
         const local = new Date(base.getTime() - base.getTimezoneOffset() * 60000);
@@ -462,14 +1137,26 @@
           });
         });
       });
-      return terms.sort((a, b) => (a.datum || "9999-12-31").localeCompare(b.datum || "9999-12-31") || a.fach.localeCompare(b.fach, "de"));
+      return terms.sort((a, b) =>
+        (a.datum || "9999-12-31").localeCompare(b.datum || "9999-12-31") ||
+        a.fach.localeCompare(b.fach, "de")
+      );
     }
 
     function visibleTerms() {
-      if (state.filterMode === "subject" && state.selectedSubjectKey) {
-        return state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey);
-      }
-      return state.terms.filter((term) => term.datum === state.selectedDay);
+      const base = state.filterMode === "subject" && state.selectedSubjectKey
+        ? state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey)
+        : state.terms.filter((term) => term.datum === state.selectedDay);
+
+      return base.slice(0, 6);
+    }
+
+    function hiddenTermsCount() {
+      const base = state.filterMode === "subject" && state.selectedSubjectKey
+        ? state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey)
+        : state.terms.filter((term) => term.datum === state.selectedDay);
+
+      return Math.max(0, base.length - 6);
     }
 
     function trendTermsForSubject(subjectKey) {
@@ -513,7 +1200,7 @@
       node.className = "toast " + type;
       node.textContent = message;
       elements.toastWrap.appendChild(node);
-      window.setTimeout(() => node.remove(), 3600);
+      window.setTimeout(() => node.remove(), 3400);
     }
 
     function setBusy(button, busy, label) {
@@ -548,7 +1235,9 @@
 
     function readableDbError(error) {
       const message = error?.message || "";
-      if (message.includes("permission_denied")) return "Firebase hat den Zugriff abgelehnt. Bitte prüfe die Realtime-Database-Regeln.";
+      if (message.includes("permission_denied")) {
+        return "Firebase hat den Zugriff abgelehnt. Bitte prüfe die Realtime-Database-Regeln.";
+      }
       return "Die Daten konnten nicht gespeichert oder geladen werden.";
     }
 
@@ -584,13 +1273,13 @@
       });
 
       elements.termDate.value = todayValue();
+      elements.termType.value = TERM_TYPES[0];
     }
 
     function renderHeader() {
       if (!state.currentProfile) return;
-      elements.profileAvatar.textContent = getInitials(state.currentProfile.name);
-      elements.profileName.textContent = state.currentProfile.name;
-      elements.profileEmail.textContent = state.currentProfile.email;
+      elements.profileNamePill.textContent = state.currentProfile.name || "Unbekannt";
+      elements.profileEmailPill.textContent = state.currentProfile.email || "-";
     }
 
     function renderDayBar() {
@@ -598,13 +1287,18 @@
       nextSevenDays().forEach((day) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "day-card" + (state.filterMode === "day" && state.selectedDay === day.date ? " active" : "") + (day.terms.length ? " has-terms" : "");
+        button.className =
+          "day-card" +
+          (state.filterMode === "day" && state.selectedDay === day.date ? " active" : "") +
+          (day.terms.length ? " has-terms" : "");
         button.dataset.day = day.date;
 
         const small = document.createElement("small");
         small.textContent = day.date === todayValue() ? "Heute" : "Tag";
+
         const strong = document.createElement("strong");
         strong.textContent = day.label;
+
         button.append(small, strong);
 
         if (day.terms.length) {
@@ -637,7 +1331,9 @@
 
         const badges = document.createElement("div");
         badges.className = "term-meta";
-        [...new Set(trendTermsForSubject(subject.key).map((term) => term.typ))].forEach((type) => badges.appendChild(createTypeBadge(type)));
+        [...new Set(trendTermsForSubject(subject.key).map((term) => term.typ))]
+          .filter(Boolean)
+          .forEach((type) => badges.appendChild(createTypeBadge(type)));
         header.appendChild(badges);
 
         button.appendChild(header);
@@ -646,15 +1342,27 @@
     }
 
     function renderContentHeader() {
+      const count = state.filterMode === "subject" && state.selectedSubjectKey
+        ? state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey).length
+        : state.terms.filter((term) => term.datum === state.selectedDay).length;
+
+      const hidden = hiddenTermsCount();
+
       if (state.filterMode === "subject" && state.selectedSubjectKey) {
         const subject = subjectByKey(state.selectedSubjectKey);
-        const count = visibleTerms().length;
         elements.contentTitle.textContent = subject ? subject.label : "Fach";
-        elements.contentMeta.textContent = count ? count + " Termin(e) für dieses Fach." : "Noch keine Termine für dieses Fach.";
+        elements.contentMeta.textContent = count
+          ? (count > 6 ? `${count} Termin(e), davon werden ${Math.min(6, count)} angezeigt.` : `${count} Termin(e) für dieses Fach.`)
+          : "Noch keine Termine für dieses Fach.";
       } else {
-        const count = visibleTerms().length;
         elements.contentTitle.textContent = formatDayLabel(state.selectedDay);
-        elements.contentMeta.textContent = count ? count + " Termin(e) an diesem Tag." : "Noch keine Termine an diesem Tag.";
+        elements.contentMeta.textContent = count
+          ? (count > 6 ? `${count} Termin(e), davon werden ${Math.min(6, count)} angezeigt.` : `${count} Termin(e) an diesem Tag.`)
+          : "Noch keine Termine an diesem Tag.";
+      }
+
+      if (hidden > 0) {
+        elements.contentMeta.textContent += ` ${hidden} weitere Einträge sind ausgeblendet, damit alles ohne Scrollen passt.`;
       }
     }
 
@@ -667,6 +1375,7 @@
 
       const titleWrap = document.createElement("div");
       titleWrap.className = "term-title";
+
       const title = document.createElement("h3");
       title.textContent = term.beschreibung;
 
@@ -677,6 +1386,7 @@
       subject.className = "pill";
       subject.textContent = term.fach;
       meta.appendChild(subject);
+
       meta.appendChild(createTypeBadge(term.typ));
 
       const date = document.createElement("span");
@@ -696,8 +1406,12 @@
 
       if (canManageTerms()) {
         const actions = document.createElement("div");
-        actions.className = "form-actions";
-        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Löschen", "danger"]].forEach(([action, label, style]) => {
+        actions.className = "btn-row";
+
+        [
+          ["edit-term", "Bearbeiten", "secondary"],
+          ["delete-term", "Löschen", "danger"]
+        ].forEach(([action, label, style]) => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "btn " + style + " small";
@@ -707,6 +1421,7 @@
           btn.textContent = label;
           actions.appendChild(btn);
         });
+
         top.appendChild(actions);
       }
 
@@ -717,6 +1432,7 @@
     function renderTermList() {
       elements.termList.innerHTML = "";
       const list = visibleTerms();
+
       if (!list.length) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
@@ -724,7 +1440,16 @@
         elements.termList.appendChild(empty);
         return;
       }
+
       list.forEach((term) => elements.termList.appendChild(createTermCard(term)));
+
+      const hidden = hiddenTermsCount();
+      if (hidden > 0) {
+        const note = document.createElement("div");
+        note.className = "empty-state";
+        note.innerHTML = `<h3>Weitere Einträge ausgeblendet</h3><p>${hidden} weitere Termine würden zusätzlich erscheinen. Sie werden absichtlich nicht gerendert, damit kein Scrollen entsteht.</p>`;
+        elements.termList.appendChild(note);
+      }
     }
 
     function createUserCard(uid, profile) {
@@ -733,21 +1458,26 @@
 
       const top = document.createElement("div");
       top.className = "user-top";
+
       const titleWrap = document.createElement("div");
       titleWrap.className = "user-title";
+
       const title = document.createElement("h3");
       title.textContent = profile.name || "Unbenannter Benutzer";
 
       const meta = document.createElement("div");
       meta.className = "term-meta";
+
       const email = document.createElement("span");
       email.className = "pill";
       email.textContent = profile.email || "Keine E-Mail";
       meta.appendChild(email);
+
       const role = document.createElement("span");
       role.className = "pill";
       role.textContent = roleLabel(profile.role);
       meta.appendChild(role);
+
       const status = document.createElement("span");
       status.className = "status-badge " + (profile.approved ? "type-hu" : "type-test");
       status.textContent = profile.approved ? "Bestätigt" : "Unbestätigt";
@@ -759,6 +1489,7 @@
 
       const controls = document.createElement("div");
       controls.className = "user-controls";
+
       const select = document.createElement("select");
       select.dataset.userId = uid;
       ["user", "sprecher", "admin"].forEach((roleValue) => {
@@ -802,6 +1533,7 @@
       elements.adminPanel.classList.toggle("hidden", !isAdmin());
       elements.userList.innerHTML = "";
       if (!isAdmin()) return;
+
       const entries = Object.entries(state.users);
       if (!entries.length) {
         const empty = document.createElement("div");
@@ -810,10 +1542,13 @@
         elements.userList.appendChild(empty);
         return;
       }
-      entries.sort((a, b) => {
-        if (a[1].approved !== b[1].approved) return a[1].approved ? 1 : -1;
-        return (a[1].name || "").localeCompare(b[1].name || "", "de");
-      }).forEach(([uid, profile]) => elements.userList.appendChild(createUserCard(uid, profile)));
+
+      entries
+        .sort((a, b) => {
+          if (a[1].approved !== b[1].approved) return a[1].approved ? 1 : -1;
+          return (a[1].name || "").localeCompare(b[1].name || "", "de");
+        })
+        .forEach(([uid, profile]) => elements.userList.appendChild(createUserCard(uid, profile)));
     }
 
     function renderTermForm() {
@@ -821,9 +1556,11 @@
       elements.termFormPanel.classList.toggle("hidden", !visible);
       elements.jumpToFormBtn.classList.toggle("hidden", !visible);
       if (!visible) return;
+
       elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufügen";
       elements.saveTermBtn.textContent = state.editingTerm ? "Änderungen speichern" : "Termin speichern";
       elements.cancelEditBtn.classList.toggle("hidden", !state.editingTerm);
+
       if (!state.editingTerm) {
         elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
       }
@@ -860,7 +1597,6 @@
       elements.termDescription.value = term.beschreibung;
       elements.termPeople.value = term.personen || "";
       renderTermForm();
-      elements.termFormPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     async function createUserProfile(uid, name, email) {
@@ -877,10 +1613,14 @@
 
     function ensureTermsSubscription() {
       if (state.unsubTerms) return;
-      state.unsubTerms = onValue(ref(db, "terms"), (snapshot) => {
-        state.terms = normalizeTerms(snapshot.val());
-        renderAll();
-      }, (error) => toast(readableDbError(error), "error"));
+      state.unsubTerms = onValue(
+        ref(db, "terms"),
+        (snapshot) => {
+          state.terms = normalizeTerms(snapshot.val());
+          renderAll();
+        },
+        (error) => toast(readableDbError(error), "error")
+      );
     }
 
     function ensureUsersSubscription() {
@@ -894,10 +1634,14 @@
         return;
       }
       if (state.unsubUsers) return;
-      state.unsubUsers = onValue(ref(db, "users"), (snapshot) => {
-        state.users = snapshot.val() || {};
-        renderAdminPanel();
-      }, (error) => toast(readableDbError(error), "error"));
+      state.unsubUsers = onValue(
+        ref(db, "users"),
+        (snapshot) => {
+          state.users = snapshot.val() || {};
+          renderAdminPanel();
+        },
+        (error) => toast(readableDbError(error), "error")
+      );
     }
 
     async function denyAccess(message) {
@@ -906,33 +1650,42 @@
     }
 
     function subscribeProfile(uid) {
-      state.unsubProfile = onValue(ref(db, "users/" + uid), async (snapshot) => {
-        const profile = snapshot.val();
-        if (!profile) {
-          if (state.pendingProfileCreation) return;
-          await denyAccess("Dein Profil wurde nicht gefunden. Bitte wende dich an einen Admin.");
-          return;
-        }
-        state.currentProfile = { uid, ...profile };
-        if (!profile.approved) {
-          if (state.registrationFlow) return;
-          await denyAccess("Dein Konto wurde noch nicht bestätigt. Bitte warte auf einen Admin.");
-          return;
-        }
-        ensureTermsSubscription();
-        ensureUsersSubscription();
-        renderAll();
-        setScreen("main");
-      }, (error) => toast(readableDbError(error), "error"));
+      state.unsubProfile = onValue(
+        ref(db, "users/" + uid),
+        async (snapshot) => {
+          const profile = snapshot.val();
+          if (!profile) {
+            if (state.pendingProfileCreation) return;
+            await denyAccess("Dein Profil wurde nicht gefunden. Bitte wende dich an einen Admin.");
+            return;
+          }
+
+          state.currentProfile = { uid, ...profile };
+
+          if (!profile.approved) {
+            if (state.registrationFlow) return;
+            await denyAccess("Dein Konto wurde noch nicht bestätigt. Bitte warte auf einen Admin.");
+            return;
+          }
+
+          ensureTermsSubscription();
+          ensureUsersSubscription();
+          renderAll();
+          setScreen("main");
+        },
+        (error) => toast(readableDbError(error), "error")
+      );
     }
 
     async function handleRegister(event) {
       event.preventDefault();
       clearAuthNotice();
+
       const name = elements.registerName.value.trim();
       const email = elements.registerEmail.value.trim();
       const password = elements.registerPassword.value;
       const confirm = elements.registerPasswordConfirm.value;
+
       if (!name || !email || !password || !confirm) {
         setAuthNotice("Bitte fülle alle Registrierungsfelder aus.", "error", "register");
         return;
@@ -941,14 +1694,17 @@
         setAuthNotice("Die Passwörter stimmen nicht überein.", "error", "register");
         return;
       }
+
       state.pendingProfileCreation = true;
       state.registrationFlow = true;
       setBusy(elements.registerSubmitBtn, true, "Registriere...");
+
       try {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
-        const isAdmin = await createUserProfile(credential.user.uid, name, email);
+        const isAdminUser = await createUserProfile(credential.user.uid, name, email);
         elements.registerForm.reset();
-        if (isAdmin) {
+
+        if (isAdminUser) {
           toast("Admin-Konto erkannt und bestätigt.", "success");
           switchAuthView("login");
         } else {
@@ -971,14 +1727,18 @@
     async function handleLogin(event) {
       event.preventDefault();
       clearAuthNotice();
+
       const email = elements.loginEmail.value.trim();
       const password = elements.loginPassword.value;
+
       if (!email || !password) {
         setAuthNotice("Bitte gib E-Mail und Passwort ein.", "error", "login");
         return;
       }
+
       setBusy(elements.loginSubmitBtn, true, "Prüfe Login...");
       setScreen("loading");
+
       try {
         await signInWithEmailAndPassword(auth, email, password);
         elements.loginForm.reset();
@@ -1002,18 +1762,31 @@
         toast("Du hast keine Rechte zum Bearbeiten von Terminen.", "error");
         return;
       }
+
       const subjectKey = elements.termSubject.value;
       const subject = subjectByKey(subjectKey);
       const typ = elements.termType.value;
       const datum = elements.termDate.value;
       const beschreibung = elements.termDescription.value.trim();
       const personen = elements.termPeople.value.trim();
+
       if (!subjectKey || !typ || !datum || !beschreibung) {
         toast("Bitte fülle Fach, Typ, Datum und Beschreibung aus.", "error");
         return;
       }
-      const payload = { fach: subject.label, typ, datum, beschreibung, personen, updatedAt: Date.now(), updatedBy: state.currentUser.uid };
+
+      const payload = {
+        fach: subject.label,
+        typ,
+        datum,
+        beschreibung,
+        personen,
+        updatedAt: Date.now(),
+        updatedBy: state.currentUser.uid
+      };
+
       setBusy(elements.saveTermBtn, true, state.editingTerm ? "Speichere..." : "Lege an...");
+
       try {
         if (state.editingTerm) {
           await set(ref(db, "terms/" + subjectKey + "/" + state.editingTerm.id), payload);
@@ -1023,9 +1796,14 @@
           toast("Termin wurde aktualisiert.", "success");
         } else {
           const newRef = push(ref(db, "terms/" + subjectKey));
-          await set(newRef, { ...payload, createdAt: Date.now(), createdBy: state.currentUser.uid });
+          await set(newRef, {
+            ...payload,
+            createdAt: Date.now(),
+            createdBy: state.currentUser.uid
+          });
           toast("Termin wurde hinzugefügt.", "success");
         }
+
         resetTermForm();
       } catch (error) {
         toast(readableDbError(error), "error");
@@ -1037,15 +1815,18 @@
     async function handleTermActions(event) {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
+
       const term = findTerm(button.dataset.subjectKey, button.dataset.termId);
       if (!term) {
         toast("Der ausgewählte Termin konnte nicht gefunden werden.", "error");
         return;
       }
+
       if (button.dataset.action === "edit-term") {
         loadTerm(term);
         return;
       }
+
       if (button.dataset.action === "delete-term") {
         if (!window.confirm("Diesen Termin wirklich löschen?")) return;
         setBusy(button, true, "Lösche...");
@@ -1074,26 +1855,37 @@
     async function handleUserActions(event) {
       const button = event.target.closest("button[data-action]");
       if (!button || !isAdmin()) return;
+
       const userId = button.dataset.userId;
       const target = state.users[userId];
       const select = elements.userList.querySelector('select[data-user-id="' + userId + '"]');
       const nextRole = select ? select.value : "user";
+
       if (!target) {
         toast("Benutzer konnte nicht gefunden werden.", "error");
         return;
       }
+
       if (button.dataset.action === "delete-user" && userId === state.currentUser.uid) {
         toast("Du kannst dein eigenes Konto hier nicht löschen.", "error");
         return;
       }
+
       if (wouldRemoveLastApprovedAdmin(target, button.dataset.action, nextRole)) {
         toast("Der letzte bestätigte Admin kann nicht entfernt oder unbestätigt gesetzt werden.", "error");
         return;
       }
+
       if (button.dataset.action === "delete-user" && !window.confirm("Diesen Benutzer wirklich aus der Datenbank löschen?")) {
         return;
       }
-      setBusy(button, true, button.dataset.action === "save-role" ? "Speichere..." : button.dataset.action === "delete-user" ? "Lösche..." : "Aktualisiere...");
+
+      setBusy(
+        button,
+        true,
+        button.dataset.action === "save-role" ? "Speichere..." : button.dataset.action === "delete-user" ? "Lösche..." : "Aktualisiere..."
+      );
+
       try {
         if (button.dataset.action === "toggle-approval") {
           if (target.approved) {
@@ -1112,10 +1904,12 @@
             toast("Benutzer wurde bestätigt.", "success");
           }
         }
+
         if (button.dataset.action === "save-role") {
           await update(ref(db, "users/" + userId), { role: nextRole });
           toast("Rolle wurde gespeichert.", "success");
         }
+
         if (button.dataset.action === "delete-user") {
           await remove(ref(db, "users/" + userId));
           toast("Benutzer wurde aus der Datenbank gelöscht.", "success");
@@ -1190,6 +1984,7 @@
           setScreen("auth");
           return;
         }
+
         cleanupSubscriptions();
         state.currentUser = user;
         state.currentProfile = null;
