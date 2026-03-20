@@ -47,10 +47,7 @@
       overscroll-behavior:none;
     }
 
-    body{
-      display:block;
-    }
-
+    body{display:block}
     h1,h2,h3,p{margin:0}
     h1,h2,h3{
       font-family:"Bricolage Grotesque",sans-serif;
@@ -966,8 +963,9 @@
     const SUBJECTS = [
       ["mathe", "Mathe"], ["deutsch", "Deutsch"], ["englisch", "Englisch"], ["geschichte", "Geschichte"],
       ["geographie", "Geographie"], ["religion", "Religion"], ["physik", "Physik"], ["physik_labor", "Physik Labor"],
-      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
-      ["digitale_grundbildung", "Digitale Grundbildung"], ["italienisch", "Italienisch"], ["sport", "Sport"]
+      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["kunst", "Kunst"],
+      ["grafisches_zeichnen", "Grafisches Zeichnen"], ["digitale_grundbildung", "Digitale Grundbildung"],
+      ["italienisch", "Italienisch"], ["sport", "Sport"]
     ].map(([key, label]) => ({ key, label }));
 
     const ROLE_LABELS = {
@@ -1080,15 +1078,6 @@
 
     function isAdmin() {
       return Boolean(state.currentProfile && state.currentProfile.role === "admin");
-    }
-
-    function getInitials(name) {
-      return (name || "4B")
-        .split(" ")
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part[0].toUpperCase())
-        .join("") || "4B";
     }
 
     function formatDate(dateString) {
