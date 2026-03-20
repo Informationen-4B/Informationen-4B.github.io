@@ -8,38 +8,102 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#07111b;--bg-2:#102132;--bg-3:#17314b;--panel:#f6f8fc;--panel-2:#edf3fb;--text:#102030;--muted:#607185;--line:#d7e1ee;--white:#fff;--blue:#3b82f6;--blue-soft:#dbeafe;--red:#ef4444;--red-soft:#fee2e2;--yellow:#facc15;--yellow-soft:#fef3c7;--green:#22c55e;--green-soft:#dcfce7;--cyan:#38bdf8;--cyan-soft:#d7f0ff;--shadow:0 24px 60px rgba(0,0,0,.22);--r1:30px;--r2:22px;--r3:14px}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%}body{font-family:"IBM Plex Sans",sans-serif;background:radial-gradient(circle at top left,rgba(59,130,246,.16),transparent 24%),radial-gradient(circle at right top,rgba(56,189,248,.12),transparent 26%),linear-gradient(155deg,#06101a 0%,#0a1623 32%,#102132 100%);color:var(--white);overflow-x:hidden}
+    :root{--text:#122033;--muted:#607089;--line:rgba(148,163,184,.28);--white:#fff;--blue:#3b82f6;--blue-strong:#2563eb;--blue-soft:#dbeafe;--red:#ef4444;--red-soft:#fee2e2;--yellow:#f59e0b;--yellow-soft:#fef3c7;--green:#10b981;--green-soft:#dcfce7;--indigo:#6366f1;--indigo-soft:#e0e7ff;--shadow:0 20px 40px rgba(59,130,246,.12);--shadow-soft:0 10px 24px rgba(15,23,42,.08);--r1:28px;--r2:20px;--r3:14px}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
+    body{font-family:"IBM Plex Sans",sans-serif;background:linear-gradient(135deg,#dbeafe,#f0f9ff,#e0f2fe);color:var(--text);overflow-x:hidden;position:relative}
+    body::before,body::after{content:"";position:fixed;border-radius:999px;pointer-events:none;z-index:0;filter:blur(8px)}
+    body::before{width:28rem;height:28rem;top:-8rem;left:-8rem;background:rgba(59,130,246,.14)}
+    body::after{width:24rem;height:24rem;right:-6rem;bottom:-6rem;background:rgba(14,165,233,.14)}
     h1,h2,h3{margin:0;font-family:"Bricolage Grotesque",sans-serif;line-height:1.04}p{margin:0;line-height:1.6}.hidden{display:none!important}
-    .screen,.main-screen{min-height:100vh;padding:1.15rem}.card,.panel{background:var(--panel);color:var(--text);border:1px solid rgba(255,255,255,.06);border-radius:var(--r1);box-shadow:var(--shadow)}
-    .loading-screen{display:grid;place-items:center}.loading-card{width:min(28rem,100%);padding:2rem;text-align:center;background:rgba(11,24,38,.88);color:var(--white);border:1px solid rgba(255,255,255,.08)}.spinner{width:3rem;height:3rem;margin:0 auto 1rem;border-radius:50%;border:4px solid rgba(255,255,255,.14);border-top-color:#7dd3fc;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-    .auth-screen{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;align-items:stretch}.auth-hero,.auth-card{padding:clamp(1.4rem,3vw,2.2rem)}.auth-hero{display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;background:linear-gradient(155deg,rgba(9,20,33,.96),rgba(16,33,50,.9));color:var(--white);border:1px solid rgba(255,255,255,.08)}
+    .screen,.main-screen{min-height:100vh;padding:1.15rem;position:relative;z-index:1}
+    .card,.panel{background:rgba(255,255,255,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);color:var(--text);border:1px solid rgba(255,255,255,.55);border-radius:var(--r1);box-shadow:var(--shadow)}
+    .loading-screen{display:grid;place-items:center}
+    .loading-card{width:min(28rem,100%);padding:2rem;text-align:center}
+    .spinner{width:3rem;height:3rem;margin:0 auto 1rem;border-radius:50%;border:4px solid rgba(59,130,246,.14);border-top-color:var(--blue);animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .auth-screen{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;align-items:stretch}
+    .auth-hero,.auth-card{padding:clamp(1.4rem,3vw,2.2rem)}
+    .auth-hero{display:flex;flex-direction:column;justify-content:space-between;gap:1.4rem;position:relative;overflow:hidden;background:linear-gradient(155deg,rgba(255,255,255,.54),rgba(219,234,254,.52))}
+    .auth-hero::before,.auth-hero::after{content:"";position:absolute;border-radius:999px}
+    .auth-hero::before{width:18rem;height:18rem;right:-5rem;top:-5rem;background:radial-gradient(circle,rgba(59,130,246,.18),transparent 70%)}
+    .auth-hero::after{width:16rem;height:16rem;left:-4rem;bottom:-5rem;background:radial-gradient(circle,rgba(14,165,233,.16),transparent 70%)}
     .eyebrow,.pill,.day-count,.type-badge,.status-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.46rem .75rem;border-radius:999px;font-size:.84rem;font-weight:700;line-height:1}
-    .eyebrow{background:rgba(125,211,252,.12);color:#c8ecff}.pill{background:#f3f6fb;border:1px solid var(--line);color:var(--text)}.day-count{background:rgba(255,255,255,.12);color:var(--white);padding:.3rem .55rem}
-    .feature-grid,.auth-subjects,.day-bar,.subject-list,.term-list,.user-list,.stack{display:grid;gap:.85rem}.feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .feature-box{padding:1rem;border-radius:var(--r2);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}.feature-box strong{display:block;margin-bottom:.3rem}
-    .subject-cloud{display:flex;flex-wrap:wrap;gap:.55rem}.subject-chip{padding:.55rem .8rem;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:.88rem}
-    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:1rem}.switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;padding:.35rem;border-radius:999px;background:#e9f0fa}
-    button,input,select,textarea{font:inherit}button{border:none;cursor:pointer;transition:transform .18s ease,opacity .18s ease,box-shadow .18s ease}button:hover:not(:disabled){transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;transform:none;box-shadow:none}
-    .switch-btn{padding:.88rem 1rem;border-radius:999px;background:transparent;color:var(--muted);font-weight:700}.switch-btn.active{background:#fff;color:var(--text);box-shadow:0 10px 24px rgba(16,32,48,.08)}
-    .notice{padding:.95rem 1rem;border-radius:var(--r3);border:1px solid transparent;font-size:.95rem}.notice.error{background:var(--red-soft);border-color:#fecaca;color:#991b1b}.notice.success{background:var(--green-soft);border-color:#bbf7d0;color:#166534}.notice.info{background:var(--blue-soft);border-color:#bfdbfe;color:#1d4ed8}
-    form{display:grid;gap:.9rem}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}.field{display:grid;gap:.42rem}.field label{font-size:.92rem;font-weight:700}
-    input,select,textarea{width:100%;padding:.92rem .96rem;border-radius:var(--r3);border:1px solid #cdd8e6;background:#fff;color:var(--text);outline:none;transition:border-color .18s ease,box-shadow .18s ease}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,.12)}textarea{min-height:7rem;resize:vertical}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.88rem 1.08rem;border-radius:999px;background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff;font-weight:700;box-shadow:0 14px 28px rgba(29,78,216,.22)}.btn.secondary{background:#e7eef8;color:var(--text);box-shadow:none}.btn.ghost{background:transparent;color:#dbeafe;border:1px solid rgba(219,234,254,.24);box-shadow:none}.btn.light{background:#f2f6fc;color:var(--text);box-shadow:none;border:1px solid var(--line)}.btn.danger{background:linear-gradient(135deg,var(--red),#dc2626);box-shadow:0 14px 28px rgba(220,38,38,.22)}.btn.small{padding:.7rem .92rem;font-size:.9rem}
-    .main-screen{max-width:1600px;margin:0 auto;display:grid;gap:1rem}.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:.9rem}.mark{width:3.2rem;height:3.2rem;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#2563eb,#38bdf8);font-family:"Bricolage Grotesque",sans-serif;font-weight:800}.topbar-copy{display:grid;gap:.18rem}.topbar-copy p{color:#bfd2e5}
-    .header-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.profile-chip{display:flex;align-items:center;gap:.75rem;padding:.72rem .88rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}.avatar{width:2.7rem;height:2.7rem;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#60a5fa,#38bdf8);font-weight:800}.profile-copy{display:grid;gap:.12rem}.profile-copy span{font-size:.9rem;color:#bfd2e5}
-    .trend-panel{padding:1.1rem;background:linear-gradient(160deg,#102132,#17314b);color:#fff;border:1px solid rgba(255,255,255,.08)}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}.panel-head p{color:inherit;opacity:.84}
-    .day-bar{grid-template-columns:repeat(7,minmax(0,1fr));margin-top:1rem}.day-card{padding:1rem;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;text-align:left;display:grid;gap:.42rem}.day-card.active{background:linear-gradient(135deg,rgba(96,165,250,.28),rgba(56,189,248,.18));border-color:rgba(125,211,252,.5);box-shadow:0 16px 34px rgba(0,0,0,.2)}.day-card.has-terms{border-color:rgba(125,211,252,.28)}.day-card small{opacity:.76;font-weight:600}
-    .workspace{display:grid;grid-template-columns:280px minmax(0,1fr) 360px;gap:1rem;align-items:start}.sidebar,.content-panel,.side-panel{padding:1.1rem}.sidebar{display:grid;gap:1rem}.subject-list{max-height:calc(100vh - 240px);overflow:auto;padding-right:.2rem}
-    .subject-item{width:100%;text-align:left;padding:1rem;border-radius:22px;background:#f9fbff;border:1px solid var(--line);display:grid;gap:.5rem}.subject-item.active{background:linear-gradient(135deg,#dbeafe,#eff6ff);border-color:#93c5fd;box-shadow:0 14px 28px rgba(59,130,246,.12)}
-    .subject-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}.subject-head strong{font-size:1rem}
-    .content-panel{display:grid;gap:1rem}.content-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
-    .term-card,.user-card{padding:1rem;border-radius:24px;background:#fff;border:1px solid var(--line);display:grid;gap:.8rem}.term-top,.user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}.term-title,.user-title{display:grid;gap:.35rem}
-    .type-badge{color:#102030;border:1px solid transparent}.type-hu{background:var(--green-soft);border-color:#86efac;color:#166534}.type-sa{background:var(--red-soft);border-color:#fca5a5;color:#991b1b}.type-test{background:var(--yellow-soft);border-color:#fde68a;color:#854d0e}.type-mu{background:var(--cyan-soft);border-color:#7dd3fc;color:#0f4c81}
-    .empty-state{padding:1.4rem;border-radius:24px;background:#f9fbff;border:1px dashed #bfd0e5;color:var(--muted)}
-    .side-panel{display:grid;gap:1rem}.admin-panel,.form-panel{display:grid;gap:1rem}.toast-wrap{position:fixed;right:1rem;bottom:1rem;z-index:25;display:grid;gap:.7rem;width:min(22rem,calc(100vw - 2rem))}.toast{padding:.95rem 1rem;border-radius:18px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.25)}.toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
+    .eyebrow{background:rgba(59,130,246,.12);color:var(--blue-strong)}
+    .pill{background:rgba(255,255,255,.78);border:1px solid rgba(255,255,255,.62);color:var(--text);box-shadow:var(--shadow-soft)}
+    .day-count{background:rgba(59,130,246,.12);color:var(--blue-strong);padding:.35rem .62rem}
+    .feature-grid,.auth-subjects,.day-bar,.subject-list,.term-list,.user-list,.stack{display:grid;gap:.9rem}
+    .subject-cloud{display:flex;flex-wrap:wrap;gap:.6rem}
+    .subject-chip{padding:.6rem .88rem;border-radius:999px;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.65);font-size:.9rem;box-shadow:var(--shadow-soft)}
+    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:1rem}
+    .switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;padding:.35rem;border-radius:999px;background:rgba(255,255,255,.54);border:1px solid rgba(255,255,255,.6)}
+    button,input,select,textarea{font:inherit}
+    button{background:var(--blue);color:#fff;border:none;padding:10px 14px;border-radius:10px;cursor:pointer;transition:.2s}
+    button:hover:not(:disabled){background:var(--blue-strong);transform:translateY(-2px)}
+    button:disabled{cursor:wait;opacity:.65;transform:none;box-shadow:none}
+    .switch-btn{padding:.88rem 1rem;border-radius:999px;background:transparent;color:var(--muted);font-weight:700}
+    .switch-btn.active{background:#fff;color:var(--text);box-shadow:var(--shadow-soft)}
+    .notice{padding:.95rem 1rem;border-radius:var(--r3);border:1px solid transparent;font-size:.95rem}
+    .notice.error{background:var(--red-soft);border-color:#fecaca;color:#991b1b}
+    .notice.success{background:var(--green-soft);border-color:#bbf7d0;color:#166534}
+    .notice.info{background:var(--blue-soft);border-color:#bfdbfe;color:#1d4ed8}
+    form{display:grid;gap:.9rem}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}
+    .field{display:grid;gap:.42rem}
+    .field label{font-size:.92rem;font-weight:700}
+    input,select,textarea{width:100%;padding:.92rem .96rem;border-radius:var(--r3);border:1px solid rgba(148,163,184,.38);background:rgba(255,255,255,.82);color:var(--text);outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+    input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,.14);background:#fff}
+    textarea{min-height:7rem;resize:vertical}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.88rem 1.08rem;border-radius:12px;background:var(--blue);color:#fff;font-weight:700;box-shadow:0 8px 25px rgba(59,130,246,.22)}
+    .btn.secondary{background:rgba(255,255,255,.76);color:var(--text);box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.65)}
+    .btn.ghost{background:rgba(255,255,255,.34);color:var(--text);border:1px solid rgba(255,255,255,.55);box-shadow:none}
+    .btn.light{background:rgba(255,255,255,.68);color:var(--text);box-shadow:var(--shadow-soft);border:1px solid rgba(255,255,255,.65)}
+    .btn.danger{background:var(--red);box-shadow:0 8px 25px rgba(239,68,68,.2)}
+    .btn.small{padding:.74rem .94rem;font-size:.9rem}
+    .main-screen{max-width:1600px;margin:0 auto;display:grid;gap:1rem}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}
+    .brand{display:flex;align-items:center;gap:.9rem}
+    .mark{width:3.3rem;height:3.3rem;border-radius:22px;display:grid;place-items:center;background:linear-gradient(135deg,#60a5fa,#38bdf8);font-family:"Bricolage Grotesque",sans-serif;font-weight:800;color:#fff;box-shadow:0 10px 24px rgba(59,130,246,.18)}
+    .topbar-copy{display:grid;gap:.18rem}
+    .header-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}
+    .profile-chip{display:flex;align-items:center;gap:.75rem;padding:.72rem .88rem;border-radius:999px;background:rgba(255,255,255,.48);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.6);box-shadow:var(--shadow-soft)}
+    .avatar{width:2.7rem;height:2.7rem;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#93c5fd,#38bdf8);font-weight:800;color:#fff}
+    .profile-copy{display:grid;gap:.12rem}
+    .profile-copy span{font-size:.9rem;color:var(--muted)}
+    .trend-panel{padding:1.1rem;background:rgba(255,255,255,.52);border:1px solid rgba(255,255,255,.58)}
+    .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+    .day-bar{grid-template-columns:repeat(7,minmax(0,1fr));margin-top:1rem}
+    .day-card{padding:.9rem 1rem;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.66);color:var(--text);text-align:left;display:grid;gap:.32rem;box-shadow:var(--shadow-soft)}
+    .day-card.active{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 10px 24px rgba(59,130,246,.22)}
+    .day-card.has-terms{outline:2px solid rgba(59,130,246,.18)}
+    .day-card small{opacity:.7;font-weight:700}
+    .workspace{display:grid;grid-template-columns:280px minmax(0,1fr) 360px;gap:1rem;align-items:start}
+    .sidebar,.content-panel,.side-panel{padding:1.1rem}
+    .sidebar{display:grid;gap:1rem;background:rgba(255,255,255,.5);backdrop-filter:blur(12px)}
+    .subject-list{max-height:calc(100vh - 240px);overflow:auto;padding-right:.2rem}
+    .subject-item{width:100%;text-align:left;padding:1rem;border-radius:16px;background:rgba(255,255,255,.64);border:1px solid rgba(255,255,255,.66);display:grid;gap:.5rem;box-shadow:var(--shadow-soft)}
+    .subject-item:hover{background:rgba(59,130,246,.12)}
+    .subject-item.active{background:rgba(59,130,246,.16);border-color:rgba(59,130,246,.24);box-shadow:0 12px 28px rgba(59,130,246,.12)}
+    .subject-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}
+    .subject-head strong{font-size:1rem}
+    .content-panel{display:grid;gap:1rem}
+    .content-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+    .term-meta,.form-actions,.user-controls{display:flex;flex-wrap:wrap;gap:.55rem;align-items:center}
+    .term-card,.user-card{margin-bottom:10px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.68);display:grid;gap:.8rem;box-shadow:var(--shadow-soft)}
+    .term-top,.user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}
+    .term-title,.user-title{display:grid;gap:.35rem}
+    .type-badge,.status-badge{padding:3px 8px;border-radius:8px;font-size:12px;border:none}
+    .type-hu{background:var(--green);color:#fff}
+    .type-sa{background:var(--red);color:#fff}
+    .type-test{background:var(--yellow);color:#fff}
+    .type-mu{background:var(--indigo);color:#fff}
+    .empty-state{padding:1.4rem;border-radius:18px;background:rgba(255,255,255,.62);border:1px dashed rgba(148,163,184,.35);color:var(--muted)}
+    .side-panel{display:grid;gap:1rem}
+    .admin-panel,.form-panel{display:grid;gap:1rem}
+    .toast-wrap{position:fixed;right:1rem;bottom:1rem;z-index:25;display:grid;gap:.7rem;width:min(22rem,calc(100vw - 2rem))}
+    .toast{padding:.95rem 1rem;border-radius:18px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.16)}
+    .toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
     @media (max-width:1280px){.workspace{grid-template-columns:260px minmax(0,1fr)}.side-panel{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr))}.day-bar{grid-template-columns:repeat(4,minmax(0,1fr))}}
-    @media (max-width:960px){.auth-screen,.workspace,.feature-grid,.form-grid,.side-panel,.day-bar{grid-template-columns:1fr}.subject-list{max-height:none}}
+    @media (max-width:960px){.auth-screen,.workspace,.form-grid,.side-panel,.day-bar{grid-template-columns:1fr}.subject-list{max-height:none}}
   </style>
 </head>
 <body>
@@ -47,7 +111,7 @@
     <div class="card loading-card">
       <div class="spinner" aria-hidden="true"></div>
       <h2>Schulplaner wird geladen</h2>
-      <p>Firebase wird verbunden und dein Zugriff wird geprueft.</p>
+      <p>Firebase wird verbunden und dein Zugriff wird geprüft.</p>
     </div>
   </section>
 
@@ -55,13 +119,7 @@
     <div class="card auth-hero">
       <div class="eyebrow">4B Dashboard</div>
       <div>
-        <h1>7 Tage, alle Faecher, alles auf einen Blick.</h1>
-        <p>Nach dem Login siehst du sofort, an welchen Tagen etwas ansteht und welche Faecher in der naechsten Woche betroffen sind.</p>
-      </div>
-      <div class="feature-grid">
-        <div class="feature-box"><strong>7-Tage Trend</strong><p>Obere Leiste zeigt heute plus die naechsten sechs Tage.</p></div>
-        <div class="feature-box"><strong>Sidebar mit Kuerzeln</strong><p>HUE, SA, Test und MUE erscheinen direkt beim Fach.</p></div>
-        <div class="feature-box"><strong>Freigaben und Rollen</strong><p>Nur freigegebene Benutzer kommen hinein; Admins steuern alles.</p></div>
+        <h1>7 Tage, alle Fächer, alles auf einen Blick.</h1>
       </div>
       <div id="subjectCloud" class="subject-cloud"></div>
     </div>
@@ -69,7 +127,6 @@
     <div class="card auth-card">
       <div>
         <h2>Login oder Registrierung</h2>
-        <p>Nur freigegebene Benutzer duerfen den Planer verwenden.</p>
       </div>
       <div class="switch-row">
         <button id="showLoginBtn" class="switch-btn active" type="button">Login</button>
@@ -88,7 +145,7 @@
         </div>
         <div class="form-grid">
           <div class="field"><label for="registerPassword">Passwort</label><input id="registerPassword" type="password" autocomplete="new-password" required></div>
-          <div class="field"><label for="registerPasswordConfirm">Passwort bestaetigen</label><input id="registerPasswordConfirm" type="password" autocomplete="new-password" required></div>
+          <div class="field"><label for="registerPasswordConfirm">Passwort bestätigen</label><input id="registerPasswordConfirm" type="password" autocomplete="new-password" required></div>
         </div>
         <button id="registerSubmitBtn" class="btn" type="submit">Konto erstellen</button>
       </form>
@@ -101,7 +158,6 @@
         <div class="mark">4B</div>
         <div class="topbar-copy">
           <h2>Schulplaner</h2>
-          <p>Trend, Sidebar und Terminliste werden live aus Firebase aktualisiert.</p>
         </div>
       </div>
       <div class="header-actions">
@@ -118,11 +174,8 @@
 
     <section class="panel trend-panel">
       <div class="panel-head">
-        <div>
-          <h2>7-Tage Trend</h2>
-          <p>Heute plus die naechsten sechs Tage. Tage mit Terminen werden hervorgehoben.</p>
-        </div>
-        <button id="resetFilterBtn" class="btn ghost small" type="button">Zur Tagesansicht heute</button>
+        <h2>7-Tage-Ansicht</h2>
+        <button id="resetFilterBtn" class="btn ghost small" type="button">Heute</button>
       </div>
       <div id="dayBar" class="day-bar"></div>
     </section>
@@ -130,10 +183,7 @@
     <div class="workspace">
       <aside class="panel sidebar">
         <div class="panel-head">
-          <div>
-            <h2>Faecher</h2>
-            <p>Typen aus den naechsten 7 Tagen werden hier automatisch berechnet.</p>
-          </div>
+          <h2>Fächer</h2>
         </div>
         <button id="showAllSubjectsBtn" class="btn light small" type="button">Heute anzeigen</button>
         <div id="subjectList" class="subject-list"></div>
@@ -143,19 +193,16 @@
         <div class="content-header">
           <div>
             <h2 id="contentTitle">Heute</h2>
-            <p id="contentMeta">Termine fuer den ausgewaehlten Filter.</p>
+            <p id="contentMeta"></p>
           </div>
-          <button id="jumpToFormBtn" class="btn secondary small hidden" type="button">Termin hinzufuegen</button>
+          <button id="jumpToFormBtn" class="btn secondary small hidden" type="button">Termin hinzufügen</button>
         </div>
         <div id="termList" class="term-list"></div>
       </section>
 
       <aside class="side-panel">
         <section id="termFormPanel" class="panel form-panel hidden">
-          <div>
-            <h2 id="termFormTitle">Termin hinzufuegen</h2>
-            <p>Admins und Sprecher koennen Termine anlegen, bearbeiten und loeschen.</p>
-          </div>
+          <h2 id="termFormTitle">Termin hinzufügen</h2>
           <form id="termForm" novalidate>
             <div class="field"><label for="termSubject">Fach</label><select id="termSubject" required></select></div>
             <div class="field"><label for="termType">Typ</label><select id="termType" required></select></div>
@@ -170,10 +217,7 @@
         </section>
 
         <section id="adminPanel" class="panel admin-panel hidden">
-          <div>
-            <h2>Adminbereich</h2>
-            <p>Benutzer freischalten und Rollen auf user, sprecher oder admin setzen.</p>
-          </div>
+          <h2>Adminbereich</h2>
           <div id="userList" class="user-list"></div>
         </section>
       </aside>
@@ -432,19 +476,19 @@
       const code = error?.code || "";
       return {
         "auth/email-already-in-use": "Diese E-Mail ist bereits registriert.",
-        "auth/invalid-email": "Bitte gib eine gueltige E-Mail-Adresse ein.",
+        "auth/invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
         "auth/weak-password": "Das Passwort ist zu schwach. Verwende mindestens 6 Zeichen.",
         "auth/invalid-credential": "E-Mail oder Passwort sind nicht korrekt.",
         "auth/user-not-found": "Dieses Konto wurde nicht gefunden.",
         "auth/wrong-password": "Das Passwort ist falsch.",
         "auth/too-many-requests": "Zu viele Versuche. Bitte warte kurz und probiere es erneut.",
-        "auth/network-request-failed": "Netzwerkfehler. Bitte pruefe deine Verbindung."
+        "auth/network-request-failed": "Netzwerkfehler. Bitte prüfe deine Verbindung."
       }[code] || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
     }
 
     function readableDbError(error) {
       const message = error?.message || "";
-      if (message.includes("permission_denied")) return "Firebase hat den Zugriff abgelehnt. Bitte pruefe die Realtime-Database-Regeln.";
+      if (message.includes("permission_denied")) return "Firebase hat den Zugriff abgelehnt. Bitte prüfe die Realtime-Database-Regeln.";
       return "Die Daten konnten nicht gespeichert oder geladen werden.";
     }
 
@@ -546,7 +590,7 @@
         const subject = subjectByKey(state.selectedSubjectKey);
         const count = visibleTerms().length;
         elements.contentTitle.textContent = subject ? subject.label : "Fach";
-        elements.contentMeta.textContent = count ? count + " Termin(e) fuer dieses Fach." : "Noch keine Termine fuer dieses Fach.";
+        elements.contentMeta.textContent = count ? count + " Termin(e) für dieses Fach." : "Noch keine Termine für dieses Fach.";
       } else {
         const count = visibleTerms().length;
         elements.contentTitle.textContent = formatDayLabel(state.selectedDay);
@@ -593,7 +637,7 @@
       if (canManageTerms()) {
         const actions = document.createElement("div");
         actions.className = "form-actions";
-        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Loeschen", "danger"]].forEach(([action, label, style]) => {
+        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Löschen", "danger"]].forEach(([action, label, style]) => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "btn " + style + " small";
@@ -616,7 +660,7 @@
       if (!list.length) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.innerHTML = "<h3>Keine Eintraege</h3><p>Fuer den aktuellen Filter gibt es noch keine Termine.</p>";
+        empty.innerHTML = "<h3>Keine Einträge</h3><p>Für den aktuellen Filter gibt es noch keine Termine.</p>";
         elements.termList.appendChild(empty);
         return;
       }
@@ -696,7 +740,7 @@
       if (!entries.length) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.innerHTML = "<h3>Noch keine Benutzer</h3><p>Sobald sich Benutzer registrieren, erscheinen sie hier.</p>";
+        empty.innerHTML = "<h3>Noch keine Benutzer</h3><p>Aktuell sind keine Benutzer vorhanden.</p>";
         elements.userList.appendChild(empty);
         return;
       }
@@ -711,8 +755,8 @@
       elements.termFormPanel.classList.toggle("hidden", !visible);
       elements.jumpToFormBtn.classList.toggle("hidden", !visible);
       if (!visible) return;
-      elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufuegen";
-      elements.saveTermBtn.textContent = state.editingTerm ? "Aenderungen speichern" : "Termin speichern";
+      elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufügen";
+      elements.saveTermBtn.textContent = state.editingTerm ? "Änderungen speichern" : "Termin speichern";
       elements.cancelEditBtn.classList.toggle("hidden", !state.editingTerm);
       if (!state.editingTerm) {
         elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
@@ -824,11 +868,11 @@
       const password = elements.registerPassword.value;
       const confirm = elements.registerPasswordConfirm.value;
       if (!name || !email || !password || !confirm) {
-        setAuthNotice("Bitte fuelle alle Registrierungsfelder aus.", "error", "register");
+        setAuthNotice("Bitte fülle alle Registrierungsfelder aus.", "error", "register");
         return;
       }
       if (password !== confirm) {
-        setAuthNotice("Die Passwoerter stimmen nicht ueberein.", "error", "register");
+        setAuthNotice("Die Passwörter stimmen nicht überein.", "error", "register");
         return;
       }
       state.pendingProfileCreation = true;
@@ -867,7 +911,7 @@
         setAuthNotice("Bitte gib E-Mail und Passwort ein.", "error", "login");
         return;
       }
-      setBusy(elements.loginSubmitBtn, true, "Pruefe Login...");
+      setBusy(elements.loginSubmitBtn, true, "Prüfe Login...");
       setScreen("loading");
       try {
         await signInWithEmailAndPassword(auth, email, password);
@@ -899,7 +943,7 @@
       const beschreibung = elements.termDescription.value.trim();
       const personen = elements.termPeople.value.trim();
       if (!subjectKey || !typ || !datum || !beschreibung) {
-        toast("Bitte fuelle Fach, Typ, Datum und Beschreibung aus.", "error");
+        toast("Bitte fülle Fach, Typ, Datum und Beschreibung aus.", "error");
         return;
       }
       const payload = { fach: subject.label, typ, datum, beschreibung, personen, updatedAt: Date.now(), updatedBy: state.currentUser.uid };
@@ -914,7 +958,7 @@
         } else {
           const newRef = push(ref(db, "terms/" + subjectKey));
           await set(newRef, { ...payload, createdAt: Date.now(), createdBy: state.currentUser.uid });
-          toast("Termin wurde hinzugefuegt.", "success");
+          toast("Termin wurde hinzugefügt.", "success");
         }
         resetTermForm();
       } catch (error) {
@@ -929,7 +973,7 @@
       if (!button) return;
       const term = findTerm(button.dataset.subjectKey, button.dataset.termId);
       if (!term) {
-        toast("Der ausgewaehlte Termin konnte nicht gefunden werden.", "error");
+        toast("Der ausgewählte Termin konnte nicht gefunden werden.", "error");
         return;
       }
       if (button.dataset.action === "edit-term") {
@@ -937,12 +981,12 @@
         return;
       }
       if (button.dataset.action === "delete-term") {
-        if (!window.confirm("Diesen Termin wirklich loeschen?")) return;
-        setBusy(button, true, "Loesche...");
+        if (!window.confirm("Diesen Termin wirklich löschen?")) return;
+        setBusy(button, true, "Lösche...");
         try {
           await remove(ref(db, "terms/" + term.subjectKey + "/" + term.id));
           if (state.editingTerm && state.editingTerm.id === term.id) resetTermForm();
-          toast("Termin wurde geloescht.", "success");
+          toast("Termin wurde gelöscht.", "success");
         } catch (error) {
           toast(readableDbError(error), "error");
         } finally {
