@@ -1,12 +1,12 @@
 // Produktions-Konfiguration für Informationen 4B.
 window.CLASSPLANNER_CONFIG = {
   firebaseConfig: {
-    apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
-    authDomain: "informationen-4b-dc655.firebaseapp.com",
-    projectId: "informationen-4b-dc655",
-    storageBucket: "informationen-4b-dc655.firebasestorage.app",
-    messagingSenderId: "523568445266",
-    appId: "1:523568445266:web:f38bc3a96adc3180f26c8b",
+    apiKey: "AIzaSyCq0CpAKCMqKP30EEYZ3HxFNBHgjD7P4Ro",
+    authDomain: "informationen-4b.firebaseapp.com",
+    projectId: "informationen-4b",
+    storageBucket: "informationen-4b.firebasestorage.app",
+    messagingSenderId: "443143023390",
+    appId: "1:443143023390:web:270bd0a36fff92991fb70f",
   },
   // Bitte auf die echten Rollen-Mails anpassen:
   rootAdminEmail: "Matthias.HANDL@ahsbruck.at",
