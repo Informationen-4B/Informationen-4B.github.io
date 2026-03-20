@@ -292,11 +292,18 @@
     const SUBJECTS = [
       ["mathe", "Mathe"], ["deutsch", "Deutsch"], ["englisch", "Englisch"], ["geschichte", "Geschichte"],
       ["geographie", "Geographie"], ["religion", "Religion"], ["physik", "Physik"], ["physik_labor", "Physik Labor"],
-      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
+      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["kunst", "Kunst"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
       ["digitale_grundbildung", "Digitale Grundbildung"], ["italienisch", "Italienisch"], ["sport", "Sport"]
     ].map(([key, label]) => ({ key, label }));
-    const ROLE_LABELS = { user: "User", sprecher: "Sprecher", admin: "Admin" };
-    const EDITOR_ROLES = new Set(["admin", "sprecher"]);
+    const ROLE_LABELS = {
+      user: "Schüler",
+      schueler: "Schüler",
+      "schüler": "Schüler",
+      sprecher: "Klassensprecher",
+      klassensprecher: "Klassensprecher",
+      admin: "Admin"
+    };
+    const EDITOR_ROLES = new Set(["admin", "sprecher", "klassensprecher"]);
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -376,7 +383,7 @@
     }
 
     function roleLabel(role) {
-      return ROLE_LABELS[role] || "User";
+      return ROLE_LABELS[role] || "Schüler";
     }
 
     function typeClass(type) {
@@ -736,7 +743,7 @@
       meta.appendChild(role);
       const status = document.createElement("span");
       status.className = "status-badge " + (profile.approved ? "type-hu" : "type-test");
-      status.textContent = profile.approved ? "Freigeschaltet" : "Wartet";
+      status.textContent = profile.approved ? "Bestätigt" : "Unbestätigt";
       meta.appendChild(status);
 
       titleWrap.append(title, meta);
@@ -764,15 +771,21 @@
       save.textContent = "Rolle speichern";
       controls.appendChild(save);
 
-      if (!profile.approved) {
-        const approve = document.createElement("button");
-        approve.type = "button";
-        approve.className = "btn small";
-        approve.dataset.action = "approve-user";
-        approve.dataset.userId = uid;
-        approve.textContent = "Freischalten";
-        controls.appendChild(approve);
-      }
+      const approval = document.createElement("button");
+      approval.type = "button";
+      approval.className = "btn small";
+      approval.dataset.action = "toggle-approval";
+      approval.dataset.userId = uid;
+      approval.textContent = profile.approved ? "Unbestätigen" : "Bestätigen";
+      controls.appendChild(approval);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn danger small";
+      removeBtn.dataset.action = "delete-user";
+      removeBtn.dataset.userId = uid;
+      removeBtn.textContent = "Löschen";
+      controls.appendChild(removeBtn);
 
       card.appendChild(controls);
       return card;
@@ -890,13 +903,13 @@
         const profile = snapshot.val();
         if (!profile) {
           if (state.pendingProfileCreation) return;
-          await denyAccess("Dein Profil wurde nicht gefunden. Bitte registriere dich erneut.");
+          await denyAccess("Dein Profil wurde nicht gefunden. Bitte wende dich an einen Admin.");
           return;
         }
         state.currentProfile = { uid, ...profile };
         if (!profile.approved) {
           if (state.registrationFlow) return;
-          await denyAccess("Dein Konto wurde noch nicht freigeschaltet. Bitte warte auf einen Admin.");
+          await denyAccess("Dein Konto wurde noch nicht bestätigt. Bitte warte auf einen Admin.");
           return;
         }
         ensureTermsSubscription();
@@ -929,10 +942,10 @@
         const isAdmin = await createUserProfile(credential.user.uid, name, email);
         elements.registerForm.reset();
         if (isAdmin) {
-          toast("Admin-Konto erkannt und freigeschaltet.", "success");
+          toast("Admin-Konto erkannt und bestätigt.", "success");
           switchAuthView("login");
         } else {
-          setAuthNotice("Registrierung erfolgreich. Ein Admin muss dein Konto jetzt freischalten.", "success", "login");
+          setAuthNotice("Registrierung erfolgreich. Ein Admin muss dein Konto jetzt bestätigen.", "success", "login");
           switchAuthView("login");
           await signOut(auth);
         }
@@ -1045,6 +1058,12 @@
       return Object.values(state.users).filter((user) => user.approved && user.role === "admin").length;
     }
 
+    function wouldRemoveLastApprovedAdmin(target, action, nextRole) {
+      if (!(target && target.approved && target.role === "admin")) return false;
+      if (action === "save-role" && nextRole === "admin") return false;
+      return approvedAdminCount() <= 1;
+    }
+
     async function handleUserActions(event) {
       const button = event.target.closest("button[data-action]");
       if (!button || !isAdmin()) return;
@@ -1056,19 +1075,43 @@
         toast("Benutzer konnte nicht gefunden werden.", "error");
         return;
       }
-      if (button.dataset.action === "save-role" && userId === state.currentUser.uid && target.role === "admin" && nextRole !== "admin" && approvedAdminCount() <= 1) {
-        toast("Du kannst dich nicht selbst als letzten Admin entfernen.", "error");
+      if (button.dataset.action === "delete-user" && userId === state.currentUser.uid) {
+        toast("Du kannst dein eigenes Konto hier nicht löschen.", "error");
         return;
       }
-      setBusy(button, true, button.dataset.action === "approve-user" ? "Schalte frei..." : "Speichere...");
+      if (wouldRemoveLastApprovedAdmin(target, button.dataset.action, nextRole)) {
+        toast("Der letzte bestätigte Admin kann nicht entfernt oder unbestätigt gesetzt werden.", "error");
+        return;
+      }
+      if (button.dataset.action === "delete-user" && !window.confirm("Diesen Benutzer wirklich aus der Datenbank löschen?")) {
+        return;
+      }
+      setBusy(button, true, button.dataset.action === "save-role" ? "Speichere..." : button.dataset.action === "delete-user" ? "Lösche..." : "Aktualisiere...");
       try {
-        if (button.dataset.action === "approve-user") {
-          await update(ref(db, "users/" + userId), { approved: true, approvedAt: Date.now(), approvedBy: state.currentUser.uid });
-          toast("Benutzer wurde freigeschaltet.", "success");
+        if (button.dataset.action === "toggle-approval") {
+          if (target.approved) {
+            await update(ref(db, "users/" + userId), {
+              approved: false,
+              approvedAt: null,
+              approvedBy: null
+            });
+            toast("Benutzer wurde auf unbestätigt gesetzt.", "success");
+          } else {
+            await update(ref(db, "users/" + userId), {
+              approved: true,
+              approvedAt: Date.now(),
+              approvedBy: state.currentUser.uid
+            });
+            toast("Benutzer wurde bestätigt.", "success");
+          }
         }
         if (button.dataset.action === "save-role") {
           await update(ref(db, "users/" + userId), { role: nextRole });
           toast("Rolle wurde gespeichert.", "success");
+        }
+        if (button.dataset.action === "delete-user") {
+          await remove(ref(db, "users/" + userId));
+          toast("Benutzer wurde aus der Datenbank gelöscht.", "success");
         }
       } catch (error) {
         toast(readableDbError(error), "error");
