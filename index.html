@@ -1,118 +1,94 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>4B Terminboard</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>4B Schulplaner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--bg:#f3efe5;--card:rgba(255,251,245,.9);--text:#16333d;--muted:#687981;--line:rgba(22,51,61,.12);--accent:#107a71;--accent-soft:rgba(16,122,113,.12);--warm:#e88b3e;--warm-soft:rgba(232,139,62,.14);--danger:#bd4e39;--danger-soft:rgba(189,78,57,.12);--success:#2b8c58;--success-soft:rgba(43,140,88,.12);--shadow:0 24px 60px rgba(18,45,55,.14);--r1:28px;--r2:18px;--r3:12px}
-    *{box-sizing:border-box}html,body{margin:0;min-height:100%}
-    body{font-family:"IBM Plex Sans",sans-serif;color:var(--text);background:radial-gradient(circle at top left,rgba(232,139,62,.16),transparent 28%),radial-gradient(circle at top right,rgba(16,122,113,.14),transparent 32%),linear-gradient(150deg,#efe6d6 0%,#f7f2e8 45%,#eef4f1 100%);overflow-x:hidden}
-    h1,h2,h3{margin:0;font-family:"Bricolage Grotesque",sans-serif;line-height:1.06}p{margin:0;color:var(--muted);line-height:1.6}.hidden{display:none!important}
-    .screen,.main-screen{min-height:100vh;padding:1.1rem}.card,.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r1);box-shadow:var(--shadow);backdrop-filter:blur(16px)}
-    .loading-screen{display:grid;place-items:center}.loading-card{width:min(28rem,100%);padding:2rem;text-align:center}.spinner{width:3rem;height:3rem;margin:0 auto 1rem;border-radius:50%;border:4px solid rgba(16,122,113,.16);border-top-color:var(--accent);animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-    .auth-screen{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem}.brand-card,.auth-card{padding:clamp(1.4rem,3vw,2.2rem)}.brand-card{display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;background:linear-gradient(150deg,rgba(255,251,245,.98),rgba(248,242,233,.92))}
-    .eyebrow,.pill,.type-pill,.role-pill,.status-pill{display:inline-flex;align-items:center;gap:.35rem;padding:.46rem .75rem;border-radius:999px;font-size:.86rem;font-weight:700;line-height:1}
-    .eyebrow,.role-pill{background:var(--accent-soft);color:#0d5f58}.pill{background:rgba(255,255,255,.72);border:1px solid rgba(22,51,61,.08)}.type-pill{background:var(--warm-soft);color:#915219}.status-pill.approved{background:var(--success-soft);color:#1d6a40}.status-pill.pending{background:var(--warm-soft);color:#915219}
-    .subject-cloud,.term-meta,.tab-badges,.form-actions,.header-actions,.user-controls{display:flex;flex-wrap:wrap;gap:.55rem}
-    .feature-grid,.hero-grid,.content-grid,.side-stack,.term-list,.user-list,.upcoming-list{display:grid;gap:1rem}.feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .feature-box{padding:1rem;border-radius:var(--r2);background:rgba(255,255,255,.64);border:1px solid rgba(22,51,61,.08)}.feature-box strong{display:block;margin-bottom:.35rem;font-family:"Bricolage Grotesque",sans-serif}
-    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:1rem}.switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;padding:.35rem;border-radius:999px;background:rgba(22,51,61,.06)}
+    :root{--bg:#07111b;--bg-2:#102132;--bg-3:#17314b;--panel:#f6f8fc;--panel-2:#edf3fb;--text:#102030;--muted:#607185;--line:#d7e1ee;--white:#fff;--blue:#3b82f6;--blue-soft:#dbeafe;--red:#ef4444;--red-soft:#fee2e2;--yellow:#facc15;--yellow-soft:#fef3c7;--green:#22c55e;--green-soft:#dcfce7;--cyan:#38bdf8;--cyan-soft:#d7f0ff;--shadow:0 24px 60px rgba(0,0,0,.22);--r1:30px;--r2:22px;--r3:14px}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%}body{font-family:"IBM Plex Sans",sans-serif;background:radial-gradient(circle at top left,rgba(59,130,246,.16),transparent 24%),radial-gradient(circle at right top,rgba(56,189,248,.12),transparent 26%),linear-gradient(155deg,#06101a 0%,#0a1623 32%,#102132 100%);color:var(--white);overflow-x:hidden}
+    h1,h2,h3{margin:0;font-family:"Bricolage Grotesque",sans-serif;line-height:1.04}p{margin:0;line-height:1.6}.hidden{display:none!important}
+    .screen,.main-screen{min-height:100vh;padding:1.15rem}.card,.panel{background:var(--panel);color:var(--text);border:1px solid rgba(255,255,255,.06);border-radius:var(--r1);box-shadow:var(--shadow)}
+    .loading-screen{display:grid;place-items:center}.loading-card{width:min(28rem,100%);padding:2rem;text-align:center;background:rgba(11,24,38,.88);color:var(--white);border:1px solid rgba(255,255,255,.08)}.spinner{width:3rem;height:3rem;margin:0 auto 1rem;border-radius:50%;border:4px solid rgba(255,255,255,.14);border-top-color:#7dd3fc;animation:spin 1s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .auth-screen{display:grid;grid-template-columns:1.05fr .95fr;gap:1rem;align-items:stretch}.auth-hero,.auth-card{padding:clamp(1.4rem,3vw,2.2rem)}.auth-hero{display:flex;flex-direction:column;justify-content:space-between;gap:1.2rem;background:linear-gradient(155deg,rgba(9,20,33,.96),rgba(16,33,50,.9));color:var(--white);border:1px solid rgba(255,255,255,.08)}
+    .eyebrow,.pill,.day-count,.type-badge,.status-badge{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;padding:.46rem .75rem;border-radius:999px;font-size:.84rem;font-weight:700;line-height:1}
+    .eyebrow{background:rgba(125,211,252,.12);color:#c8ecff}.pill{background:#f3f6fb;border:1px solid var(--line);color:var(--text)}.day-count{background:rgba(255,255,255,.12);color:var(--white);padding:.3rem .55rem}
+    .feature-grid,.auth-subjects,.day-bar,.subject-list,.term-list,.user-list,.stack{display:grid;gap:.85rem}.feature-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .feature-box{padding:1rem;border-radius:var(--r2);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08)}.feature-box strong{display:block;margin-bottom:.3rem}
+    .subject-cloud{display:flex;flex-wrap:wrap;gap:.55rem}.subject-chip{padding:.55rem .8rem;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);font-size:.88rem}
+    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:1rem}.switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.5rem;padding:.35rem;border-radius:999px;background:#e9f0fa}
     button,input,select,textarea{font:inherit}button{border:none;cursor:pointer;transition:transform .18s ease,opacity .18s ease,box-shadow .18s ease}button:hover:not(:disabled){transform:translateY(-1px)}button:disabled{cursor:wait;opacity:.65;transform:none;box-shadow:none}
-    .switch-btn{padding:.85rem 1rem;border-radius:999px;background:transparent;color:var(--muted);font-weight:700}.switch-btn.active{background:rgba(255,251,245,.98);color:var(--text);box-shadow:0 12px 26px rgba(18,45,55,.08)}
-    .notice{padding:.95rem 1rem;border-radius:var(--r3);border:1px solid transparent;font-size:.95rem}.notice.error{background:var(--danger-soft);border-color:rgba(189,78,57,.22);color:#883424}.notice.success{background:var(--success-soft);border-color:rgba(43,140,88,.2);color:#1d6a40}.notice.info{background:var(--accent-soft);border-color:rgba(16,122,113,.2);color:#0d5f58}
+    .switch-btn{padding:.88rem 1rem;border-radius:999px;background:transparent;color:var(--muted);font-weight:700}.switch-btn.active{background:#fff;color:var(--text);box-shadow:0 10px 24px rgba(16,32,48,.08)}
+    .notice{padding:.95rem 1rem;border-radius:var(--r3);border:1px solid transparent;font-size:.95rem}.notice.error{background:var(--red-soft);border-color:#fecaca;color:#991b1b}.notice.success{background:var(--green-soft);border-color:#bbf7d0;color:#166534}.notice.info{background:var(--blue-soft);border-color:#bfdbfe;color:#1d4ed8}
     form{display:grid;gap:.9rem}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.9rem}.field{display:grid;gap:.42rem}.field label{font-size:.92rem;font-weight:700}
-    input,select,textarea{width:100%;padding:.92rem .96rem;border-radius:var(--r3);border:1px solid rgba(22,51,61,.14);background:rgba(255,255,255,.88);color:var(--text);outline:none;transition:border-color .18s ease,box-shadow .18s ease}
-    input:focus,select:focus,textarea:focus{border-color:rgba(16,122,113,.38);box-shadow:0 0 0 4px rgba(16,122,113,.12)}textarea{min-height:7rem;resize:vertical}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.9rem 1.1rem;border-radius:999px;background:var(--accent);color:#f7faf9;font-weight:700;box-shadow:0 14px 28px rgba(16,122,113,.18)}
-    .btn.secondary{background:rgba(22,51,61,.08);color:var(--text);box-shadow:none}.btn.ghost{background:transparent;color:#0d5f58;border:1px solid rgba(16,122,113,.22);box-shadow:none}.btn.danger{background:var(--danger);box-shadow:0 14px 28px rgba(189,78,57,.18)}.btn.small{padding:.72rem .95rem;font-size:.9rem}
-    .main-screen{max-width:1550px;margin:0 auto;display:grid;gap:1rem}
-    .main-header,.panel-head,.subject-toolbar,.term-top,.user-top,.profile-chip{display:flex;align-items:flex-start;justify-content:space-between;gap:.9rem;flex-wrap:wrap}
-    .logo-title{display:flex;gap:.85rem;align-items:center}.logo-mark,.profile-avatar{display:grid;place-items:center;width:3rem;height:3rem;border-radius:18px;background:linear-gradient(145deg,rgba(16,122,113,.18),rgba(232,139,62,.18));font-family:"Bricolage Grotesque",sans-serif;font-weight:800}
-    .profile-avatar{border-radius:50%;width:2.8rem;height:2.8rem}.profile-copy{display:grid;gap:.18rem}.profile-chip{padding:.7rem .85rem;border-radius:999px;background:rgba(255,255,255,.72);border:1px solid rgba(22,51,61,.08)}
-    .hero-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero-card{padding:1.3rem;position:relative;overflow:hidden}.hero-card::after{content:"";position:absolute;right:-2rem;bottom:-2rem;width:7rem;height:7rem;border-radius:999px;background:radial-gradient(circle,rgba(16,122,113,.12),transparent 68%)}.hero-card strong{display:block;margin-top:.7rem;font-family:"Bricolage Grotesque",sans-serif;font-size:clamp(1.55rem,3vw,2.4rem)}
-    .content-grid{grid-template-columns:minmax(0,1.45fr) minmax(21rem,.82fr);align-items:start}.panel{padding:1.15rem}.panel-copy{display:grid;gap:.28rem}
-    .subject-tabs{display:flex;gap:.75rem;overflow-x:auto;padding-bottom:.35rem;margin-bottom:1rem;scrollbar-width:thin}
-    .subject-tab{min-width:11rem;padding:.95rem;text-align:left;border-radius:20px;background:rgba(255,255,255,.68);border:1px solid rgba(22,51,61,.1);color:var(--text);display:grid;gap:.45rem}
-    .subject-tab.active{background:linear-gradient(145deg,rgba(16,122,113,.12),rgba(255,255,255,.92));border-color:rgba(16,122,113,.28);box-shadow:0 18px 32px rgba(16,122,113,.1)}
-    .term-card,.user-card,.upcoming-card,.empty-state{padding:1rem;border-radius:22px;background:rgba(255,255,255,.76);border:1px solid rgba(22,51,61,.08)}.term-card,.user-card,.upcoming-card{display:grid;gap:.75rem}.empty-state{border-style:dashed;background:rgba(255,255,255,.46)}.term-title,.user-title,.helper-list{display:grid;gap:.35rem}.helper-list{gap:.75rem}.helper-line{display:flex;gap:.7rem;color:var(--muted)}.helper-dot{width:.7rem;height:.7rem;margin-top:.48rem;flex:0 0 auto;border-radius:999px;background:linear-gradient(135deg,var(--accent),var(--warm))}
-    .toast-wrap{position:fixed;right:1rem;bottom:1rem;z-index:20;display:grid;gap:.7rem;width:min(22rem,calc(100vw - 2rem))}.toast{padding:.95rem 1rem;border-radius:18px;color:#fff;box-shadow:0 18px 36px rgba(18,45,55,.18);animation:toast-in .22s ease}.toast.info{background:rgba(16,122,113,.95)}.toast.success{background:rgba(43,140,88,.95)}.toast.error{background:rgba(189,78,57,.95)}@keyframes toast-in{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    @media (max-width:1100px){.auth-screen,.content-grid,.hero-grid,.feature-grid{grid-template-columns:1fr}}
-    @media (max-width:800px){.screen,.main-screen{padding:1rem}.form-grid{grid-template-columns:1fr}.subject-tab{min-width:10rem}}
+    input,select,textarea{width:100%;padding:.92rem .96rem;border-radius:var(--r3);border:1px solid #cdd8e6;background:#fff;color:var(--text);outline:none;transition:border-color .18s ease,box-shadow .18s ease}input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,130,246,.12)}textarea{min-height:7rem;resize:vertical}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.88rem 1.08rem;border-radius:999px;background:linear-gradient(135deg,var(--blue),#1d4ed8);color:#fff;font-weight:700;box-shadow:0 14px 28px rgba(29,78,216,.22)}.btn.secondary{background:#e7eef8;color:var(--text);box-shadow:none}.btn.ghost{background:transparent;color:#dbeafe;border:1px solid rgba(219,234,254,.24);box-shadow:none}.btn.light{background:#f2f6fc;color:var(--text);box-shadow:none;border:1px solid var(--line)}.btn.danger{background:linear-gradient(135deg,var(--red),#dc2626);box-shadow:0 14px 28px rgba(220,38,38,.22)}.btn.small{padding:.7rem .92rem;font-size:.9rem}
+    .main-screen{max-width:1600px;margin:0 auto;display:grid;gap:1rem}.topbar{display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:.9rem}.mark{width:3.2rem;height:3.2rem;border-radius:20px;display:grid;place-items:center;background:linear-gradient(135deg,#2563eb,#38bdf8);font-family:"Bricolage Grotesque",sans-serif;font-weight:800}.topbar-copy{display:grid;gap:.18rem}.topbar-copy p{color:#bfd2e5}
+    .header-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap}.profile-chip{display:flex;align-items:center;gap:.75rem;padding:.72rem .88rem;border-radius:999px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08)}.avatar{width:2.7rem;height:2.7rem;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#60a5fa,#38bdf8);font-weight:800}.profile-copy{display:grid;gap:.12rem}.profile-copy span{font-size:.9rem;color:#bfd2e5}
+    .trend-panel{padding:1.1rem;background:linear-gradient(160deg,#102132,#17314b);color:#fff;border:1px solid rgba(255,255,255,.08)}.panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}.panel-head p{color:inherit;opacity:.84}
+    .day-bar{grid-template-columns:repeat(7,minmax(0,1fr));margin-top:1rem}.day-card{padding:1rem;border-radius:22px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);color:#fff;text-align:left;display:grid;gap:.42rem}.day-card.active{background:linear-gradient(135deg,rgba(96,165,250,.28),rgba(56,189,248,.18));border-color:rgba(125,211,252,.5);box-shadow:0 16px 34px rgba(0,0,0,.2)}.day-card.has-terms{border-color:rgba(125,211,252,.28)}.day-card small{opacity:.76;font-weight:600}
+    .workspace{display:grid;grid-template-columns:280px minmax(0,1fr) 360px;gap:1rem;align-items:start}.sidebar,.content-panel,.side-panel{padding:1.1rem}.sidebar{display:grid;gap:1rem}.subject-list{max-height:calc(100vh - 240px);overflow:auto;padding-right:.2rem}
+    .subject-item{width:100%;text-align:left;padding:1rem;border-radius:22px;background:#f9fbff;border:1px solid var(--line);display:grid;gap:.5rem}.subject-item.active{background:linear-gradient(135deg,#dbeafe,#eff6ff);border-color:#93c5fd;box-shadow:0 14px 28px rgba(59,130,246,.12)}
+    .subject-head{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem}.subject-head strong{font-size:1rem}
+    .content-panel{display:grid;gap:1rem}.content-header{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+    .term-card,.user-card{padding:1rem;border-radius:24px;background:#fff;border:1px solid var(--line);display:grid;gap:.8rem}.term-top,.user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.75rem;flex-wrap:wrap}.term-title,.user-title{display:grid;gap:.35rem}
+    .type-badge{color:#102030;border:1px solid transparent}.type-hu{background:var(--green-soft);border-color:#86efac;color:#166534}.type-sa{background:var(--red-soft);border-color:#fca5a5;color:#991b1b}.type-test{background:var(--yellow-soft);border-color:#fde68a;color:#854d0e}.type-mu{background:var(--cyan-soft);border-color:#7dd3fc;color:#0f4c81}
+    .empty-state{padding:1.4rem;border-radius:24px;background:#f9fbff;border:1px dashed #bfd0e5;color:var(--muted)}
+    .side-panel{display:grid;gap:1rem}.admin-panel,.form-panel{display:grid;gap:1rem}.toast-wrap{position:fixed;right:1rem;bottom:1rem;z-index:25;display:grid;gap:.7rem;width:min(22rem,calc(100vw - 2rem))}.toast{padding:.95rem 1rem;border-radius:18px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.25)}.toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
+    @media (max-width:1280px){.workspace{grid-template-columns:260px minmax(0,1fr)}.side-panel{grid-column:1 / -1;grid-template-columns:repeat(2,minmax(0,1fr))}.day-bar{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media (max-width:960px){.auth-screen,.workspace,.feature-grid,.form-grid,.side-panel,.day-bar{grid-template-columns:1fr}.subject-list{max-height:none}}
   </style>
 </head>
 <body>
   <section id="loadingScreen" class="screen loading-screen">
     <div class="card loading-card">
       <div class="spinner" aria-hidden="true"></div>
-      <h2>4B Terminboard lädt</h2>
-      <p>Firebase wird verbunden und dein Zugriff wird geprüft.</p>
+      <h2>Schulplaner wird geladen</h2>
+      <p>Firebase wird verbunden und dein Zugriff wird geprueft.</p>
     </div>
   </section>
 
   <section id="authScreen" class="screen auth-screen hidden">
-    <div class="card brand-card">
-      <div class="eyebrow">4B · Schultermine</div>
+    <div class="card auth-hero">
+      <div class="eyebrow">4B Dashboard</div>
       <div>
-        <h1>Alles Wichtige pro Fach auf einen Blick.</h1>
-        <p>Tests, SA, HÜ und MÜ werden zentral gesammelt und live für die Klasse synchronisiert.</p>
+        <h1>7 Tage, alle Faecher, alles auf einen Blick.</h1>
+        <p>Nach dem Login siehst du sofort, an welchen Tagen etwas ansteht und welche Faecher in der naechsten Woche betroffen sind.</p>
       </div>
       <div class="feature-grid">
-        <div class="feature-box"><strong>Login mit Freischaltung</strong><p>Neue Benutzer werden erst nach Admin-Freigabe nutzbar.</p></div>
-        <div class="feature-box"><strong>Rollen mit Rechten</strong><p>Admins und Klassensprecher pflegen Termine, User lesen nur mit.</p></div>
-        <div class="feature-box"><strong>Live-Aktualisierung</strong><p>Die Oberfläche aktualisiert sich sofort nach jeder Änderung.</p></div>
+        <div class="feature-box"><strong>7-Tage Trend</strong><p>Obere Leiste zeigt heute plus die naechsten sechs Tage.</p></div>
+        <div class="feature-box"><strong>Sidebar mit Kuerzeln</strong><p>HUE, SA, Test und MUE erscheinen direkt beim Fach.</p></div>
+        <div class="feature-box"><strong>Freigaben und Rollen</strong><p>Nur freigegebene Benutzer kommen hinein; Admins steuern alles.</p></div>
       </div>
       <div id="subjectCloud" class="subject-cloud"></div>
     </div>
 
     <div class="card auth-card">
-      <div class="panel-copy">
-        <h2>Anmelden oder registrieren</h2>
-        <p>Der eigentliche Inhalt wird erst nach erfolgreichem Login angezeigt.</p>
+      <div>
+        <h2>Login oder Registrierung</h2>
+        <p>Nur freigegebene Benutzer duerfen den Planer verwenden.</p>
       </div>
-
       <div class="switch-row">
         <button id="showLoginBtn" class="switch-btn active" type="button">Login</button>
         <button id="showRegisterBtn" class="switch-btn" type="button">Registrieren</button>
       </div>
-
       <div id="authNotice" class="notice hidden" aria-live="polite"></div>
-
       <form id="loginForm" novalidate>
-        <div class="field">
-          <label for="loginEmail">E-Mail</label>
-          <input id="loginEmail" type="email" autocomplete="email" placeholder="name@schule.at" required />
-        </div>
-        <div class="field">
-          <label for="loginPassword">Passwort</label>
-          <input id="loginPassword" type="password" autocomplete="current-password" placeholder="Dein Passwort" required />
-        </div>
+        <div class="field"><label for="loginEmail">E-Mail</label><input id="loginEmail" type="email" autocomplete="email" required></div>
+        <div class="field"><label for="loginPassword">Passwort</label><input id="loginPassword" type="password" autocomplete="current-password" required></div>
         <button id="loginSubmitBtn" class="btn" type="submit">Einloggen</button>
       </form>
-
       <form id="registerForm" class="hidden" novalidate>
         <div class="form-grid">
-          <div class="field">
-            <label for="registerName">Name</label>
-            <input id="registerName" type="text" autocomplete="name" placeholder="Vor- und Nachname" required />
-          </div>
-          <div class="field">
-            <label for="registerEmail">E-Mail</label>
-            <input id="registerEmail" type="email" autocomplete="email" placeholder="name@schule.at" required />
-          </div>
+          <div class="field"><label for="registerName">Name</label><input id="registerName" type="text" autocomplete="name" required></div>
+          <div class="field"><label for="registerEmail">E-Mail</label><input id="registerEmail" type="email" autocomplete="email" required></div>
         </div>
         <div class="form-grid">
-          <div class="field">
-            <label for="registerPassword">Passwort</label>
-            <input id="registerPassword" type="password" autocomplete="new-password" placeholder="Mindestens 6 Zeichen" required />
-          </div>
-          <div class="field">
-            <label for="registerPasswordConfirm">Passwort bestätigen</label>
-            <input id="registerPasswordConfirm" type="password" autocomplete="new-password" placeholder="Passwort wiederholen" required />
-          </div>
+          <div class="field"><label for="registerPassword">Passwort</label><input id="registerPassword" type="password" autocomplete="new-password" required></div>
+          <div class="field"><label for="registerPasswordConfirm">Passwort bestaetigen</label><input id="registerPasswordConfirm" type="password" autocomplete="new-password" required></div>
         </div>
         <button id="registerSubmitBtn" class="btn" type="submit">Konto erstellen</button>
       </form>
@@ -120,110 +96,72 @@
   </section>
 
   <main id="mainScreen" class="main-screen hidden">
-    <header class="main-header">
-      <div class="logo-title">
-        <div class="logo-mark">4B</div>
-        <div>
-          <h2>4B Terminboard</h2>
-          <p>Fachbezogene Termine, Berechtigungen und Freischaltungen in einer Oberfläche.</p>
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">4B</div>
+        <div class="topbar-copy">
+          <h2>Schulplaner</h2>
+          <p>Trend, Sidebar und Terminliste werden live aus Firebase aktualisiert.</p>
         </div>
       </div>
-
       <div class="header-actions">
         <div class="profile-chip">
-          <div id="profileAvatar" class="profile-avatar">4B</div>
+          <div id="profileAvatar" class="avatar">4B</div>
           <div class="profile-copy">
             <strong id="profileName">Gast</strong>
-            <div class="term-meta">
-              <span id="profileRole" class="role-pill">User</span>
-              <span id="profileEmail" class="pill">-</span>
-            </div>
+            <span id="profileEmail">-</span>
           </div>
         </div>
-        <button id="logoutBtn" class="btn secondary" type="button">Abmelden</button>
+        <button id="logoutBtn" class="btn ghost" type="button">Abmelden</button>
       </div>
     </header>
 
-    <section class="hero-grid">
-      <article class="card hero-card">
-        <p>Aktive Termine</p>
-        <strong id="totalTermsCount">0</strong>
-        <p>Einträge über alle Fächer hinweg.</p>
-      </article>
-      <article class="card hero-card">
-        <p>Nächster Termin</p>
-        <strong id="nextTermLabel">Noch offen</strong>
-        <p id="nextTermMeta">Sobald Termine eingetragen sind, erscheint hier der nächste Eintrag.</p>
-      </article>
-      <article class="card hero-card">
-        <p>Dein Zugriff</p>
-        <strong id="permissionLabel">Leserechte</strong>
-        <p id="permissionMeta">Nur Admin, Klassensprecher und Stellvertreter dürfen bearbeiten.</p>
-      </article>
+    <section class="panel trend-panel">
+      <div class="panel-head">
+        <div>
+          <h2>7-Tage Trend</h2>
+          <p>Heute plus die naechsten sechs Tage. Tage mit Terminen werden hervorgehoben.</p>
+        </div>
+        <button id="resetFilterBtn" class="btn ghost small" type="button">Zur Tagesansicht heute</button>
+      </div>
+      <div id="dayBar" class="day-bar"></div>
     </section>
 
-    <div class="content-grid">
-      <section class="panel">
+    <div class="workspace">
+      <aside class="panel sidebar">
         <div class="panel-head">
-          <div class="panel-copy">
-            <h2>Fächer</h2>
-            <p>Tabs zeigen automatisch die vorhandenen Terminarten pro Fach an.</p>
+          <div>
+            <h2>Faecher</h2>
+            <p>Typen aus den naechsten 7 Tagen werden hier automatisch berechnet.</p>
           </div>
         </div>
+        <button id="showAllSubjectsBtn" class="btn light small" type="button">Heute anzeigen</button>
+        <div id="subjectList" class="subject-list"></div>
+      </aside>
 
-        <div id="subjectTabs" class="subject-tabs"></div>
-
-        <div class="subject-toolbar">
-          <div class="panel-copy">
-            <h3 id="currentSubjectTitle">Mathe</h3>
-            <p id="currentSubjectMeta">Noch keine Termine in diesem Fach.</p>
+      <section class="panel content-panel">
+        <div class="content-header">
+          <div>
+            <h2 id="contentTitle">Heute</h2>
+            <p id="contentMeta">Termine fuer den ausgewaehlten Filter.</p>
           </div>
-          <button id="jumpToFormBtn" class="btn ghost small hidden" type="button">Termin hinzufügen</button>
+          <button id="jumpToFormBtn" class="btn secondary small hidden" type="button">Termin hinzufuegen</button>
         </div>
-
         <div id="termList" class="term-list"></div>
       </section>
 
-      <div class="side-stack">
-        <section id="termFormPanel" class="panel hidden">
-          <div class="panel-copy">
-            <h2 id="termFormTitle">Termin hinzufügen</h2>
-            <p>Für neue Einträge und Bearbeitungen wird dasselbe Formular verwendet.</p>
+      <aside class="side-panel">
+        <section id="termFormPanel" class="panel form-panel hidden">
+          <div>
+            <h2 id="termFormTitle">Termin hinzufuegen</h2>
+            <p>Admins und Sprecher koennen Termine anlegen, bearbeiten und loeschen.</p>
           </div>
-
           <form id="termForm" novalidate>
-            <div class="form-grid">
-              <div class="field">
-                <label for="termSubject">Fach</label>
-                <select id="termSubject" required></select>
-              </div>
-              <div class="field">
-                <label for="termType">Typ</label>
-                <select id="termType" required>
-                  <option value="">Bitte wählen</option>
-                  <option value="Test">Test</option>
-                  <option value="SA">SA</option>
-                  <option value="HÜ">HÜ</option>
-                  <option value="MÜ">MÜ</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="termDate">Datum</label>
-              <input id="termDate" type="date" required />
-            </div>
-
-            <div class="field">
-              <label for="termDescription">Beschreibung</label>
-              <textarea id="termDescription" placeholder="z. B. Stoffbereich oder Thema" required></textarea>
-            </div>
-
-            <div class="field">
-              <label for="termPeople">Personen</label>
-              <input id="termPeople" type="text" placeholder="Optional" />
-            </div>
-
+            <div class="field"><label for="termSubject">Fach</label><select id="termSubject" required></select></div>
+            <div class="field"><label for="termType">Typ</label><select id="termType" required></select></div>
+            <div class="field"><label for="termDate">Datum</label><input id="termDate" type="date" required></div>
+            <div class="field"><label for="termDescription">Beschreibung</label><textarea id="termDescription" required></textarea></div>
+            <div class="field"><label for="termPeople">Personen</label><input id="termPeople" type="text" placeholder="Optional"></div>
             <div class="form-actions">
               <button id="saveTermBtn" class="btn" type="submit">Termin speichern</button>
               <button id="cancelEditBtn" class="btn secondary hidden" type="button">Bearbeitung abbrechen</button>
@@ -231,34 +169,14 @@
           </form>
         </section>
 
-        <section class="panel">
-          <div class="panel-copy">
-            <h2>Demnächst</h2>
-            <p>Die nächsten fünf Termine über alle Fächer hinweg.</p>
-          </div>
-          <div id="upcomingList" class="upcoming-list"></div>
-        </section>
-
-        <section class="panel">
-          <div class="panel-copy">
-            <h2>Hinweise</h2>
-            <p>So bleibt das System im Schulalltag zuverlässig.</p>
-          </div>
-          <div class="helper-list">
-            <div class="helper-line"><span class="helper-dot"></span><span>Neue Konten starten ohne Freigabe und müssen von Admin bestätigt werden.</span></div>
-            <div class="helper-line"><span class="helper-dot"></span><span>Tabs zeigen direkt, welche Terminarten im Fach schon vorhanden sind.</span></div>
-            <div class="helper-line"><span class="helper-dot"></span><span>Das Formular aktualisiert die Oberfläche sofort nach dem Speichern oder Löschen.</span></div>
-          </div>
-        </section>
-
-        <section id="adminPanel" class="panel hidden">
-          <div class="panel-copy">
+        <section id="adminPanel" class="panel admin-panel hidden">
+          <div>
             <h2>Adminbereich</h2>
-            <p>Benutzer freischalten und Rollen wie Klassensprecher oder Stellvertreter vergeben.</p>
+            <p>Benutzer freischalten und Rollen auf user, sprecher oder admin setzen.</p>
           </div>
           <div id="userList" class="user-list"></div>
         </section>
-      </div>
+      </aside>
     </div>
   </main>
 
@@ -280,22 +198,15 @@
     };
 
     const ADMIN_EMAIL = "matthias.handl@ahsbruck.at";
+    const TERM_TYPES = ["Test", "SA", "H\u00DC", "M\u00DC"];
     const SUBJECTS = [
       ["mathe", "Mathe"], ["deutsch", "Deutsch"], ["englisch", "Englisch"], ["geschichte", "Geschichte"],
       ["geographie", "Geographie"], ["religion", "Religion"], ["physik", "Physik"], ["physik_labor", "Physik Labor"],
-      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"],
-      ["grafisches_zeichnen", "Grafisches Zeichnen"], ["digitale_grundbildung", "Digitale Grundbildung"],
-      ["italienisch", "Italienisch"], ["sport", "Sport"]
+      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["grafisches_zeichnen", "Grafisches Zeichnen"],
+      ["digitale_grundbildung", "Digitale Grundbildung"], ["italienisch", "Italienisch"], ["sport", "Sport"]
     ].map(([key, label]) => ({ key, label }));
-
-    const ROLE_LABELS = {
-      admin: "Admin",
-      klassensprecher: "Klassensprecher",
-      stellvertreter: "Stellvertreter",
-      user: "User"
-    };
-
-    const EDITOR_ROLES = new Set(["admin", "klassensprecher", "stellvertreter"]);
+    const ROLE_LABELS = { user: "User", sprecher: "Sprecher", admin: "Admin" };
+    const EDITOR_ROLES = new Set(["admin", "sprecher"]);
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -321,17 +232,14 @@
       registerSubmitBtn: document.getElementById("registerSubmitBtn"),
       profileAvatar: document.getElementById("profileAvatar"),
       profileName: document.getElementById("profileName"),
-      profileRole: document.getElementById("profileRole"),
       profileEmail: document.getElementById("profileEmail"),
       logoutBtn: document.getElementById("logoutBtn"),
-      totalTermsCount: document.getElementById("totalTermsCount"),
-      nextTermLabel: document.getElementById("nextTermLabel"),
-      nextTermMeta: document.getElementById("nextTermMeta"),
-      permissionLabel: document.getElementById("permissionLabel"),
-      permissionMeta: document.getElementById("permissionMeta"),
-      subjectTabs: document.getElementById("subjectTabs"),
-      currentSubjectTitle: document.getElementById("currentSubjectTitle"),
-      currentSubjectMeta: document.getElementById("currentSubjectMeta"),
+      resetFilterBtn: document.getElementById("resetFilterBtn"),
+      dayBar: document.getElementById("dayBar"),
+      showAllSubjectsBtn: document.getElementById("showAllSubjectsBtn"),
+      subjectList: document.getElementById("subjectList"),
+      contentTitle: document.getElementById("contentTitle"),
+      contentMeta: document.getElementById("contentMeta"),
       jumpToFormBtn: document.getElementById("jumpToFormBtn"),
       termList: document.getElementById("termList"),
       termFormPanel: document.getElementById("termFormPanel"),
@@ -344,7 +252,6 @@
       termPeople: document.getElementById("termPeople"),
       saveTermBtn: document.getElementById("saveTermBtn"),
       cancelEditBtn: document.getElementById("cancelEditBtn"),
-      upcomingList: document.getElementById("upcomingList"),
       adminPanel: document.getElementById("adminPanel"),
       userList: document.getElementById("userList"),
       toastWrap: document.getElementById("toastWrap")
@@ -355,9 +262,11 @@
       authNotice: null,
       currentUser: null,
       currentProfile: null,
-      currentSubjectKey: SUBJECTS[0].key,
-      termsBySubject: emptyTermsMap(),
+      terms: [],
       users: {},
+      filterMode: "day",
+      selectedDay: todayValue(),
+      selectedSubjectKey: null,
       editingTerm: null,
       pendingProfileCreation: false,
       registrationFlow: false,
@@ -366,32 +275,27 @@
       unsubUsers: null
     };
 
-    function emptyTermsMap() {
-      return SUBJECTS.reduce((acc, subject) => {
-        acc[subject.key] = [];
-        return acc;
-      }, {});
-    }
-
-    function subjectByKey(key) {
-      return SUBJECTS.find((subject) => subject.key === key) || SUBJECTS[0];
-    }
-
     function todayValue() {
       const now = new Date();
       const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
       return local.toISOString().slice(0, 10);
     }
 
-    function formatDate(value) {
-      if (!value) return "Kein Datum";
-      const date = new Date(value + "T12:00:00");
-      if (Number.isNaN(date.getTime())) return value;
-      return new Intl.DateTimeFormat("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+    function subjectByKey(key) {
+      return SUBJECTS.find((subject) => subject.key === key) || null;
     }
 
     function roleLabel(role) {
       return ROLE_LABELS[role] || "User";
+    }
+
+    function typeClass(type) {
+      return {
+        "H\u00DC": "type-hu",
+        "SA": "type-sa",
+        "Test": "type-test",
+        "M\u00DC": "type-mu"
+      }[type] || "";
     }
 
     function isAdminEmail(email) {
@@ -406,18 +310,67 @@
       return Boolean(state.currentProfile && state.currentProfile.role === "admin");
     }
 
-    function allTerms() {
-      return Object.values(state.termsBySubject).flat();
+    function getInitials(name) {
+      return (name || "4B").split(" ").filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "4B";
     }
 
-    function sortedTerms(list) {
-      return [...list].sort((a, b) => (a.datum || "9999-12-31").localeCompare(b.datum || "9999-12-31"));
+    function formatDate(dateString) {
+      if (!dateString) return "Kein Datum";
+      const date = new Date(dateString + "T12:00:00");
+      if (Number.isNaN(date.getTime())) return dateString;
+      return new Intl.DateTimeFormat("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
     }
 
-    function nextUpcomingTerm() {
-      const today = todayValue();
-      const sorted = sortedTerms(allTerms());
-      return sorted.find((term) => term.datum >= today) || sorted[0] || null;
+    function formatDayLabel(dateString) {
+      const date = new Date(dateString + "T12:00:00");
+      const weekday = new Intl.DateTimeFormat("de-AT", { weekday: "short" }).format(date).replace(".", "");
+      const day = new Intl.DateTimeFormat("de-AT", { day: "2-digit" }).format(date);
+      return weekday.charAt(0).toUpperCase() + weekday.slice(1) + " " + day;
+    }
+
+    function nextSevenDays() {
+      return Array.from({ length: 7 }, (_, index) => {
+        const base = new Date(todayValue() + "T12:00:00");
+        base.setDate(base.getDate() + index);
+        const local = new Date(base.getTime() - base.getTimezoneOffset() * 60000);
+        const date = local.toISOString().slice(0, 10);
+        return {
+          date,
+          label: formatDayLabel(date),
+          terms: state.terms.filter((term) => term.datum === date)
+        };
+      });
+    }
+
+    function normalizeTerms(raw) {
+      const terms = [];
+      SUBJECTS.forEach((subject) => {
+        const bucket = raw && raw[subject.key] ? Object.entries(raw[subject.key]) : [];
+        bucket.forEach(([id, value]) => {
+          terms.push({
+            id,
+            subjectKey: subject.key,
+            fach: subject.label,
+            typ: value.typ || "",
+            datum: value.datum || "",
+            beschreibung: value.beschreibung || "",
+            personen: value.personen || ""
+          });
+        });
+      });
+      return terms.sort((a, b) => (a.datum || "9999-12-31").localeCompare(b.datum || "9999-12-31") || a.fach.localeCompare(b.fach, "de"));
+    }
+
+    function visibleTerms() {
+      if (state.filterMode === "subject" && state.selectedSubjectKey) {
+        return state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey);
+      }
+      return state.terms.filter((term) => term.datum === state.selectedDay);
+    }
+
+    function trendTermsForSubject(subjectKey) {
+      const dates = new Set(nextSevenDays().map((day) => day.date));
+      return state.terms.filter((term) => term.subjectKey === subjectKey && dates.has(term.datum));
     }
 
     function setScreen(name) {
@@ -446,10 +399,9 @@
     }
 
     function renderAuthNotice() {
-      const notice = state.authNotice;
-      const visible = Boolean(notice && notice.view === state.authView && notice.message);
-      elements.authNotice.className = "notice" + (visible ? " " + notice.type : " hidden");
-      elements.authNotice.textContent = visible ? notice.message : "";
+      const visible = Boolean(state.authNotice && state.authNotice.view === state.authView);
+      elements.authNotice.className = "notice" + (visible ? " " + state.authNotice.type : " hidden");
+      elements.authNotice.textContent = visible ? state.authNotice.message : "";
     }
 
     function toast(message, type = "info") {
@@ -478,126 +430,128 @@
 
     function readableAuthError(error) {
       const code = error?.code || "";
-      const map = {
+      return {
         "auth/email-already-in-use": "Diese E-Mail ist bereits registriert.",
-        "auth/invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "auth/invalid-email": "Bitte gib eine gueltige E-Mail-Adresse ein.",
         "auth/weak-password": "Das Passwort ist zu schwach. Verwende mindestens 6 Zeichen.",
         "auth/invalid-credential": "E-Mail oder Passwort sind nicht korrekt.",
         "auth/user-not-found": "Dieses Konto wurde nicht gefunden.",
         "auth/wrong-password": "Das Passwort ist falsch.",
         "auth/too-many-requests": "Zu viele Versuche. Bitte warte kurz und probiere es erneut.",
-        "auth/network-request-failed": "Netzwerkfehler. Bitte prüfe deine Verbindung."
-      };
-      return map[code] || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
+        "auth/network-request-failed": "Netzwerkfehler. Bitte pruefe deine Verbindung."
+      }[code] || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
     }
 
     function readableDbError(error) {
       const message = error?.message || "";
-      if (message.includes("permission_denied")) return "Firebase hat den Zugriff abgelehnt. Bitte prüfe die Realtime-Database-Regeln.";
+      if (message.includes("permission_denied")) return "Firebase hat den Zugriff abgelehnt. Bitte pruefe die Realtime-Database-Regeln.";
       return "Die Daten konnten nicht gespeichert oder geladen werden.";
     }
 
-    function normalizeTerms(raw) {
-      const map = emptyTermsMap();
-      SUBJECTS.forEach((subject) => {
-        const entries = raw && raw[subject.key] ? Object.entries(raw[subject.key]) : [];
-        map[subject.key] = entries.map(([id, value]) => ({
-          id,
-          subjectKey: subject.key,
-          fach: subject.label,
-          typ: value.typ || "",
-          datum: value.datum || "",
-          beschreibung: value.beschreibung || "",
-          personen: value.personen || ""
-        }));
-      });
-      return map;
-    }
-
-    function subjectTypes(subjectKey) {
-      return [...new Set(state.termsBySubject[subjectKey].map((term) => term.typ).filter(Boolean))];
+    function createTypeBadge(type) {
+      const badge = document.createElement("span");
+      badge.className = "type-badge " + typeClass(type);
+      badge.textContent = type;
+      return badge;
     }
 
     function populateStaticUI() {
       elements.subjectCloud.innerHTML = "";
       elements.termSubject.innerHTML = "";
+      elements.termType.innerHTML = "";
+
       SUBJECTS.forEach((subject) => {
-        const pill = document.createElement("span");
-        pill.className = "pill";
-        pill.textContent = subject.label;
-        elements.subjectCloud.appendChild(pill);
+        const chip = document.createElement("span");
+        chip.className = "subject-chip";
+        chip.textContent = subject.label;
+        elements.subjectCloud.appendChild(chip);
 
         const option = document.createElement("option");
         option.value = subject.key;
         option.textContent = subject.label;
         elements.termSubject.appendChild(option);
       });
+
+      TERM_TYPES.forEach((type) => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        elements.termType.appendChild(option);
+      });
+
       elements.termDate.value = todayValue();
-      elements.termSubject.value = state.currentSubjectKey;
     }
 
     function renderHeader() {
       if (!state.currentProfile) return;
-      const initials = state.currentProfile.name.split(" ").filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "4B";
-      elements.profileAvatar.textContent = initials;
+      elements.profileAvatar.textContent = getInitials(state.currentProfile.name);
       elements.profileName.textContent = state.currentProfile.name;
-      elements.profileRole.textContent = roleLabel(state.currentProfile.role);
       elements.profileEmail.textContent = state.currentProfile.email;
     }
 
-    function renderSummary() {
-      const next = nextUpcomingTerm();
-      elements.totalTermsCount.textContent = String(allTerms().length);
-      if (next) {
-        elements.nextTermLabel.textContent = next.fach + " · " + next.typ;
-        elements.nextTermMeta.textContent = formatDate(next.datum) + " · " + next.beschreibung;
-      } else {
-        elements.nextTermLabel.textContent = "Noch offen";
-        elements.nextTermMeta.textContent = "Sobald Termine eingetragen sind, erscheint hier der nächste Eintrag.";
-      }
+    function renderDayBar() {
+      elements.dayBar.innerHTML = "";
+      nextSevenDays().forEach((day) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-card" + (state.filterMode === "day" && state.selectedDay === day.date ? " active" : "") + (day.terms.length ? " has-terms" : "");
+        button.dataset.day = day.date;
 
-      if (canManageTerms()) {
-        elements.permissionLabel.textContent = "Bearbeiten erlaubt";
-        elements.permissionMeta.textContent = "Du kannst Termine anlegen, bearbeiten und löschen.";
-      } else {
-        elements.permissionLabel.textContent = "Leserechte";
-        elements.permissionMeta.textContent = "Du kannst alle Termine sehen, aber nichts verändern.";
-      }
+        const small = document.createElement("small");
+        small.textContent = day.date === todayValue() ? "Heute" : "Tag";
+        const strong = document.createElement("strong");
+        strong.textContent = day.label;
+        button.append(small, strong);
+
+        if (day.terms.length) {
+          const count = document.createElement("span");
+          count.className = "day-count";
+          count.textContent = day.terms.length + " Termin(e)";
+          button.appendChild(count);
+        }
+
+        elements.dayBar.appendChild(button);
+      });
     }
 
-    function renderSubjectTabs() {
-      elements.subjectTabs.innerHTML = "";
+    function renderSubjectList() {
+      elements.subjectList.innerHTML = "";
+      elements.showAllSubjectsBtn.className = state.filterMode === "day" ? "btn small" : "btn light small";
+
       SUBJECTS.forEach((subject) => {
         const button = document.createElement("button");
         button.type = "button";
-        button.className = "subject-tab" + (state.currentSubjectKey === subject.key ? " active" : "");
+        button.className = "subject-item" + (state.filterMode === "subject" && state.selectedSubjectKey === subject.key ? " active" : "");
         button.dataset.subjectKey = subject.key;
+
+        const header = document.createElement("div");
+        header.className = "subject-head";
 
         const title = document.createElement("strong");
         title.textContent = subject.label;
-        button.appendChild(title);
+        header.appendChild(title);
 
         const badges = document.createElement("div");
-        badges.className = "tab-badges";
-        const types = subjectTypes(subject.key);
+        badges.className = "term-meta";
+        [...new Set(trendTermsForSubject(subject.key).map((term) => term.typ))].forEach((type) => badges.appendChild(createTypeBadge(type)));
+        header.appendChild(badges);
 
-        if (!types.length) {
-          const badge = document.createElement("span");
-          badge.className = "pill";
-          badge.textContent = "Keine Termine";
-          badges.appendChild(badge);
-        } else {
-          types.forEach((type) => {
-            const badge = document.createElement("span");
-            badge.className = "type-pill";
-            badge.textContent = type;
-            badges.appendChild(badge);
-          });
-        }
-
-        button.appendChild(badges);
-        elements.subjectTabs.appendChild(button);
+        button.appendChild(header);
+        elements.subjectList.appendChild(button);
       });
+    }
+
+    function renderContentHeader() {
+      if (state.filterMode === "subject" && state.selectedSubjectKey) {
+        const subject = subjectByKey(state.selectedSubjectKey);
+        const count = visibleTerms().length;
+        elements.contentTitle.textContent = subject ? subject.label : "Fach";
+        elements.contentMeta.textContent = count ? count + " Termin(e) fuer dieses Fach." : "Noch keine Termine fuer dieses Fach.";
+      } else {
+        const count = visibleTerms().length;
+        elements.contentTitle.textContent = formatDayLabel(state.selectedDay);
+        elements.contentMeta.textContent = count ? count + " Termin(e) an diesem Tag." : "Noch keine Termine an diesem Tag.";
+      }
     }
 
     function createTermCard(term) {
@@ -609,19 +563,29 @@
 
       const titleWrap = document.createElement("div");
       titleWrap.className = "term-title";
-
       const title = document.createElement("h3");
       title.textContent = term.beschreibung;
 
       const meta = document.createElement("div");
       meta.className = "term-meta";
 
-      [term.typ, formatDate(term.datum), term.personen].filter(Boolean).forEach((value, index) => {
-        const pill = document.createElement("span");
-        pill.className = index === 0 ? "type-pill" : "pill";
-        pill.textContent = value;
-        meta.appendChild(pill);
-      });
+      const subject = document.createElement("span");
+      subject.className = "pill";
+      subject.textContent = term.fach;
+      meta.appendChild(subject);
+      meta.appendChild(createTypeBadge(term.typ));
+
+      const date = document.createElement("span");
+      date.className = "pill";
+      date.textContent = formatDate(term.datum);
+      meta.appendChild(date);
+
+      if (term.personen) {
+        const people = document.createElement("span");
+        people.className = "pill";
+        people.textContent = term.personen;
+        meta.appendChild(people);
+      }
 
       titleWrap.append(title, meta);
       top.appendChild(titleWrap);
@@ -629,8 +593,7 @@
       if (canManageTerms()) {
         const actions = document.createElement("div");
         actions.className = "form-actions";
-
-        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Löschen", "danger"]].forEach(([action, label, style]) => {
+        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Loeschen", "danger"]].forEach(([action, label, style]) => {
           const btn = document.createElement("button");
           btn.type = "button";
           btn.className = "btn " + style + " small";
@@ -640,7 +603,6 @@
           btn.textContent = label;
           actions.appendChild(btn);
         });
-
         top.appendChild(actions);
       }
 
@@ -649,61 +611,16 @@
     }
 
     function renderTermList() {
-      const subject = subjectByKey(state.currentSubjectKey);
-      const currentTerms = sortedTerms(state.termsBySubject[state.currentSubjectKey]);
-
-      elements.currentSubjectTitle.textContent = subject.label;
-      elements.currentSubjectMeta.textContent = currentTerms.length ? currentTerms.length + " Termin(e) in diesem Fach." : "Noch keine Termine in diesem Fach.";
       elements.termList.innerHTML = "";
-
-      if (!currentTerms.length) {
-        const empty = document.createElement("div");
-        empty.className = "empty-state";
-        empty.innerHTML = "<h3>Noch leer</h3><p>Für dieses Fach wurde noch kein Termin eingetragen.</p>";
-        elements.termList.appendChild(empty);
-        return;
-      }
-
-      currentTerms.forEach((term) => elements.termList.appendChild(createTermCard(term)));
-    }
-
-    function renderUpcoming() {
-      const list = sortedTerms(allTerms()).slice(0, 5);
-      elements.upcomingList.innerHTML = "";
-
+      const list = visibleTerms();
       if (!list.length) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.innerHTML = "<h3>Noch nichts geplant</h3><p>Sobald Einträge vorhanden sind, erscheinen hier die nächsten Termine.</p>";
-        elements.upcomingList.appendChild(empty);
+        empty.innerHTML = "<h3>Keine Eintraege</h3><p>Fuer den aktuellen Filter gibt es noch keine Termine.</p>";
+        elements.termList.appendChild(empty);
         return;
       }
-
-      list.forEach((term) => {
-        const card = document.createElement("article");
-        card.className = "upcoming-card";
-
-        const top = document.createElement("div");
-        top.className = "term-top";
-
-        const copy = document.createElement("div");
-        copy.className = "term-title";
-
-        const title = document.createElement("h3");
-        title.textContent = term.fach + " · " + term.typ;
-
-        const desc = document.createElement("p");
-        desc.textContent = term.beschreibung;
-
-        const date = document.createElement("span");
-        date.className = "pill";
-        date.textContent = formatDate(term.datum);
-
-        copy.append(title, desc);
-        top.append(copy, date);
-        card.appendChild(top);
-        elements.upcomingList.appendChild(card);
-      });
+      list.forEach((term) => elements.termList.appendChild(createTermCard(term)));
     }
 
     function createUserCard(uid, profile) {
@@ -712,29 +629,24 @@
 
       const top = document.createElement("div");
       top.className = "user-top";
-
       const titleWrap = document.createElement("div");
       titleWrap.className = "user-title";
-
       const title = document.createElement("h3");
       title.textContent = profile.name || "Unbenannter Benutzer";
 
       const meta = document.createElement("div");
       meta.className = "term-meta";
-
-      const emailPill = document.createElement("span");
-      emailPill.className = "pill";
-      emailPill.textContent = profile.email || "Keine E-Mail";
-      meta.appendChild(emailPill);
-
+      const email = document.createElement("span");
+      email.className = "pill";
+      email.textContent = profile.email || "Keine E-Mail";
+      meta.appendChild(email);
       const role = document.createElement("span");
-      role.className = "role-pill";
+      role.className = "pill";
       role.textContent = roleLabel(profile.role);
       meta.appendChild(role);
-
       const status = document.createElement("span");
-      status.className = "status-pill " + (profile.approved ? "approved" : "pending");
-      status.textContent = profile.approved ? "Freigeschaltet" : "Wartet auf Freigabe";
+      status.className = "status-badge " + (profile.approved ? "type-hu" : "type-test");
+      status.textContent = profile.approved ? "Freigeschaltet" : "Wartet";
       meta.appendChild(status);
 
       titleWrap.append(title, meta);
@@ -743,10 +655,9 @@
 
       const controls = document.createElement("div");
       controls.className = "user-controls";
-
       const select = document.createElement("select");
       select.dataset.userId = uid;
-      ["user", "klassensprecher", "stellvertreter", "admin"].forEach((roleValue) => {
+      ["user", "sprecher", "admin"].forEach((roleValue) => {
         const option = document.createElement("option");
         option.value = roleValue;
         option.textContent = roleLabel(roleValue);
@@ -781,16 +692,14 @@
       elements.adminPanel.classList.toggle("hidden", !isAdmin());
       elements.userList.innerHTML = "";
       if (!isAdmin()) return;
-
       const entries = Object.entries(state.users);
       if (!entries.length) {
         const empty = document.createElement("div");
         empty.className = "empty-state";
-        empty.innerHTML = "<h3>Noch keine Benutzer geladen</h3><p>Sobald Konten vorhanden sind, kannst du sie hier freischalten.</p>";
+        empty.innerHTML = "<h3>Noch keine Benutzer</h3><p>Sobald sich Benutzer registrieren, erscheinen sie hier.</p>";
         elements.userList.appendChild(empty);
         return;
       }
-
       entries.sort((a, b) => {
         if (a[1].approved !== b[1].approved) return a[1].approved ? 1 : -1;
         return (a[1].name || "").localeCompare(b[1].name || "", "de");
@@ -802,19 +711,20 @@
       elements.termFormPanel.classList.toggle("hidden", !visible);
       elements.jumpToFormBtn.classList.toggle("hidden", !visible);
       if (!visible) return;
-
-      elements.termSubject.value = state.editingTerm ? state.editingTerm.subjectKey : state.currentSubjectKey;
-      elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufügen";
-      elements.saveTermBtn.textContent = state.editingTerm ? "Änderungen speichern" : "Termin speichern";
+      elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufuegen";
+      elements.saveTermBtn.textContent = state.editingTerm ? "Aenderungen speichern" : "Termin speichern";
       elements.cancelEditBtn.classList.toggle("hidden", !state.editingTerm);
+      if (!state.editingTerm) {
+        elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
+      }
     }
 
     function renderAll() {
       renderHeader();
-      renderSummary();
-      renderSubjectTabs();
+      renderDayBar();
+      renderSubjectList();
+      renderContentHeader();
       renderTermList();
-      renderUpcoming();
       renderTermForm();
       renderAdminPanel();
     }
@@ -823,12 +733,13 @@
       state.editingTerm = null;
       elements.termForm.reset();
       elements.termDate.value = todayValue();
-      elements.termSubject.value = state.currentSubjectKey;
+      elements.termType.value = TERM_TYPES[0];
+      elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
       renderTermForm();
     }
 
     function findTerm(subjectKey, termId) {
-      return state.termsBySubject[subjectKey].find((term) => term.id === termId) || null;
+      return state.terms.find((term) => term.id === termId && term.subjectKey === subjectKey) || null;
     }
 
     function loadTerm(term) {
@@ -856,14 +767,10 @@
 
     function ensureTermsSubscription() {
       if (state.unsubTerms) return;
-      state.unsubTerms = onValue(
-        ref(db, "terms"),
-        (snapshot) => {
-          state.termsBySubject = normalizeTerms(snapshot.val());
-          renderAll();
-        },
-        (error) => toast(readableDbError(error), "error")
-      );
+      state.unsubTerms = onValue(ref(db, "terms"), (snapshot) => {
+        state.terms = normalizeTerms(snapshot.val());
+        renderAll();
+      }, (error) => toast(readableDbError(error), "error"));
     }
 
     function ensureUsersSubscription() {
@@ -876,17 +783,11 @@
         renderAdminPanel();
         return;
       }
-
       if (state.unsubUsers) return;
-
-      state.unsubUsers = onValue(
-        ref(db, "users"),
-        (snapshot) => {
-          state.users = snapshot.val() || {};
-          renderAdminPanel();
-        },
-        (error) => toast(readableDbError(error), "error")
-      );
+      state.unsubUsers = onValue(ref(db, "users"), (snapshot) => {
+        state.users = snapshot.val() || {};
+        renderAdminPanel();
+      }, (error) => toast(readableDbError(error), "error"));
     }
 
     async function denyAccess(message) {
@@ -895,64 +796,50 @@
     }
 
     function subscribeProfile(uid) {
-      state.unsubProfile = onValue(
-        ref(db, "users/" + uid),
-        async (snapshot) => {
-          const profile = snapshot.val();
-
-          if (!profile) {
-            if (state.pendingProfileCreation) return;
-            await denyAccess("Dein Profil wurde nicht gefunden. Bitte registriere dich erneut.");
-            return;
-          }
-
-          state.currentProfile = { uid, ...profile };
-
-          if (!profile.approved) {
-            if (state.registrationFlow) return;
-            await denyAccess("Dein Konto wurde noch nicht freigeschaltet. Bitte warte auf einen Admin.");
-            return;
-          }
-
-          ensureTermsSubscription();
-          ensureUsersSubscription();
-          renderAll();
-          setScreen("main");
-        },
-        (error) => toast(readableDbError(error), "error")
-      );
+      state.unsubProfile = onValue(ref(db, "users/" + uid), async (snapshot) => {
+        const profile = snapshot.val();
+        if (!profile) {
+          if (state.pendingProfileCreation) return;
+          await denyAccess("Dein Profil wurde nicht gefunden. Bitte registriere dich erneut.");
+          return;
+        }
+        state.currentProfile = { uid, ...profile };
+        if (!profile.approved) {
+          if (state.registrationFlow) return;
+          await denyAccess("Dein Konto wurde noch nicht freigeschaltet. Bitte warte auf einen Admin.");
+          return;
+        }
+        ensureTermsSubscription();
+        ensureUsersSubscription();
+        renderAll();
+        setScreen("main");
+      }, (error) => toast(readableDbError(error), "error"));
     }
 
     async function handleRegister(event) {
       event.preventDefault();
       clearAuthNotice();
-
       const name = elements.registerName.value.trim();
       const email = elements.registerEmail.value.trim();
       const password = elements.registerPassword.value;
       const confirm = elements.registerPasswordConfirm.value;
-
       if (!name || !email || !password || !confirm) {
-        setAuthNotice("Bitte fülle alle Registrierungsfelder aus.", "error", "register");
+        setAuthNotice("Bitte fuelle alle Registrierungsfelder aus.", "error", "register");
         return;
       }
-
       if (password !== confirm) {
-        setAuthNotice("Die Passwörter stimmen nicht überein.", "error", "register");
+        setAuthNotice("Die Passwoerter stimmen nicht ueberein.", "error", "register");
         return;
       }
-
       state.pendingProfileCreation = true;
       state.registrationFlow = true;
       setBusy(elements.registerSubmitBtn, true, "Registriere...");
-
       try {
         const credential = await createUserWithEmailAndPassword(auth, email, password);
-        const admin = await createUserProfile(credential.user.uid, name, email);
+        const isAdmin = await createUserProfile(credential.user.uid, name, email);
         elements.registerForm.reset();
-
-        if (admin) {
-          toast("Admin-Konto erkannt und automatisch freigeschaltet.", "success");
+        if (isAdmin) {
+          toast("Admin-Konto erkannt und freigeschaltet.", "success");
           switchAuthView("login");
         } else {
           setAuthNotice("Registrierung erfolgreich. Ein Admin muss dein Konto jetzt freischalten.", "success", "login");
@@ -974,18 +861,14 @@
     async function handleLogin(event) {
       event.preventDefault();
       clearAuthNotice();
-
       const email = elements.loginEmail.value.trim();
       const password = elements.loginPassword.value;
-
       if (!email || !password) {
         setAuthNotice("Bitte gib E-Mail und Passwort ein.", "error", "login");
         return;
       }
-
-      setBusy(elements.loginSubmitBtn, true, "Prüfe Login...");
+      setBusy(elements.loginSubmitBtn, true, "Pruefe Login...");
       setScreen("loading");
-
       try {
         await signInWithEmailAndPassword(auth, email, password);
         elements.loginForm.reset();
@@ -1005,52 +888,34 @@
 
     async function handleTermSubmit(event) {
       event.preventDefault();
-
       if (!canManageTerms()) {
         toast("Du hast keine Rechte zum Bearbeiten von Terminen.", "error");
         return;
       }
-
       const subjectKey = elements.termSubject.value;
       const subject = subjectByKey(subjectKey);
       const typ = elements.termType.value;
       const datum = elements.termDate.value;
       const beschreibung = elements.termDescription.value.trim();
       const personen = elements.termPeople.value.trim();
-
       if (!subjectKey || !typ || !datum || !beschreibung) {
-        toast("Bitte fülle Fach, Typ, Datum und Beschreibung aus.", "error");
+        toast("Bitte fuelle Fach, Typ, Datum und Beschreibung aus.", "error");
         return;
       }
-
-      const payload = {
-        fach: subject.label,
-        typ,
-        datum,
-        beschreibung,
-        personen,
-        updatedAt: Date.now(),
-        updatedBy: state.currentUser.uid
-      };
-
+      const payload = { fach: subject.label, typ, datum, beschreibung, personen, updatedAt: Date.now(), updatedBy: state.currentUser.uid };
       setBusy(elements.saveTermBtn, true, state.editingTerm ? "Speichere..." : "Lege an...");
-
       try {
         if (state.editingTerm) {
           await set(ref(db, "terms/" + subjectKey + "/" + state.editingTerm.id), payload);
-
           if (subjectKey !== state.editingTerm.subjectKey) {
             await remove(ref(db, "terms/" + state.editingTerm.subjectKey + "/" + state.editingTerm.id));
           }
-
           toast("Termin wurde aktualisiert.", "success");
         } else {
           const newRef = push(ref(db, "terms/" + subjectKey));
           await set(newRef, { ...payload, createdAt: Date.now(), createdBy: state.currentUser.uid });
-          toast("Termin wurde hinzugefügt.", "success");
+          toast("Termin wurde hinzugefuegt.", "success");
         }
-
-        state.currentSubjectKey = subjectKey;
         resetTermForm();
       } catch (error) {
         toast(readableDbError(error), "error");
@@ -1062,29 +927,22 @@
     async function handleTermActions(event) {
       const button = event.target.closest("button[data-action]");
       if (!button) return;
-
-      const termId = button.dataset.termId;
-      const subjectKey = button.dataset.subjectKey;
-      const term = findTerm(subjectKey, termId);
-
+      const term = findTerm(button.dataset.subjectKey, button.dataset.termId);
       if (!term) {
-        toast("Der ausgewählte Termin konnte nicht gefunden werden.", "error");
+        toast("Der ausgewaehlte Termin konnte nicht gefunden werden.", "error");
         return;
       }
-
       if (button.dataset.action === "edit-term") {
         loadTerm(term);
         return;
       }
-
       if (button.dataset.action === "delete-term") {
-        if (!window.confirm("Diesen Termin wirklich löschen?")) return;
-        setBusy(button, true, "Lösche...");
-
+        if (!window.confirm("Diesen Termin wirklich loeschen?")) return;
+        setBusy(button, true, "Loesche...");
         try {
-          await remove(ref(db, "terms/" + subjectKey + "/" + termId));
-          if (state.editingTerm && state.editingTerm.id === termId) resetTermForm();
-          toast("Termin wurde gelöscht.", "success");
+          await remove(ref(db, "terms/" + term.subjectKey + "/" + term.id));
+          if (state.editingTerm && state.editingTerm.id === term.id) resetTermForm();
+          toast("Termin wurde geloescht.", "success");
         } catch (error) {
           toast(readableDbError(error), "error");
         } finally {
@@ -1094,46 +952,30 @@
     }
 
     function approvedAdminCount() {
-      return Object.values(state.users).filter((profile) => profile.approved && profile.role === "admin").length;
+      return Object.values(state.users).filter((user) => user.approved && user.role === "admin").length;
     }
 
     async function handleUserActions(event) {
       const button = event.target.closest("button[data-action]");
       if (!button || !isAdmin()) return;
-
       const userId = button.dataset.userId;
       const target = state.users[userId];
       const select = elements.userList.querySelector('select[data-user-id="' + userId + '"]');
       const nextRole = select ? select.value : "user";
-
       if (!target) {
         toast("Benutzer konnte nicht gefunden werden.", "error");
         return;
       }
-
-      if (
-        button.dataset.action === "save-role" &&
-        userId === state.currentUser.uid &&
-        target.role === "admin" &&
-        nextRole !== "admin" &&
-        approvedAdminCount() <= 1
-      ) {
+      if (button.dataset.action === "save-role" && userId === state.currentUser.uid && target.role === "admin" && nextRole !== "admin" && approvedAdminCount() <= 1) {
         toast("Du kannst dich nicht selbst als letzten Admin entfernen.", "error");
         return;
       }
-
       setBusy(button, true, button.dataset.action === "approve-user" ? "Schalte frei..." : "Speichere...");
-
       try {
         if (button.dataset.action === "approve-user") {
-          await update(ref(db, "users/" + userId), {
-            approved: true,
-            approvedAt: Date.now(),
-            approvedBy: state.currentUser.uid
-          });
+          await update(ref(db, "users/" + userId), { approved: true, approvedAt: Date.now(), approvedBy: state.currentUser.uid });
           toast("Benutzer wurde freigeschaltet.", "success");
         }
-
         if (button.dataset.action === "save-role") {
           await update(ref(db, "users/" + userId), { role: nextRole });
           toast("Rolle wurde gespeichert.", "success");
@@ -1145,23 +987,39 @@
       }
     }
 
-    function handleTabs(event) {
+    function handleDayBar(event) {
+      const button = event.target.closest("button[data-day]");
+      if (!button) return;
+      state.filterMode = "day";
+      state.selectedDay = button.dataset.day;
+      state.selectedSubjectKey = null;
+      renderAll();
+    }
+
+    function handleSubjectList(event) {
       const button = event.target.closest("button[data-subject-key]");
       if (!button) return;
-      state.currentSubjectKey = button.dataset.subjectKey;
-      if (!state.editingTerm) elements.termSubject.value = state.currentSubjectKey;
-      renderSubjectTabs();
-      renderTermList();
-      renderTermForm();
+      state.filterMode = "subject";
+      state.selectedSubjectKey = button.dataset.subjectKey;
+      renderAll();
+    }
+
+    function resetToTodayFilter() {
+      state.filterMode = "day";
+      state.selectedDay = todayValue();
+      state.selectedSubjectKey = null;
+      renderAll();
     }
 
     function resetLoggedOutState() {
       cleanupSubscriptions();
       state.currentUser = null;
       state.currentProfile = null;
-      state.currentSubjectKey = SUBJECTS[0].key;
-      state.termsBySubject = emptyTermsMap();
+      state.terms = [];
       state.users = {};
+      state.filterMode = "day";
+      state.selectedDay = todayValue();
+      state.selectedSubjectKey = null;
       state.pendingProfileCreation = false;
       state.registrationFlow = false;
       resetTermForm();
@@ -1174,7 +1032,10 @@
       elements.loginForm.addEventListener("submit", handleLogin);
       elements.registerForm.addEventListener("submit", handleRegister);
       elements.logoutBtn.addEventListener("click", handleLogout);
-      elements.subjectTabs.addEventListener("click", handleTabs);
+      elements.resetFilterBtn.addEventListener("click", resetToTodayFilter);
+      elements.showAllSubjectsBtn.addEventListener("click", resetToTodayFilter);
+      elements.dayBar.addEventListener("click", handleDayBar);
+      elements.subjectList.addEventListener("click", handleSubjectList);
       elements.termForm.addEventListener("submit", handleTermSubmit);
       elements.termList.addEventListener("click", handleTermActions);
       elements.userList.addEventListener("click", handleUserActions);
@@ -1189,11 +1050,10 @@
           setScreen("auth");
           return;
         }
-
         cleanupSubscriptions();
         state.currentUser = user;
         state.currentProfile = null;
-        state.termsBySubject = emptyTermsMap();
+        state.terms = [];
         state.users = {};
         setScreen("loading");
         subscribeProfile(user.uid);
@@ -1203,6 +1063,7 @@
     populateStaticUI();
     registerEvents();
     switchAuthView("login");
+    resetTermForm();
     renderAll();
     initAuth();
   </script>
