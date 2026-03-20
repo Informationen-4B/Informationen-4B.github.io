@@ -14,7 +14,7 @@ Diese Website ermöglicht:
 
 ## Wichtig zum Fehler `identitytoolkit ... REPLACE_ME`
 
-Wenn du diesen Fehler siehst, sind in `firebase-config.js` noch Platzhalterwerte aktiv oder die Datei wurde nicht korrekt geladen.
+Wenn du diesen Fehler siehst, sind in `firebase-config.json` noch Platzhalterwerte aktiv oder die Datei wurde nicht korrekt geladen.
 
 ## 1) Firebase-Projekt anlegen
 
@@ -24,14 +24,14 @@ Wenn du diesen Fehler siehst, sind in `firebase-config.js` noch Platzhalterwerte
 4. Erstelle **Cloud Firestore** (Production oder Test, danach Regeln setzen).
 5. Bei **Project settings > Your apps > Web app** die Config kopieren.
 
-## 2) `firebase-config.js` ausfüllen
+## 2) `firebase-config.json` ausfüllen
 
 Im Repo gibt es:
 
-- `firebase-config.js` (Projektwerte sind bereits eingetragen; Rollen-E-Mails bitte anpassen)
-- `firebase-config.example.js` (Beispiel)
+- `firebase-config.json` (Projektwerte sind bereits eingetragen; Rollen-E-Mails bitte anpassen)
+- `firebase-config.example.json` (Beispiel)
 
-Trage in `firebase-config.js` ein:
+Trage in `firebase-config.json` ein:
 
 - `firebaseConfig` (`apiKey`, `authDomain`, `projectId`, ...)
 - `rootAdminEmail`
@@ -94,4 +94,10 @@ Prüfe in Firebase:
 1. **Authentication > Sign-in method**: `E-Mail/Passwort` aktivieren.
 2. **Authentication > Settings > Authorized domains**: deine GitHub-Pages-Domain hinzufügen (z. B. `username.github.io`).
 3. Warten/neu laden (Änderungen brauchen manchmal 1-2 Minuten).
+
+
+### Fehler `Unexpected identifier firebaseConfig` in `firebase-config.js`
+
+Nutze stattdessen die JSON-Datei: `firebase-config.json`.
+JSON ist weniger fehleranfällig als bearbeitete JS-Objekte.
 
