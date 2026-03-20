@@ -1,185 +1,1406 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Informationen-4B</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informationen-4B</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg1:#f6f9ff;
+      --bg2:#eef4ff;
+      --surface:#ffffff;
+      --surface-2:#f8fbff;
+      --line:rgba(15,23,42,.08);
+      --text:#0f172a;
+      --muted:#64748b;
+      --blue:#3b82f6;
+      --blue-strong:#2563eb;
+      --red:#ef4444;
+      --yellow:#f59e0b;
+      --green:#10b981;
+      --indigo:#8b5cf6;
+      --pink:#ec4899;
+      --shadow:0 10px 30px rgba(15,23,42,.08);
+      --shadow-soft:0 16px 40px rgba(15,23,42,.10);
+      --r1:20px;
+      --r2:14px;
+      --r3:10px;
+    }
 
-<style>
-* {
-  box-sizing: border-box;
-}
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      min-height:100%;
+      overflow-y:auto;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at top left,rgba(59,130,246,.14),transparent 28%),
+        radial-gradient(circle at top right,rgba(139,92,246,.12),transparent 26%),
+        radial-gradient(circle at bottom right,rgba(236,72,153,.10),transparent 24%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg2) 100%);
+      color:var(--text);
+      font-family:"IBM Plex Sans",sans-serif;
+      font-size:clamp(12px,1vw,16px);
+      overscroll-behavior:none;
+    }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
+    body{display:block}
+    h1,h2,h3,p{margin:0}
+    h1,h2,h3{
+      font-family:"Bricolage Grotesque",sans-serif;
+      line-height:1.05;
+      letter-spacing:-.02em;
+    }
+    p{line-height:1.5}
+    button,input,select,textarea{font:inherit}
+    button{
+      border:none;
+      cursor:pointer;
+      transition:transform .15s ease, box-shadow .15s ease, background .15s ease, opacity .15s ease;
+    }
+    button:hover:not(:disabled){transform:translateY(-1px)}
+    button:disabled{opacity:.65;cursor:wait;transform:none}
+    .hidden{display:none!important}
 
-  /* 🔥 WICHTIG: SCROLL FIX */
-  height: auto;
-  min-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+    .screen{
+      min-height:100vh;
+      padding:20px;
+      overflow:visible;
+    }
 
-body {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  grid-template-rows: 70px auto;
-}
+    .card,.panel{
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--line);
+      border-radius:var(--r1);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+      color:var(--text);
+    }
 
-header {
-  grid-column: 1 / 3;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  background: linear-gradient(90deg, #4f46e5, #3b82f6);
-  color: white;
-}
+    .eyebrow,.pill,.day-count,.type-badge,.status-badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.82rem;
+      font-weight:700;
+      line-height:1;
+      white-space:nowrap;
+    }
 
-header h1 {
-  margin: 0;
-  font-size: 20px;
-}
+    .eyebrow{background:rgba(59,130,246,.12);color:var(--blue-strong)}
+    .pill{background:var(--surface-2);border:1px solid var(--line);color:var(--text)}
+    .day-count{background:rgba(59,130,246,.12);color:var(--blue-strong)}
 
-.sidebar {
-  background: #1e293b;
-  color: white;
-  padding: 15px;
-}
+    .loading-screen{display:grid;place-items:center}
+    .loading-card{width:min(420px,100%);padding:28px;text-align:center}
+    .spinner{width:46px;height:46px;margin:0 auto 16px;border-radius:50%;border:4px solid rgba(59,130,246,.14);border-top-color:var(--blue);animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
 
-.sidebar div {
-  padding: 10px;
-  margin-bottom: 6px;
-  border-radius: 6px;
-  background: #334155;
-}
+    .auth-screen{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:18px;align-items:stretch}
+    .auth-hero,.auth-card{padding:28px}
+    .auth-hero{display:flex;flex-direction:column;justify-content:space-between;gap:20px;background:linear-gradient(145deg,rgba(255,255,255,.92),rgba(243,248,255,.92)),linear-gradient(135deg,rgba(59,130,246,.10),transparent 40%)}
+    .auth-hero h1{font-size:clamp(2rem,3.6vw,4rem);max-width:12ch;margin-top:10px}
+    .subject-cloud{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+    .subject-chip{padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.92);border:1px solid var(--line);box-shadow:0 8px 20px rgba(15,23,42,.05);font-size:.92rem}
+    .auth-card{display:flex;flex-direction:column;justify-content:center;gap:14px;background:rgba(255,255,255,.90)}
 
-.main {
-  padding: 15px;
-}
+    .switch-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;padding:6px;border-radius:14px;background:var(--surface-2);border:1px solid var(--line)}
+    .switch-btn{background:transparent;color:var(--muted);padding:12px 14px;border-radius:10px;box-shadow:none;font-weight:700}
+    .switch-btn:hover:not(:disabled){background:rgba(59,130,246,.08);color:var(--text)}
+    .switch-btn.active{background:var(--surface);color:var(--text);box-shadow:var(--shadow)}
 
-.days {
-  display: flex;
-  gap: 10px;
-  overflow-x: auto;
-  padding-bottom: 10px;
-}
+    .notice{padding:14px 16px;border-radius:14px;border:1px solid transparent;font-size:.95rem}
+    .notice.error{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.20);color:#b91c1c}
+    .notice.success{background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.20);color:#047857}
+    .notice.info{background:rgba(59,130,246,.10);border-color:rgba(59,130,246,.18);color:#1d4ed8}
 
-.day {
-  min-width: 80px;
-  background: #e0e7ff;
-  padding: 10px;
-  border-radius: 8px;
-  text-align: center;
-}
+    form{display:grid;gap:12px}
+    .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .field{display:grid;gap:6px}
+    .field label{font-size:.9rem;font-weight:700;color:#334155}
 
-.form {
-  margin-top: 20px;
-}
+    input,select,textarea{
+      width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:#fff;color:var(--text);outline:none;box-shadow:none;transition:border-color .18s ease, box-shadow .18s ease, background .18s ease;
+    }
+    input:focus,select:focus,textarea:focus{border-color:rgba(59,130,246,.6);box-shadow:0 0 0 4px rgba(59,130,246,.10)}
+    textarea{min-height:84px;resize:vertical}
 
-input, select, button {
-  width: 100%;
-  margin-bottom: 10px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 14px;border-radius:12px;background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;font-weight:700;box-shadow:0 12px 22px rgba(59,130,246,.18);
+    }
+    .btn:hover:not(:disabled){background:linear-gradient(135deg,#60a5fa,var(--indigo))}
+    .btn.secondary{background:#e8f0ff;color:#1d4ed8;box-shadow:none;border:1px solid rgba(59,130,246,.12)}
+    .btn.secondary:hover:not(:disabled){background:#dbeafe}
+    .btn.ghost{background:#eff6ff;color:#1d4ed8;box-shadow:none;border:1px solid rgba(59,130,246,.12)}
+    .btn.ghost:hover:not(:disabled){background:#dbeafe}
+    .btn.light{background:#fff;color:#334155;border:1px solid var(--line);box-shadow:none}
+    .btn.light:hover:not(:disabled){background:#f8fbff}
+    .btn.danger{background:linear-gradient(135deg,#ef4444,#dc2626);box-shadow:0 12px 22px rgba(239,68,68,.16)}
+    .btn.danger:hover:not(:disabled){background:linear-gradient(135deg,#f87171,#ef4444)}
+    .btn.small{padding:8px 11px;border-radius:10px;font-size:.9rem}
 
-button {
-  background: #4f46e5;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
+    .main-screen{min-height:100vh;display:grid;grid-template-columns:260px minmax(0,1fr);grid-template-rows:auto;overflow:visible;padding:0;gap:0}
 
-/* 📱 MOBILE FIX */
-@media (max-width: 700px) {
-  body {
-    grid-template-columns: 1fr;
-    grid-template-rows: 60px auto auto;
-  }
+    .topbar{
+      grid-column:1 / -1;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:16px 20px;background:rgba(255,255,255,.88);border-bottom:1px solid var(--line);backdrop-filter:blur(16px);box-shadow:0 2px 14px rgba(15,23,42,.04);position:sticky;top:0;z-index:20;
+    }
 
-  .sidebar {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 5px;
-  }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .mark{width:40px;height:40px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;font-family:"Bricolage Grotesque",sans-serif;font-weight:800;flex:0 0 auto;box-shadow:0 10px 18px rgba(59,130,246,.20)}
+    .topbar-copy{min-width:0}
+    .topbar-copy h2{font-size:1.35rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .main {
-    padding: 10px;
-  }
-}
-</style>
+    .header-actions{display:flex;align-items:center;gap:12px;flex:0 0 auto;min-width:0;flex-wrap:wrap;justify-content:flex-end}
+    .header-user{display:flex;align-items:center;gap:8px;min-width:0;flex-wrap:wrap;justify-content:flex-end}
+    .header-user .pill{max-width:260px;overflow:hidden;text-overflow:ellipsis}
+
+    .sidebar{grid-column:1;background:linear-gradient(180deg,#ffffff 0%,#f5f8ff 100%);border-right:1px solid var(--line);border-radius:0;box-shadow:none;padding:16px 14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+    .sidebar .panel-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .sidebar .panel-head h2{font-size:1.12rem}
+    .sidebar .btn.light{width:100%;justify-content:center}
+    .subject-list{display:grid;gap:7px;min-height:0}
+    .subject-item{width:100%;padding:10px 11px;border-radius:12px;cursor:pointer;background:rgba(255,255,255,.86);border:1px solid var(--line);color:var(--text);text-align:left;display:grid;gap:8px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .subject-item:hover:not(:disabled){background:#f8fbff;border-color:rgba(59,130,246,.18);transform:none}
+    .subject-item.active{background:linear-gradient(135deg,var(--blue),var(--indigo));color:#fff;border-color:transparent}
+    .subject-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+    .subject-head strong{font-size:.95rem;line-height:1.15}
+    .sidebar .term-meta{display:flex;flex-wrap:wrap;gap:6px;min-height:0}
+
+    .content-shell{grid-column:2;padding:16px;min-width:0;min-height:0;overflow:visible}
+    .trend-panel{padding:16px;background:linear-gradient(135deg,rgba(255,255,255,.95),rgba(245,249,255,.95));margin-bottom:14px}
+    .panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+
+    .day-bar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:10px;padding-top:12px;min-width:0}
+    .day-card{min-width:0;padding:12px 10px;border-radius:16px;background:#fff;border:1px solid var(--line);color:var(--text);text-align:left;display:grid;gap:8px;box-shadow:0 8px 18px rgba(15,23,42,.04)}
+    .day-card:hover:not(:disabled){background:#f8fbff;border-color:rgba(59,130,246,.18);transform:none}
+    .day-card.active{background:linear-gradient(135deg,var(--blue),var(--pink));color:#fff;border-color:transparent;box-shadow:0 14px 28px rgba(59,130,246,.18)}
+    .day-card.active .day-count{background:rgba(255,255,255,.18);color:#fff}
+    .day-card.has-terms{border-color:rgba(59,130,246,.30)}
+    .day-card small{font-size:.78rem;font-weight:700;opacity:.78}
+    .day-card strong{font-size:.95rem;line-height:.12}
+
+    .workspace{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start;min-height:0}
+    .content-panel,.form-panel,.admin-panel{padding:16px;background:rgba(255,255,255,.90);min-height:0;overflow:visible}
+    .content-panel{display:flex;flex-direction:column;gap:12px;min-width:0}
+    .content-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+    .content-header h2{font-size:1.65rem}
+    .content-header p{color:var(--muted);margin-top:4px}
+
+    .term-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;min-height:0;align-content:start}
+    .term-card,.user-card{background:linear-gradient(145deg,#ffffff,#f8fbff);border-radius:16px;padding:14px;box-shadow:0 10px 20px rgba(15,23,42,.05);border:1px solid var(--line);display:grid;gap:10px;min-width:0}
+    .term-top,.user-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}
+    .term-title,.user-title{display:grid;gap:8px;min-width:0;flex:1 1 auto}
+    .term-title h3,.user-title h3{font-size:1.05rem;line-height:1.2;word-break:break-word}
+    .term-meta,.user-controls,.form-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;min-width:0}
+    .type-badge,.status-badge{padding:4px 9px;border-radius:10px;font-size:12px}
+    .type-hu{background:rgba(16,185,129,.14);color:#047857;border:1px solid rgba(16,185,129,.18)}
+    .type-sa{background:rgba(239,68,68,.12);color:#b91c1c;border:1px solid rgba(239,68,68,.16)}
+    .type-test{background:rgba(245,158,11,.14);color:#b45309;border:1px solid rgba(245,158,11,.18)}
+    .type-mu{background:rgba(139,92,246,.12);color:#6d28d9;border:1px solid rgba(139,92,246,.18)}
+    .empty-state{padding:18px;border-radius:14px;background:rgba(255,255,255,.90);border:1px dashed rgba(59,130,246,.20);color:var(--muted);grid-column:1 / -1}
+
+    .side-panel{display:grid;gap:12px;min-height:0;overflow:visible}
+    .form-panel,.admin-panel{display:grid;gap:12px;align-content:start}
+    .form-panel h2,.admin-panel h2{font-size:1.22rem}
+    .user-list{display:grid;gap:10px;min-height:0;overflow:visible}
+    .btn-row{display:flex;flex-wrap:wrap;gap:8px}
+
+    .toast-wrap{position:fixed;right:14px;bottom:14px;z-index:60;display:grid;gap:10px;width:min(320px,calc(100vw - 28px));pointer-events:none}
+    .toast{padding:14px 16px;border-radius:14px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.18)}
+    .toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
+
+    @media (max-width:1180px){
+      .workspace{grid-template-columns:1fr}
+      .side-panel{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .form-panel,.admin-panel{min-height:auto}
+    }
+
+    @media (max-width:980px){
+      .auth-screen{grid-template-columns:1fr}
+      .main-screen{grid-template-columns:1fr;grid-template-rows:auto auto auto}
+      .sidebar{grid-column:1;border-right:none;border-bottom:1px solid var(--line)}
+      .content-shell{grid-column:1;padding:14px}
+      .workspace{grid-template-columns:1fr}
+      .term-list{grid-template-columns:1fr}
+      .side-panel{grid-template-columns:1fr}
+      .day-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
+    }
+
+    @media (max-width:720px){
+      .screen{padding:12px}
+      .auth-hero,.auth-card{padding:18px}
+      .topbar{padding:12px;align-items:flex-start;flex-direction:column;gap:12px}
+      .brand{width:100%}
+      .header-actions{width:100%;justify-content:space-between;align-items:stretch}
+      .header-user{width:100%;justify-content:flex-start}
+      .header-user .pill{max-width:none;flex:1 1 0}
+      #logoutBtn{width:100%}
+      .topbar-copy h2{font-size:1.12rem}
+      .content-panel,.form-panel,.admin-panel{padding:14px}
+      .form-grid{grid-template-columns:1fr}
+      .day-bar{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .content-header h2{font-size:1.35rem}
+      .subject-item{padding:12px}
+      .day-card{padding:11px 10px}
+      .term-card,.user-card{padding:12px}
+      .btn{width:100%}
+      .btn.small{width:auto}
+      .form-actions{flex-direction:column;align-items:stretch}
+      .form-actions .btn{width:100%}
+      .sidebar .btn.light{width:100%}
+    }
+
+    @media (max-width:520px){
+      .auth-hero h1{font-size:1.8rem;max-width:none}
+      .switch-row{grid-template-columns:1fr}
+      .day-bar{grid-template-columns:1fr 1fr}
+      .subject-head{flex-direction:column;align-items:flex-start}
+      .header-actions{flex-direction:column}
+    }
+  </style>
 </head>
 <body>
+  <section id="loadingScreen" class="screen loading-screen">
+    <div class="card loading-card">
+      <div class="spinner" aria-hidden="true"></div>
+      <h2>Informationen-4B wird geladen</h2>
+      <p>Firebase wird verbunden und dein Zugriff wird geprüft.</p>
+    </div>
+  </section>
 
-<header>
-  <h1>Informationen-4B</h1>
-  <button onclick="logout()">Abmelden</button>
-</header>
+  <section id="authScreen" class="screen auth-screen hidden">
+    <div class="card auth-hero">
+      <div class="eyebrow">4B Klasse</div>
+      <div><h1>Informationen-4B</h1></div>
+      <div id="subjectCloud" class="subject-cloud"></div>
+    </div>
 
-<div class="sidebar" id="subjects"></div>
+    <div class="card auth-card">
+      <div><h2>Login oder Registrierung</h2></div>
+      <div class="switch-row">
+        <button id="showLoginBtn" class="switch-btn active" type="button">Login</button>
+        <button id="showRegisterBtn" class="switch-btn" type="button">Registrieren</button>
+      </div>
+      <div id="authNotice" class="notice hidden" aria-live="polite"></div>
 
-<div class="main">
-  <div class="days" id="days"></div>
+      <form id="loginForm" novalidate>
+        <div class="field">
+          <label for="loginEmail">E-Mail</label>
+          <input id="loginEmail" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="loginPassword">Passwort</label>
+          <input id="loginPassword" type="password" autocomplete="current-password" required>
+        </div>
+        <button id="loginSubmitBtn" class="btn" type="submit">Einloggen</button>
+      </form>
 
-  <div class="form">
-    <input type="text" id="title" placeholder="Titel">
-    <select id="subject"></select>
-    <select id="type">
-      <option>HÜ</option>
-      <option>SA</option>
-      <option>Test</option>
-    </select>
-    <input type="date" id="date">
-    <button onclick="addEntry()">Termin hinzufügen</button>
-  </div>
-</div>
+      <form id="registerForm" class="hidden" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="registerName">Name</label>
+            <input id="registerName" type="text" autocomplete="name" required>
+          </div>
+          <div class="field">
+            <label for="registerEmail">E-Mail</label>
+            <input id="registerEmail" type="email" autocomplete="email" required>
+          </div>
+        </div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="registerPassword">Passwort</label>
+            <input id="registerPassword" type="password" autocomplete="new-password" required>
+          </div>
+          <div class="field">
+            <label for="registerPasswordConfirm">Passwort bestätigen</label>
+            <input id="registerPasswordConfirm" type="password" autocomplete="new-password" required>
+          </div>
+        </div>
+        <button id="registerSubmitBtn" class="btn" type="submit">Konto erstellen</button>
+      </form>
+    </div>
+  </section>
 
-<script>
-const subjects = [
-  "Mathe","Deutsch","Englisch","Geschichte","Geographie",
-  "Religion","Physik","Physik Labor","Chemie","Chemie Labor",
-  "Biologie","Grafisches Zeichnen","Digitale Grundbildung",
-  "Italienisch","Sport","Kunst"
-];
+  <main id="mainScreen" class="main-screen hidden">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark">4B</div>
+        <div class="topbar-copy">
+          <h2>Informationen-4B</h2>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="header-user">
+          <span id="profileNamePill" class="pill">Name</span>
+          <span id="profileEmailPill" class="pill">E-Mail</span>
+        </div>
+        <button id="logoutBtn" class="btn ghost" type="button">Abmelden</button>
+      </div>
+    </header>
 
-const subjectDiv = document.getElementById("subjects");
-const subjectSelect = document.getElementById("subject");
+    <aside class="panel sidebar">
+      <div class="panel-head">
+        <h2>Fächer</h2>
+      </div>
+      <button id="showAllSubjectsBtn" class="btn light small" type="button">Heute anzeigen</button>
+      <div id="subjectList" class="subject-list"></div>
+    </aside>
 
-subjects.forEach(s => {
-  let d = document.createElement("div");
-  d.innerText = s;
-  subjectDiv.appendChild(d);
+    <section class="content-shell">
+      <section class="panel trend-panel">
+        <div class="panel-head">
+          <h2>14-Tage-Übersicht</h2>
+          <button id="resetFilterBtn" class="btn ghost small" type="button">Heute</button>
+        </div>
+        <div id="dayBar" class="day-bar"></div>
+      </section>
 
-  let o = document.createElement("option");
-  o.text = s;
-  subjectSelect.add(o);
-});
+      <div class="workspace">
+        <section class="panel content-panel">
+          <div class="content-header">
+            <div>
+              <h2 id="contentTitle">Heute</h2>
+              <p id="contentMeta"></p>
+            </div>
+            <button id="jumpToFormBtn" class="btn secondary small hidden" type="button">Termin hinzufügen</button>
+          </div>
+          <div id="termList" class="term-list"></div>
+        </section>
 
-// 14 Tage
-const daysDiv = document.getElementById("days");
-for (let i = 0; i < 14; i++) {
-  let d = new Date();
-  d.setDate(d.getDate() + i);
+        <aside class="side-panel">
+          <section id="termFormPanel" class="panel form-panel hidden">
+            <h2 id="termFormTitle">Termin hinzufügen</h2>
+            <form id="termForm" novalidate>
+              <div class="field">
+                <label for="termSubject">Fach</label>
+                <select id="termSubject" required></select>
+              </div>
+              <div class="field">
+                <label for="termType">Typ</label>
+                <select id="termType" required></select>
+              </div>
+              <div class="field">
+                <label for="termDate">Datum</label>
+                <input id="termDate" type="date" required>
+              </div>
+              <div class="field">
+                <label for="termDescription">Beschreibung</label>
+                <textarea id="termDescription" required></textarea>
+              </div>
+              <div class="field">
+                <label for="termPeople">Personen</label>
+                <input id="termPeople" type="text" placeholder="Optional">
+              </div>
+              <div class="form-actions">
+                <button id="saveTermBtn" class="btn" type="submit">Termin speichern</button>
+                <button id="cancelEditBtn" class="btn secondary hidden" type="button">Bearbeitung abbrechen</button>
+              </div>
+            </form>
+          </section>
 
-  let el = document.createElement("div");
-  el.className = "day";
-  el.innerText = d.toLocaleDateString();
+          <section id="adminPanel" class="panel admin-panel hidden">
+            <h2>Adminbereich</h2>
+            <div id="userList" class="user-list"></div>
+          </section>
+        </aside>
+      </div>
+    </section>
+  </main>
 
-  daysDiv.appendChild(el);
-}
+  <div id="toastWrap" class="toast-wrap" aria-live="polite"></div>
 
-function addEntry() {
-  alert("Termin gespeichert (Demo)");
-}
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getAuth,
+      onAuthStateChanged,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      update,
+      remove,
+      push,
+      onValue,
+      get,
+      child
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-function logout() {
-  alert("Logout");
-}
-</script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCBPlpoODRfMwrU8Nxk4TTFPvUNMX8igvo",
+      authDomain: "informationen-4b-dc655.firebaseapp.com",
+      databaseURL: "https://informationen-4b-dc655-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "informationen-4b-dc655",
+      storageBucket: "informationen-4b-dc655.firebasestorage.app",
+      messagingSenderId: "523568445266",
+      appId: "1:523568445266:web:f38bc3a96adc3180f26c8b"
+    };
 
+    const ADMIN_EMAIL = "matthias.handl@ahsbruck.at";
+    const TERM_TYPES = ["Test", "SA", "HÜ", "MÜ"];
+    const SUBJECTS = [
+      ["mathe", "Mathe"], ["deutsch", "Deutsch"], ["englisch", "Englisch"], ["geschichte", "Geschichte"],
+      ["geographie", "Geographie"], ["religion", "Religion"], ["physik", "Physik"], ["physik_labor", "Physik Labor"],
+      ["chemie", "Chemie"], ["chemie_labor", "Chemie Labor"], ["biologie", "Biologie"], ["kunst", "Kunst"],
+      ["grafisches_zeichnen", "Grafisches Zeichnen"], ["digitale_grundbildung", "Digitale Grundbildung"],
+      ["italienisch", "Italienisch"], ["sport", "Sport"]
+    ].map(([key, label]) => ({ key, label }));
+
+    const ROLE_LABELS = {
+      user: "Schüler",
+      schueler: "Schüler",
+      "schüler": "Schüler",
+      sprecher: "Klassensprecher",
+      klassensprecher: "Klassensprecher",
+      admin: "Admin"
+    };
+
+    const EDITOR_ROLES = new Set(["admin", "sprecher", "klassensprecher"]);
+    const APPROVAL_REQUIRED = true;
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const elements = {
+      loadingScreen: document.getElementById("loadingScreen"),
+      authScreen: document.getElementById("authScreen"),
+      mainScreen: document.getElementById("mainScreen"),
+      subjectCloud: document.getElementById("subjectCloud"),
+      showLoginBtn: document.getElementById("showLoginBtn"),
+      showRegisterBtn: document.getElementById("showRegisterBtn"),
+      loginForm: document.getElementById("loginForm"),
+      registerForm: document.getElementById("registerForm"),
+      authNotice: document.getElementById("authNotice"),
+      loginEmail: document.getElementById("loginEmail"),
+      loginPassword: document.getElementById("loginPassword"),
+      loginSubmitBtn: document.getElementById("loginSubmitBtn"),
+      registerName: document.getElementById("registerName"),
+      registerEmail: document.getElementById("registerEmail"),
+      registerPassword: document.getElementById("registerPassword"),
+      registerPasswordConfirm: document.getElementById("registerPasswordConfirm"),
+      registerSubmitBtn: document.getElementById("registerSubmitBtn"),
+      profileNamePill: document.getElementById("profileNamePill"),
+      profileEmailPill: document.getElementById("profileEmailPill"),
+      logoutBtn: document.getElementById("logoutBtn"),
+      resetFilterBtn: document.getElementById("resetFilterBtn"),
+      dayBar: document.getElementById("dayBar"),
+      showAllSubjectsBtn: document.getElementById("showAllSubjectsBtn"),
+      subjectList: document.getElementById("subjectList"),
+      contentTitle: document.getElementById("contentTitle"),
+      contentMeta: document.getElementById("contentMeta"),
+      jumpToFormBtn: document.getElementById("jumpToFormBtn"),
+      termList: document.getElementById("termList"),
+      termFormPanel: document.getElementById("termFormPanel"),
+      termFormTitle: document.getElementById("termFormTitle"),
+      termForm: document.getElementById("termForm"),
+      termSubject: document.getElementById("termSubject"),
+      termType: document.getElementById("termType"),
+      termDate: document.getElementById("termDate"),
+      termDescription: document.getElementById("termDescription"),
+      termPeople: document.getElementById("termPeople"),
+      saveTermBtn: document.getElementById("saveTermBtn"),
+      cancelEditBtn: document.getElementById("cancelEditBtn"),
+      adminPanel: document.getElementById("adminPanel"),
+      userList: document.getElementById("userList"),
+      toastWrap: document.getElementById("toastWrap")
+    };
+
+    const state = {
+      authView: "login",
+      authNotice: null,
+      currentUser: null,
+      currentProfile: null,
+      terms: [],
+      users: {},
+      filterMode: "day",
+      selectedDay: todayValue(),
+      selectedSubjectKey: null,
+      editingTerm: null,
+      pendingProfileCreation: false,
+      registrationFlow: false,
+      unsubProfile: null,
+      unsubTerms: null,
+      unsubUsers: null
+    };
+
+    function todayValue() {
+      const now = new Date();
+      const local = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+      return local.toISOString().slice(0, 10);
+    }
+
+    function subjectByKey(key) {
+      return SUBJECTS.find((subject) => subject.key === key) || null;
+    }
+
+    function roleLabel(role) {
+      return ROLE_LABELS[role] || "Schüler";
+    }
+
+    function typeClass(type) {
+      return {
+        "HÜ": "type-hu",
+        "SA": "type-sa",
+        "Test": "type-test",
+        "MÜ": "type-mu"
+      }[type] || "";
+    }
+
+    function isAdminEmail(email) {
+      return String(email || "").trim().toLowerCase() === ADMIN_EMAIL;
+    }
+
+    function canManageTerms() {
+      return Boolean(state.currentProfile && EDITOR_ROLES.has(state.currentProfile.role));
+    }
+
+    function isAdmin() {
+      return Boolean(state.currentProfile && state.currentProfile.role === "admin");
+    }
+
+    function getInitials(name) {
+      return (name || "4B").split(" ").filter(Boolean).slice(0, 2).map((part) => part[0].toUpperCase()).join("") || "4B";
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "Kein Datum";
+      const date = new Date(dateString + "T12:00:00");
+      if (Number.isNaN(date.getTime())) return dateString;
+      return new Intl.DateTimeFormat("de-AT", { day: "2-digit", month: "2-digit", year: "numeric" }).format(date);
+    }
+
+    function formatDayLabel(dateString) {
+      const date = new Date(dateString + "T12:00:00");
+      const weekday = new Intl.DateTimeFormat("de-AT", { weekday: "short" }).format(date).replace(".", "");
+      const day = new Intl.DateTimeFormat("de-AT", { day: "2-digit" }).format(date);
+      return weekday.charAt(0).toUpperCase() + weekday.slice(1) + " " + day;
+    }
+
+    function nextFourteenDays() {
+      return Array.from({ length: 14 }, (_, index) => {
+        const base = new Date(todayValue() + "T12:00:00");
+        base.setDate(base.getDate() + index);
+        const local = new Date(base.getTime() - base.getTimezoneOffset() * 60000);
+        const date = local.toISOString().slice(0, 10);
+        return {
+          date,
+          label: formatDayLabel(date),
+          terms: state.terms.filter((term) => term.datum === date)
+        };
+      });
+    }
+
+    function normalizeTerms(raw) {
+      const terms = [];
+      SUBJECTS.forEach((subject) => {
+        const bucket = raw && raw[subject.key] ? Object.entries(raw[subject.key]) : [];
+        bucket.forEach(([id, value]) => {
+          terms.push({
+            id,
+            subjectKey: subject.key,
+            fach: subject.label,
+            typ: value.typ || "",
+            datum: value.datum || "",
+            beschreibung: value.beschreibung || "",
+            personen: value.personen || ""
+          });
+        });
+      });
+      return terms.sort((a, b) => (a.datum || "9999-12-31").localeCompare(b.datum || "9999-12-31") || a.fach.localeCompare(b.fach, "de"));
+    }
+
+    function visibleTerms() {
+      return state.filterMode === "subject" && state.selectedSubjectKey
+        ? state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey)
+        : state.terms.filter((term) => term.datum === state.selectedDay);
+    }
+
+    function trendTermsForSubject(subjectKey) {
+      const dates = new Set(nextFourteenDays().map((day) => day.date));
+      return state.terms.filter((term) => term.subjectKey === subjectKey && dates.has(term.datum));
+    }
+
+    function setScreen(name) {
+      elements.loadingScreen.classList.toggle("hidden", name !== "loading");
+      elements.authScreen.classList.toggle("hidden", name !== "auth");
+      elements.mainScreen.classList.toggle("hidden", name !== "main");
+    }
+
+    function switchAuthView(view) {
+      state.authView = view;
+      elements.showLoginBtn.classList.toggle("active", view === "login");
+      elements.showRegisterBtn.classList.toggle("active", view === "register");
+      elements.loginForm.classList.toggle("hidden", view !== "login");
+      elements.registerForm.classList.toggle("hidden", view !== "register");
+      renderAuthNotice();
+    }
+
+    function setAuthNotice(message, type = "info", view = state.authView) {
+      state.authNotice = { message, type, view };
+      renderAuthNotice();
+    }
+
+    function clearAuthNotice() {
+      state.authNotice = null;
+      renderAuthNotice();
+    }
+
+    function renderAuthNotice() {
+      const visible = Boolean(state.authNotice && state.authNotice.view === state.authView);
+      elements.authNotice.className = "notice" + (visible ? " " + state.authNotice.type : " hidden");
+      elements.authNotice.textContent = visible ? state.authNotice.message : "";
+    }
+
+    function toast(message, type = "info") {
+      const node = document.createElement("div");
+      node.className = "toast " + type;
+      node.textContent = message;
+      elements.toastWrap.appendChild(node);
+      window.setTimeout(() => node.remove(), 3400);
+    }
+
+    function setBusy(button, busy, label) {
+      if (busy) {
+        button.dataset.originalLabel = button.textContent;
+        button.textContent = label;
+      } else if (button.dataset.originalLabel) {
+        button.textContent = button.dataset.originalLabel;
+      }
+      button.disabled = busy;
+    }
+
+    function cleanupSubscriptions() {
+      if (state.unsubProfile) { state.unsubProfile(); state.unsubProfile = null; }
+      if (state.unsubTerms) { state.unsubTerms(); state.unsubTerms = null; }
+      if (state.unsubUsers) { state.unsubUsers(); state.unsubUsers = null; }
+    }
+
+    function readableAuthError(error) {
+      const code = error?.code || "";
+      return {
+        "auth/email-already-in-use": "Diese E-Mail ist bereits registriert.",
+        "auth/invalid-email": "Bitte gib eine gültige E-Mail-Adresse ein.",
+        "auth/weak-password": "Das Passwort ist zu schwach. Verwende mindestens 6 Zeichen.",
+        "auth/invalid-credential": "E-Mail oder Passwort sind nicht korrekt.",
+        "auth/user-not-found": "Dieses Konto wurde nicht gefunden.",
+        "auth/wrong-password": "Das Passwort ist falsch.",
+        "auth/too-many-requests": "Zu viele Versuche. Bitte warte kurz und probiere es erneut.",
+        "auth/network-request-failed": "Netzwerkfehler. Bitte prüfe deine Verbindung."
+      }[code] || "Es ist ein Fehler aufgetreten. Bitte versuche es erneut.";
+    }
+
+    function readableDbError(error) {
+      const message = error?.message || "";
+      if (message.includes("permission_denied")) {
+        return "Firebase hat den Zugriff abgelehnt. Bitte prüfe die Realtime-Database-Regeln.";
+      }
+      return "Die Daten konnten nicht gespeichert oder geladen werden.";
+    }
+
+    function createTypeBadge(type) {
+      const badge = document.createElement("span");
+      badge.className = "type-badge " + typeClass(type);
+      badge.textContent = type;
+      return badge;
+    }
+
+    function populateStaticUI() {
+      elements.subjectCloud.innerHTML = "";
+      elements.termSubject.innerHTML = "";
+      elements.termType.innerHTML = "";
+
+      SUBJECTS.forEach((subject) => {
+        const chip = document.createElement("span");
+        chip.className = "subject-chip";
+        chip.textContent = subject.label;
+        elements.subjectCloud.appendChild(chip);
+
+        const option = document.createElement("option");
+        option.value = subject.key;
+        option.textContent = subject.label;
+        elements.termSubject.appendChild(option);
+      });
+
+      TERM_TYPES.forEach((type) => {
+        const option = document.createElement("option");
+        option.value = type;
+        option.textContent = type;
+        elements.termType.appendChild(option);
+      });
+
+      elements.termDate.value = todayValue();
+      elements.termType.value = TERM_TYPES[0];
+    }
+
+    function renderHeader() {
+      if (!state.currentProfile) return;
+      elements.profileNamePill.textContent = state.currentProfile.name || "Unbekannt";
+      elements.profileEmailPill.textContent = state.currentProfile.email || "-";
+    }
+
+    function renderDayBar() {
+      elements.dayBar.innerHTML = "";
+      nextFourteenDays().forEach((day) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "day-card" + (state.filterMode === "day" && state.selectedDay === day.date ? " active" : "") + (day.terms.length ? " has-terms" : "");
+        button.dataset.day = day.date;
+
+        const small = document.createElement("small");
+        small.textContent = day.date === todayValue() ? "Heute" : "Tag";
+        const strong = document.createElement("strong");
+        strong.textContent = day.label;
+        button.append(small, strong);
+
+        if (day.terms.length) {
+          const count = document.createElement("span");
+          count.className = "day-count";
+          count.textContent = day.terms.length + " Termin(e)";
+          button.appendChild(count);
+        }
+
+        elements.dayBar.appendChild(button);
+      });
+    }
+
+    function renderSubjectList() {
+      elements.subjectList.innerHTML = "";
+      elements.showAllSubjectsBtn.className = state.filterMode === "day" ? "btn small" : "btn light small";
+
+      SUBJECTS.forEach((subject) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "subject-item" + (state.filterMode === "subject" && state.selectedSubjectKey === subject.key ? " active" : "");
+        button.dataset.subjectKey = subject.key;
+
+        const header = document.createElement("div");
+        header.className = "subject-head";
+        const title = document.createElement("strong");
+        title.textContent = subject.label;
+        header.appendChild(title);
+
+        const badges = document.createElement("div");
+        badges.className = "term-meta";
+        [...new Set(trendTermsForSubject(subject.key).map((term) => term.typ))].filter(Boolean).forEach((type) => badges.appendChild(createTypeBadge(type)));
+        header.appendChild(badges);
+
+        button.appendChild(header);
+        elements.subjectList.appendChild(button);
+      });
+    }
+
+    function renderContentHeader() {
+      const count = state.filterMode === "subject" && state.selectedSubjectKey
+        ? state.terms.filter((term) => term.subjectKey === state.selectedSubjectKey).length
+        : state.terms.filter((term) => term.datum === state.selectedDay).length;
+
+      if (state.filterMode === "subject" && state.selectedSubjectKey) {
+        const subject = subjectByKey(state.selectedSubjectKey);
+        elements.contentTitle.textContent = subject ? subject.label : "Fach";
+        elements.contentMeta.textContent = count ? `${count} Termin(e) für dieses Fach.` : "Noch keine Termine für dieses Fach.";
+      } else {
+        elements.contentTitle.textContent = formatDayLabel(state.selectedDay);
+        elements.contentMeta.textContent = count ? `${count} Termin(e) an diesem Tag.` : "Noch keine Termine an diesem Tag.";
+      }
+    }
+
+    function createTermCard(term) {
+      const card = document.createElement("article");
+      card.className = "term-card";
+
+      const top = document.createElement("div");
+      top.className = "term-top";
+
+      const titleWrap = document.createElement("div");
+      titleWrap.className = "term-title";
+
+      const title = document.createElement("h3");
+      title.textContent = term.beschreibung;
+
+      const meta = document.createElement("div");
+      meta.className = "term-meta";
+
+      const subject = document.createElement("span");
+      subject.className = "pill";
+      subject.textContent = term.fach;
+      meta.appendChild(subject);
+
+      meta.appendChild(createTypeBadge(term.typ));
+
+      const date = document.createElement("span");
+      date.className = "pill";
+      date.textContent = formatDate(term.datum);
+      meta.appendChild(date);
+
+      if (term.personen) {
+        const people = document.createElement("span");
+        people.className = "pill";
+        people.textContent = term.personen;
+        meta.appendChild(people);
+      }
+
+      titleWrap.append(title, meta);
+      top.appendChild(titleWrap);
+
+      if (canManageTerms()) {
+        const actions = document.createElement("div");
+        actions.className = "btn-row";
+        [["edit-term", "Bearbeiten", "secondary"], ["delete-term", "Löschen", "danger"]].forEach(([action, label, style]) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "btn " + style + " small";
+          btn.dataset.action = action;
+          btn.dataset.termId = term.id;
+          btn.dataset.subjectKey = term.subjectKey;
+          btn.textContent = label;
+          actions.appendChild(btn);
+        });
+        top.appendChild(actions);
+      }
+
+      card.appendChild(top);
+      return card;
+    }
+
+    function renderTermList() {
+      elements.termList.innerHTML = "";
+      const list = visibleTerms();
+
+      if (!list.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML = "<h3>Keine Einträge</h3><p>Für den aktuellen Filter gibt es noch keine Termine.</p>";
+        elements.termList.appendChild(empty);
+        return;
+      }
+
+      list.forEach((term) => elements.termList.appendChild(createTermCard(term)));
+    }
+
+    function createUserCard(uid, profile) {
+      const card = document.createElement("article");
+      card.className = "user-card";
+
+      const top = document.createElement("div");
+      top.className = "user-top";
+      const titleWrap = document.createElement("div");
+      titleWrap.className = "user-title";
+      const title = document.createElement("h3");
+      title.textContent = profile.name || "Unbenannter Benutzer";
+
+      const meta = document.createElement("div");
+      meta.className = "term-meta";
+      const email = document.createElement("span");
+      email.className = "pill";
+      email.textContent = profile.email || "Keine E-Mail";
+      meta.appendChild(email);
+      const role = document.createElement("span");
+      role.className = "pill";
+      role.textContent = roleLabel(profile.role);
+      meta.appendChild(role);
+      const status = document.createElement("span");
+      status.className = "status-badge " + (profile.approved ? "type-hu" : "type-test");
+      status.textContent = profile.approved ? "Bestätigt" : "Unbestätigt";
+      meta.appendChild(status);
+
+      titleWrap.append(title, meta);
+      top.appendChild(titleWrap);
+      card.appendChild(top);
+
+      const controls = document.createElement("div");
+      controls.className = "user-controls";
+
+      const select = document.createElement("select");
+      select.dataset.userId = uid;
+      ["user", "sprecher", "admin"].forEach((roleValue) => {
+        const option = document.createElement("option");
+        option.value = roleValue;
+        option.textContent = roleLabel(roleValue);
+        option.selected = profile.role === roleValue;
+        select.appendChild(option);
+      });
+      controls.appendChild(select);
+
+      const save = document.createElement("button");
+      save.type = "button";
+      save.className = "btn secondary small";
+      save.dataset.action = "save-role";
+      save.dataset.userId = uid;
+      save.textContent = "Rolle speichern";
+      controls.appendChild(save);
+
+      const approval = document.createElement("button");
+      approval.type = "button";
+      approval.className = "btn small";
+      approval.dataset.action = "toggle-approval";
+      approval.dataset.userId = uid;
+      approval.textContent = profile.approved ? "Unbestätigen" : "Bestätigen";
+      controls.appendChild(approval);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn danger small";
+      removeBtn.dataset.action = "delete-user";
+      removeBtn.dataset.userId = uid;
+      removeBtn.textContent = "Löschen";
+      controls.appendChild(removeBtn);
+
+      card.appendChild(controls);
+      return card;
+    }
+
+    function renderAdminPanel() {
+      elements.adminPanel.classList.toggle("hidden", !isAdmin());
+      elements.userList.innerHTML = "";
+      if (!isAdmin()) return;
+
+      const entries = Object.entries(state.users);
+      if (!entries.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty-state";
+        empty.innerHTML = "<h3>Noch keine Benutzer</h3><p>Aktuell sind keine Benutzer vorhanden.</p>";
+        elements.userList.appendChild(empty);
+        return;
+      }
+
+      entries.sort((a, b) => {
+        if (a[1].approved !== b[1].approved) return a[1].approved ? 1 : -1;
+        return (a[1].name || "").localeCompare(b[1].name || "", "de");
+      }).forEach(([uid, profile]) => elements.userList.appendChild(createUserCard(uid, profile)));
+    }
+
+    function renderTermForm() {
+      const visible = canManageTerms();
+      elements.termFormPanel.classList.toggle("hidden", !visible);
+      elements.jumpToFormBtn.classList.toggle("hidden", !visible);
+      if (!visible) return;
+      elements.termFormTitle.textContent = state.editingTerm ? "Termin bearbeiten" : "Termin hinzufügen";
+      elements.saveTermBtn.textContent = state.editingTerm ? "Änderungen speichern" : "Termin speichern";
+      elements.cancelEditBtn.classList.toggle("hidden", !state.editingTerm);
+      if (!state.editingTerm) {
+        elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
+      }
+    }
+
+    function renderAll() {
+      renderHeader();
+      renderDayBar();
+      renderSubjectList();
+      renderContentHeader();
+      renderTermList();
+      renderTermForm();
+      renderAdminPanel();
+    }
+
+    function resetTermForm() {
+      state.editingTerm = null;
+      elements.termForm.reset();
+      elements.termDate.value = todayValue();
+      elements.termType.value = TERM_TYPES[0];
+      elements.termSubject.value = state.selectedSubjectKey || SUBJECTS[0].key;
+      renderTermForm();
+    }
+
+    function findTerm(subjectKey, termId) {
+      return state.terms.find((term) => term.id === termId && term.subjectKey === subjectKey) || null;
+    }
+
+    function loadTerm(term) {
+      state.editingTerm = term;
+      elements.termSubject.value = term.subjectKey;
+      elements.termType.value = term.typ;
+      elements.termDate.value = term.datum;
+      elements.termDescription.value = term.beschreibung;
+      elements.termPeople.value = term.personen || "";
+      renderTermForm();
+      elements.termFormPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    async function createUserProfile(uid, name, email) {
+      const admin = isAdminEmail(email);
+      await set(ref(db, "users/" + uid), {
+        name,
+        email,
+        role: admin ? "admin" : "user",
+        approved: admin,
+        createdAt: Date.now()
+      });
+      return admin;
+    }
+
+    function ensureTermsSubscription() {
+      if (state.unsubTerms) return;
+      state.unsubTerms = onValue(ref(db, "terms"), (snapshot) => {
+        state.terms = normalizeTerms(snapshot.val());
+        renderAll();
+      }, (error) => toast(readableDbError(error), "error"));
+    }
+
+    function ensureUsersSubscription() {
+      if (!isAdmin()) {
+        if (state.unsubUsers) {
+          state.unsubUsers();
+          state.unsubUsers = null;
+        }
+        state.users = {};
+        renderAdminPanel();
+        return;
+      }
+      if (state.unsubUsers) return;
+      state.unsubUsers = onValue(ref(db, "users"), (snapshot) => {
+        state.users = snapshot.val() || {};
+        renderAdminPanel();
+      }, (error) => toast(readableDbError(error), "error"));
+    }
+
+    async function denyAccess(message) {
+      setAuthNotice(message, "error", "login");
+      await signOut(auth);
+    }
+
+    function subscribeProfile(uid) {
+      state.unsubProfile = onValue(ref(db, "users/" + uid), async (snapshot) => {
+        const profile = snapshot.val();
+        if (!profile) {
+          if (state.pendingProfileCreation) return;
+          await denyAccess("Dein Profil wurde nicht gefunden. Bitte wende dich an einen Admin.");
+          return;
+        }
+
+        state.currentProfile = { uid, ...profile };
+
+        if (APPROVAL_REQUIRED && !profile.approved) {
+          if (state.registrationFlow) return;
+          await denyAccess("Dein Konto wurde noch nicht bestätigt. Bitte warte auf einen Admin.");
+          return;
+        }
+
+        ensureTermsSubscription();
+        ensureUsersSubscription();
+        renderAll();
+        setScreen("main");
+      }, (error) => toast(readableDbError(error), "error"));
+    }
+
+    async function handleRegister(event) {
+      event.preventDefault();
+      clearAuthNotice();
+
+      const name = elements.registerName.value.trim();
+      const email = elements.registerEmail.value.trim();
+      const password = elements.registerPassword.value;
+      const confirm = elements.registerPasswordConfirm.value;
+
+      if (!name || !email || !password || !confirm) {
+        setAuthNotice("Bitte fülle alle Registrierungsfelder aus.", "error", "register");
+        return;
+      }
+      if (password !== confirm) {
+        setAuthNotice("Die Passwörter stimmen nicht überein.", "error", "register");
+        return;
+      }
+
+      state.pendingProfileCreation = true;
+      state.registrationFlow = true;
+      setBusy(elements.registerSubmitBtn, true, "Registriere...");
+
+      try {
+        const credential = await createUserWithEmailAndPassword(auth, email, password);
+        const isAdminUser = await createUserProfile(credential.user.uid, name, email);
+        elements.registerForm.reset();
+
+        if (isAdminUser) {
+          toast("Admin-Konto erkannt und bestätigt.", "success");
+          switchAuthView("login");
+        } else {
+          setAuthNotice("Registrierung erfolgreich. Ein Admin muss dein Konto jetzt bestätigen.", "success", "login");
+          switchAuthView("login");
+          await signOut(auth);
+        }
+      } catch (error) {
+        if (auth.currentUser) {
+          try { await signOut(auth); } catch {}
+        }
+        setAuthNotice(readableAuthError(error), "error", "register");
+      } finally {
+        state.pendingProfileCreation = false;
+        state.registrationFlow = false;
+        setBusy(elements.registerSubmitBtn, false);
+      }
+    }
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      clearAuthNotice();
+
+      const email = elements.loginEmail.value.trim();
+      const password = elements.loginPassword.value;
+
+      if (!email || !password) {
+        setAuthNotice("Bitte gib E-Mail und Passwort ein.", "error", "login");
+        return;
+      }
+
+      setBusy(elements.loginSubmitBtn, true, "Prüfe Login...");
+      setScreen("loading");
+
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        elements.loginForm.reset();
+      } catch (error) {
+        setScreen("auth");
+        setAuthNotice(readableAuthError(error), "error", "login");
+      } finally {
+        setBusy(elements.loginSubmitBtn, false);
+      }
+    }
+
+    async function handleLogout() {
+      clearAuthNotice();
+      await signOut(auth);
+      toast("Du wurdest abgemeldet.", "info");
+    }
+
+    async function handleTermSubmit(event) {
+      event.preventDefault();
+      if (!canManageTerms()) {
+        toast("Du hast keine Rechte zum Bearbeiten von Terminen.", "error");
+        return;
+      }
+
+      const subjectKey = elements.termSubject.value;
+      const subject = subjectByKey(subjectKey);
+      const typ = elements.termType.value;
+      const datum = elements.termDate.value;
+      const beschreibung = elements.termDescription.value.trim();
+      const personen = elements.termPeople.value.trim();
+
+      if (!subjectKey || !typ || !datum || !beschreibung) {
+        toast("Bitte fülle Fach, Typ, Datum und Beschreibung aus.", "error");
+        return;
+      }
+
+      const payload = {
+        fach: subject.label,
+        typ,
+        datum,
+        beschreibung,
+        personen,
+        updatedAt: Date.now(),
+        updatedBy: state.currentUser.uid
+      };
+
+      setBusy(elements.saveTermBtn, true, state.editingTerm ? "Speichere..." : "Lege an...");
+
+      try {
+        if (state.editingTerm) {
+          await set(ref(db, "terms/" + subjectKey + "/" + state.editingTerm.id), payload);
+          if (subjectKey !== state.editingTerm.subjectKey) {
+            await remove(ref(db, "terms/" + state.editingTerm.subjectKey + "/" + state.editingTerm.id));
+          }
+          toast("Termin wurde aktualisiert.", "success");
+        } else {
+          const newRef = push(ref(db, "terms/" + subjectKey));
+          await set(newRef, { ...payload, createdAt: Date.now(), createdBy: state.currentUser.uid });
+          toast("Termin wurde hinzugefügt.", "success");
+        }
+
+        resetTermForm();
+      } catch (error) {
+        toast(readableDbError(error), "error");
+      } finally {
+        setBusy(elements.saveTermBtn, false);
+      }
+    }
+
+    async function handleTermActions(event) {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+
+      const term = findTerm(button.dataset.subjectKey, button.dataset.termId);
+      if (!term) {
+        toast("Der ausgewählte Termin konnte nicht gefunden werden.", "error");
+        return;
+      }
+
+      if (button.dataset.action === "edit-term") {
+        loadTerm(term);
+        return;
+      }
+
+      if (button.dataset.action === "delete-term") {
+        if (!window.confirm("Diesen Termin wirklich löschen?")) return;
+        setBusy(button, true, "Lösche...");
+        try {
+          await remove(ref(db, "terms/" + term.subjectKey + "/" + term.id));
+          if (state.editingTerm && state.editingTerm.id === term.id) resetTermForm();
+          toast("Termin wurde gelöscht.", "success");
+        } catch (error) {
+          toast(readableDbError(error), "error");
+        } finally {
+          setBusy(button, false);
+        }
+      }
+    }
+
+    function approvedAdminCount() {
+      return Object.values(state.users).filter((user) => user.approved && user.role === "admin").length;
+    }
+
+    function wouldRemoveLastApprovedAdmin(target, action, nextRole) {
+      if (!(target && target.approved && target.role === "admin")) return false;
+      if (action === "save-role" && nextRole === "admin") return false;
+      return approvedAdminCount() <= 1;
+    }
+
+    async function handleUserActions(event) {
+      const button = event.target.closest("button[data-action]");
+      if (!button || !isAdmin()) return;
+
+      const userId = button.dataset.userId;
+      const target = state.users[userId];
+      const select = elements.userList.querySelector('select[data-user-id="' + userId + '"]');
+      const nextRole = select ? select.value : "user";
+
+      if (!target) {
+        toast("Benutzer konnte nicht gefunden werden.", "error");
+        return;
+      }
+
+      if (button.dataset.action === "delete-user" && userId === state.currentUser.uid) {
+        toast("Du kannst dein eigenes Konto hier nicht löschen.", "error");
+        return;
+      }
+
+      if (wouldRemoveLastApprovedAdmin(target, button.dataset.action, nextRole)) {
+        toast("Der letzte bestätigte Admin kann nicht entfernt oder unbestätigt gesetzt werden.", "error");
+        return;
+      }
+
+      if (button.dataset.action === "delete-user" && !window.confirm("Diesen Benutzer wirklich aus der Datenbank löschen?")) {
+        return;
+      }
+
+      setBusy(button, true, button.dataset.action === "save-role" ? "Speichere..." : button.dataset.action === "delete-user" ? "Lösche..." : "Aktualisiere...");
+
+      try {
+        if (button.dataset.action === "toggle-approval") {
+          if (target.approved) {
+            await update(ref(db, "users/" + userId), { approved: false, approvedAt: null, approvedBy: null });
+            toast("Benutzer wurde auf unbestätigt gesetzt.", "success");
+          } else {
+            await update(ref(db, "users/" + userId), { approved: true, approvedAt: Date.now(), approvedBy: state.currentUser.uid });
+            toast("Benutzer wurde bestätigt.", "success");
+          }
+        }
+
+        if (button.dataset.action === "save-role") {
+          await update(ref(db, "users/" + userId), { role: nextRole });
+          toast("Rolle wurde gespeichert.", "success");
+        }
+
+        if (button.dataset.action === "delete-user") {
+          await remove(ref(db, "users/" + userId));
+          toast("Benutzer wurde aus der Datenbank gelöscht.", "success");
+        }
+      } catch (error) {
+        toast(readableDbError(error), "error");
+      } finally {
+        setBusy(button, false);
+      }
+    }
+
+    function handleDayBar(event) {
+      const button = event.target.closest("button[data-day]");
+      if (!button) return;
+      state.filterMode = "day";
+      state.selectedDay = button.dataset.day;
+      state.selectedSubjectKey = null;
+      renderAll();
+    }
+
+    function handleSubjectList(event) {
+      const button = event.target.closest("button[data-subject-key]");
+      if (!button) return;
+      state.filterMode = "subject";
+      state.selectedSubjectKey = button.dataset.subjectKey;
+      renderAll();
+    }
+
+    function resetToTodayFilter() {
+      state.filterMode = "day";
+      state.selectedDay = todayValue();
+      state.selectedSubjectKey = null;
+      renderAll();
+    }
+
+    function resetLoggedOutState() {
+      cleanupSubscriptions();
+      state.currentUser = null;
+      state.currentProfile = null;
+      state.terms = [];
+      state.users = {};
+      state.filterMode = "day";
+      state.selectedDay = todayValue();
+      state.selectedSubjectKey = null;
+      state.pendingProfileCreation = false;
+      state.registrationFlow = false;
+      resetTermForm();
+      renderAll();
+    }
+
+    function registerEvents() {
+      elements.showLoginBtn.addEventListener("click", () => switchAuthView("login"));
+      elements.showRegisterBtn.addEventListener("click", () => switchAuthView("register"));
+      elements.loginForm.addEventListener("submit", handleLogin);
+      elements.registerForm.addEventListener("submit", handleRegister);
+      elements.logoutBtn.addEventListener("click", handleLogout);
+      elements.resetFilterBtn.addEventListener("click", resetToTodayFilter);
+      elements.showAllSubjectsBtn.addEventListener("click", resetToTodayFilter);
+      elements.dayBar.addEventListener("click", handleDayBar);
+      elements.subjectList.addEventListener("click", handleSubjectList);
+      elements.termForm.addEventListener("submit", handleTermSubmit);
+      elements.termList.addEventListener("click", handleTermActions);
+      elements.userList.addEventListener("click", handleUserActions);
+      elements.cancelEditBtn.addEventListener("click", resetTermForm);
+      elements.jumpToFormBtn.addEventListener("click", () => elements.termFormPanel.scrollIntoView({ behavior: "smooth", block: "start" }));
+    }
+
+    function initAuth() {
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          resetLoggedOutState();
+          setScreen("auth");
+          return;
+        }
+
+        cleanupSubscriptions();
+        state.currentUser = user;
+        state.currentProfile = null;
+        state.terms = [];
+        state.users = {};
+        setScreen("loading");
+        subscribeProfile(user.uid);
+      });
+    }
+
+    populateStaticUI();
+    registerEvents();
+    switchAuthView("login");
+    resetTermForm();
+    renderAll();
+    initAuth();
+  </script>
 </body>
-</html>
+</html>"}]}
