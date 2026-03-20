@@ -21,16 +21,14 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 /**
- * Lege eine Datei firebase-config.js an (siehe firebase-config.example.js),
- * die window.CLASSPLANNER_CONFIG setzt.
+ * Konfiguration wird primär aus firebase-config.json geladen.
+ * Fallback: window.CLASSPLANNER_CONFIG (falls jemand weiterhin firebase-config.js nutzt).
  */
-const runtimeConfig = window.CLASSPLANNER_CONFIG || {};
-const firebaseConfig = runtimeConfig.firebaseConfig || {};
-
-const ROOT_ADMIN_EMAIL = runtimeConfig.rootAdminEmail || "dein.name@example.com";
-const CLASS_REP_1_EMAIL = runtimeConfig.classRep1Email || "klassensprecherin1@example.com";
-const CLASS_REP_2_EMAIL = runtimeConfig.classRep2Email || "klassensprecherin2@example.com";
-const DEPUTY_REP_EMAIL = runtimeConfig.deputyRepEmail || "stellvertreter@example.com";
+let firebaseConfig = {};
+let ROOT_ADMIN_EMAIL = "dein.name@example.com";
+let CLASS_REP_1_EMAIL = "klassensprecherin1@example.com";
+let CLASS_REP_2_EMAIL = "klassensprecherin2@example.com";
+let DEPUTY_REP_EMAIL = "stellvertreter@example.com";
 
 const authSection = document.getElementById("auth-section");
 const appSection = document.getElementById("app-section");
@@ -65,13 +63,35 @@ const SUBJECTS = [
   "Sonstiges",
 ];
 
-if (isFirebaseConfigured(firebaseConfig)) {
-  const app = initializeApp(firebaseConfig);
-  auth = getAuth(app);
-  db = getFirestore(app);
-  wireAuthState();
-} else {
-  showSetupNotice();
+bootstrap();
+
+
+async function bootstrap() {
+  const runtimeConfig = await loadRuntimeConfig();
+  firebaseConfig = runtimeConfig.firebaseConfig || {};
+  ROOT_ADMIN_EMAIL = runtimeConfig.rootAdminEmail || ROOT_ADMIN_EMAIL;
+  CLASS_REP_1_EMAIL = runtimeConfig.classRep1Email || CLASS_REP_1_EMAIL;
+  CLASS_REP_2_EMAIL = runtimeConfig.classRep2Email || CLASS_REP_2_EMAIL;
+  DEPUTY_REP_EMAIL = runtimeConfig.deputyRepEmail || DEPUTY_REP_EMAIL;
+
+  if (isFirebaseConfigured(firebaseConfig)) {
+    const app = initializeApp(firebaseConfig);
+    auth = getAuth(app);
+    db = getFirestore(app);
+    wireAuthState();
+  } else {
+    showSetupNotice();
+  }
+}
+
+async function loadRuntimeConfig() {
+  try {
+    const res = await fetch("./firebase-config.json", { cache: "no-store" });
+    if (res.ok) return await res.json();
+  } catch (_) {
+    // fallback unten
+  }
+  return window.CLASSPLANNER_CONFIG || {};
 }
 
 registerForm.addEventListener("submit", async (e) => {
@@ -315,7 +335,7 @@ function formatDate(v) {
 function showSetupNotice() {
   setupSection.classList.remove("hidden");
   disableAuthForms();
-  toast("Firebase ist noch nicht konfiguriert. Bitte firebase-config.js eintragen.");
+  toast("Firebase ist noch nicht konfiguriert. Bitte firebase-config.json eintragen.");
 }
 
 function disableAuthForms() {
@@ -338,7 +358,7 @@ function friendlyAuthError(err) {
   if (code.includes("auth/invalid-email")) return "Ungültige E-Mail-Adresse.";
   if (code.includes("auth/weak-password")) return "Passwort ist zu kurz (mind. 6 Zeichen).";
   if (code.includes("auth/invalid-credential")) return "E-Mail oder Passwort sind falsch.";
-  if (code.includes("auth/api-key-not-valid")) return "Firebase API-Key ist ungültig. Prüfe firebase-config.js.";
+  if (code.includes("auth/api-key-not-valid")) return "Firebase API-Key ist ungültig. Prüfe firebase-config.json.";
   if (code.includes("auth/configuration-not-found")) {
     return "Auth-Konfiguration fehlt: In Firebase unter Authentication > Sign-in method E-Mail/Passwort aktivieren und unter Authorized domains deine GitHub-Domain eintragen.";
   }
