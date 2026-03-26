@@ -223,6 +223,23 @@
     .toast{padding:14px 16px;border-radius:14px;color:#fff;box-shadow:0 18px 36px rgba(0,0,0,.18)}
     .toast.info{background:#2563eb}.toast.success{background:#16a34a}.toast.error{background:#dc2626}
 
+    .mobile-sidebar-btn{display:none}
+    .sidebar-backdrop{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,.35);
+      backdrop-filter:blur(2px);
+      z-index:45;
+      opacity:0;
+      pointer-events:none;
+      transition:opacity .25s ease;
+    }
+    .sidebar-backdrop.open{
+      opacity:1;
+      pointer-events:auto;
+    }
+    body.sidebar-open{overflow:hidden}
+
     @media (max-width:1180px){
       .workspace{grid-template-columns:1fr}
       .side-panel{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -238,6 +255,22 @@
       .term-list{grid-template-columns:1fr}
       .side-panel{grid-template-columns:1fr}
       .day-bar{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .mobile-sidebar-btn{display:inline-flex}
+      .sidebar{
+        position:fixed;
+        top:0;
+        left:0;
+        width:min(320px,84vw);
+        height:100vh;
+        z-index:50;
+        transform:translateX(-105%);
+        transition:transform .25s ease;
+        overflow-y:auto;
+        -webkit-overflow-scrolling:touch;
+        box-shadow:0 24px 60px rgba(15,23,42,.22);
+      }
+      .sidebar.open{transform:translateX(0)}
+      .header-actions{flex-wrap:wrap}
     }
 
     @media (max-width:720px){
@@ -344,6 +377,7 @@
         </div>
       </div>
       <div class="header-actions">
+        <button id="mobileSidebarBtn" class="btn ghost small mobile-sidebar-btn" type="button" aria-controls="sidebar" aria-expanded="false">☰ Fächer</button>
         <div class="header-user">
           <span id="profileNamePill" class="pill">Name</span>
           <span id="profileEmailPill" class="pill">E-Mail</span>
@@ -352,13 +386,15 @@
       </div>
     </header>
 
-    <aside class="panel sidebar">
+    <aside id="sidebar" class="panel sidebar">
       <div class="panel-head">
         <h2>Fächer</h2>
       </div>
       <button id="showAllSubjectsBtn" class="btn light small" type="button">Heute anzeigen</button>
       <div id="subjectList" class="subject-list"></div>
     </aside>
+
+    <div id="sidebarBackdrop" class="sidebar-backdrop hidden" aria-hidden="true"></div>
 
     <section class="content-shell">
       <section class="panel trend-panel">
@@ -521,7 +557,10 @@
       cancelEditBtn: document.getElementById("cancelEditBtn"),
       adminPanel: document.getElementById("adminPanel"),
       userList: document.getElementById("userList"),
-      toastWrap: document.getElementById("toastWrap")
+      toastWrap: document.getElementById("toastWrap"),
+      sidebar: document.getElementById("sidebar"),
+      mobileSidebarBtn: document.getElementById("mobileSidebarBtn"),
+      sidebarBackdrop: document.getElementById("sidebarBackdrop")
     };
 
     const state = {
@@ -1098,6 +1137,7 @@
         ensureUsersSubscription();
         renderAll();
         setScreen("main");
+        syncSidebarMode();
       }, (error) => toast(readableDbError(error), "error"));
     }
 
@@ -1178,6 +1218,7 @@
       clearAuthNotice();
       await signOut(auth);
       toast("Du wurdest abgemeldet.", "info");
+      closeSidebarOnMobile();
     }
 
     async function handleTermSubmit(event) {
@@ -1336,6 +1377,7 @@
       state.selectedDay = button.dataset.day;
       state.selectedSubjectKey = null;
       renderAll();
+      closeSidebarOnMobile();
     }
 
     function handleSubjectList(event) {
@@ -1344,6 +1386,7 @@
       state.filterMode = "subject";
       state.selectedSubjectKey = button.dataset.subjectKey;
       renderAll();
+      closeSidebarOnMobile();
     }
 
     function resetToTodayFilter() {
@@ -1351,6 +1394,42 @@
       state.selectedDay = todayValue();
       state.selectedSubjectKey = null;
       renderAll();
+      closeSidebarOnMobile();
+    }
+
+    function approvedSidebarStateShouldOpen() {
+      return window.matchMedia("(max-width: 980px)").matches;
+    }
+
+    function setSidebarOpen(open) {
+      if (!elements.sidebar || !elements.sidebarBackdrop || !elements.mobileSidebarBtn) return;
+      const mobile = approvedSidebarStateShouldOpen();
+      const shouldOpen = mobile && open;
+      elements.sidebar.classList.toggle("open", shouldOpen);
+      elements.sidebarBackdrop.classList.toggle("open", shouldOpen);
+      elements.sidebarBackdrop.classList.toggle("hidden", !shouldOpen);
+      document.body.classList.toggle("sidebar-open", shouldOpen);
+      elements.mobileSidebarBtn.setAttribute("aria-expanded", String(shouldOpen));
+    }
+
+    function toggleSidebar() {
+      setSidebarOpen(!elements.sidebar.classList.contains("open"));
+    }
+
+    function closeSidebarOnMobile() {
+      if (approvedSidebarStateShouldOpen()) setSidebarOpen(false);
+    }
+
+    function syncSidebarMode() {
+      if (!approvedSidebarStateShouldOpen()) {
+        elements.sidebar?.classList.remove("open");
+        elements.sidebarBackdrop?.classList.remove("open");
+        elements.sidebarBackdrop?.classList.add("hidden");
+        document.body.classList.remove("sidebar-open");
+        elements.mobileSidebarBtn?.setAttribute("aria-expanded", "false");
+      } else {
+        elements.mobileSidebarBtn?.setAttribute("aria-expanded", String(elements.sidebar?.classList.contains("open") || false));
+      }
     }
 
     function resetLoggedOutState() {
@@ -1366,6 +1445,7 @@
       state.registrationFlow = false;
       resetTermForm();
       renderAll();
+      closeSidebarOnMobile();
     }
 
     function registerEvents() {
@@ -1383,6 +1463,9 @@
       elements.userList.addEventListener("click", handleUserActions);
       elements.cancelEditBtn.addEventListener("click", resetTermForm);
       elements.jumpToFormBtn.addEventListener("click", () => elements.termFormPanel.scrollIntoView({ behavior: "smooth", block: "start" }));
+      elements.mobileSidebarBtn.addEventListener("click", toggleSidebar);
+      elements.sidebarBackdrop.addEventListener("click", () => setSidebarOpen(false));
+      window.addEventListener("resize", syncSidebarMode);
     }
 
     function initAuth() {
@@ -1408,6 +1491,7 @@
     switchAuthView("login");
     resetTermForm();
     renderAll();
+    syncSidebarMode();
     initAuth();
   </script>
 </body>
